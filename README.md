@@ -1,2 +1,2 @@
 # JOB-HUNT
-A Job Platform for connecting the companies with job seekers world wide.
+A Job Platform for connecting companies with job seekers worldwide.
