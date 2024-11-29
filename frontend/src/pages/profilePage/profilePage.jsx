@@ -7,7 +7,7 @@ import "./profilePage.css";
 
 export default function ProfilePage() {
     const { userName, profileSection } = useParams();
-    const currentSection = profileSection || 'profileInfo';
+    const currentSection = profileSection || '';
     console.log(userName)
     return (
         <div className="profile-page">
@@ -15,34 +15,24 @@ export default function ProfilePage() {
             <div className="main-profile">
                 <div className="profile-nav">
                     <NavLink to={`/${userName}/profile/profileInfo`} className='profile-section'>
-                        <i></i>
-                        <p>
-                            Profile Info
-                        </p>
+                        <i class="fa-solid fa-user-tie"></i>
+                        <p>Profile Info</p>
                     </NavLink>
                     <NavLink to={`/${userName}/profile/savedJobs`} className='profile-section'>
-                        <i></i>
-                        <p>
-                            Saved Jobs
-                        </p>
+                        <i class="fa-solid fa-bookmark"></i>
+                        <p>Saved Jobs</p>
                     </NavLink>
                     <NavLink to={`/${userName}/profile/jobsApplications`} className='profile-section'>
-                        <i></i>
-                        <p>
-                            Jobs Applications
-                        </p>
+                        <i class="fa-solid fa-window-maximize"></i>
+                        <p>Jobs Applications</p>
                     </NavLink>
                     <NavLink to={`/${userName}/profile/settings`} className='profile-section'>
-                        <i></i>
-                        <p>
-                            Settings
-                        </p>
+                        <i class="fa-solid fa-gear"></i>
+                        <p>Settings</p>
                     </NavLink>
                     <div className='profile-section'>
-                        <i></i>
-                        <p>
-                            Logout
-                        </p>
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <p>Logout</p>
                     </div>
                 </div>
                 <div className="nav-section">

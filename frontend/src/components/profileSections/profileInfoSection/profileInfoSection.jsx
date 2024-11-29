@@ -25,9 +25,7 @@ export default function ProfileInfoSection() {
                                 <div className="profile-info-label">
                                     {key.charAt(0).toUpperCase() + key.slice(1)}
                                 </div>
-                                <div className="profile-info-value">
-                                    {value}
-                                </div>
+                                <input className="profile-info-value" value={value}/>
                             </div>
                         );
                     })
