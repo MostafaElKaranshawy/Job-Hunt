@@ -1,8 +1,9 @@
-
+import React from "react";
+import GoogleOAuth from "../../components/googleOAuthLogIn/GoogleOAuthLogIn";
 import "./SignUpPage.css";
 function SignUpPage() {
     return (
-        <div>Welcome to job hunter signup Page</div>
-    );
+        <GoogleOAuth />
+        );
 }
 export default SignUpPage;
