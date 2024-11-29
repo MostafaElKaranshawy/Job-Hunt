@@ -17,6 +17,8 @@ function EmployerSignUp() {
   const [errors, setErrors] = useState({});
   const [selectedCountry, setSelectedCountry] = useState("eg");
 
+
+   
   const handleCountryChange = (country) => {
     setSelectedCountry(country); // Update the selected country
   };
