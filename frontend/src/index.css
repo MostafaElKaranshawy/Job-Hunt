@@ -28,6 +28,7 @@ body,
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 h1 {
@@ -68,8 +69,8 @@ button:focus-visible {
 }
 /* Total scrollbar */
 ::-webkit-scrollbar {
-  width: 12px; /* Width of vertical scrollbar */
-  height: 12px; /* Height of horizontal scrollbar */
+  width: 10px; /* Width of vertical scrollbar */
+  height: 10px; /* Height of horizontal scrollbar */
 }
 
 /* Track */

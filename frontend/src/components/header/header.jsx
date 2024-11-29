@@ -20,7 +20,7 @@ function Header() {
                     
                     <li>
                         <NavLink to={`/${userName}/profile`} className="menu-item" onClick>
-                            <i class="fa-solid fa-user"></i>
+                            <i className="fa-solid fa-user"></i>
                             <p>Profile</p>
                         </NavLink>
                     </li>

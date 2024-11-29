@@ -3,14 +3,12 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    height: calc(100% - 40px);
-    overflow-y: scroll;
     width: calc(100% - 40px);
-    margin: 20px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     color: rgb(0, 85, 0);
+    margin: 20px 0;
 }
 .profile-info-section .profile-picture{
     margin: 20px;
@@ -60,4 +58,12 @@
     box-shadow: 0 0 10px #73bd73;
     padding: 10px 20px;
 
+}
+
+.profile-data-sections{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
