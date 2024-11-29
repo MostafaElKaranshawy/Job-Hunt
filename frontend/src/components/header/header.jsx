@@ -12,15 +12,15 @@ function Header() {
             <div className="nav">
                 <ul className="nav-menu">
                     <li>
-                        <NavLink to="/home" className="menu-item" onClick>
+                        <NavLink to="/home" className="menu-item">
                             <i className="fa-solid fa-house"></i>
                             <p>Home</p>
                         </NavLink>
                     </li>
                     
                     <li>
-                        <NavLink to={`/${userName}/profile`} className="menu-item" onClick>
-                            <i className="fa-solid fa-user"></i>
+                        <NavLink to={`/applicant/${userName}/profile`} className="menu-item">
+                            <i className="fa-solid fa-user-tie"></i>
                             <p>Profile</p>
                         </NavLink>
                     </li>

@@ -14,19 +14,19 @@ export default function ProfilePage() {
             <Header/>
             <div className="main-profile">
                 <div className="profile-nav">
-                    <NavLink to={`/${userName}/profile/profileInfo`} className='profile-section'>
+                    <NavLink to={`/applicant/${userName}/profile/profileInfo`} className='profile-section'>
                         <i className="fa-solid fa-user-tie"></i>
                         <p>Profile Info</p>
                     </NavLink>
-                    <NavLink to={`/${userName}/profile/savedJobs`} className='profile-section'>
+                    <NavLink to={`/applicant/${userName}/profile/savedJobs`} className='profile-section'>
                         <i className="fa-solid fa-bookmark"></i>
                         <p>Saved Jobs</p>
                     </NavLink>
-                    <NavLink to={`/${userName}/profile/jobsApplications`} className='profile-section'>
+                    <NavLink to={`/applicant/${userName}/profile/jobsApplications`} className='profile-section'>
                         <i className="fa-solid fa-window-maximize"></i>
                         <p>Jobs Applications</p>
                     </NavLink>
-                    <NavLink to={`/${userName}/profile/settings`} className='profile-section'>
+                    <NavLink to={`/applicant/${userName}/profile/settings`} className='profile-section'>
                         <i className="fa-solid fa-gear"></i>
                         <p>Settings</p>
                     </NavLink>
