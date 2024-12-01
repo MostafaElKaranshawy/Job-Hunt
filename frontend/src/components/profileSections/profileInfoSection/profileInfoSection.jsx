@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Section from "../../section/section";
+import CustomSection from "../../customSection/customSection";
 import Skills from "../../skills/skills";
 import "./profileInfoSection.css";
 import profileHolder from "../../../assets/profile.png";
@@ -21,54 +22,111 @@ export default function ProfileInfoSection() {
                     fieldValue: "mostafaelkaranshawy0@gmail.com",
                 },
             ],
-        },
+        }
+    ]);
+    const [customSections, setCustomSections] = useState([
         {
             sectionName: "Education",
-            sectionFields: [
-                {
-                    fieldName: "School",
-                    fieldValue: "Cairo University",
+            sectionSections: [
+                {   
+                    sectionName: "Education 1",
+                    sectionFields: [
+                        {
+                            fieldName: "Scool",
+                            fieldValue: "MIT",
+                        },
+                        {
+                            fieldName: "Major",
+                            fieldValue: "Software Engineering",
+                        },
+                        {
+                            fieldName: "Start Date",
+                            fieldValue: "2020",
+                        },
+                        {
+                            fieldName: "End Date",
+                            fieldValue: "2021",
+                        },
+                    ],
                 },
-                {
-                    fieldName: "Major",
-                    fieldValue: "Computer Science",
+                {   
+                    sectionName: "Education 2",
+                    sectionFields: [
+                        {
+                            fieldName: "Scool",
+                            fieldValue: "MIT",
+                        },
+                        {
+                            fieldName: "Major",
+                            fieldValue: "Software Engineering",
+                        },
+                        {
+                            fieldName: "Start Date",
+                            fieldValue: "2020",
+                        },
+                        {
+                            fieldName: "End Date",
+                            fieldValue: "2021",
+                        },
+                    ],
                 },
-                {
-                    fieldName: "Graduation Year",
-                    fieldValue: "2020",
-                },
-            ],
+            ]
         },
         {
             sectionName: "Experience",
-            sectionFields: [
-                {
-                    fieldName: "Company",
-                    fieldValue: "Google",
-                },
-                {
-                    fieldName: "Position",
-                    fieldValue: "Software Engineer",
-                },
-                {
-                    fieldName: "Start Date",
-                    fieldValue: "2020",
-                },
-                {
-                    fieldName: "End Date",
-                    fieldValue: "2021",
-                },
-            ],
+            sectionSections: [
+            {   
+                sectionName: "Experience 1",
+                sectionFields: [
+                    {
+                        fieldName: "Company",
+                        fieldValue: "Google",
+                    },
+                    {
+                        fieldName: "Position",
+                        fieldValue: "Software Engineer",
+                    },
+                    {
+                        fieldName: "Start Date",
+                        fieldValue: "2020",
+                    },
+                    {
+                        fieldName: "End Date",
+                        fieldValue: "2021",
+                    },
+                ],
+                }
+            ]
         },
     ]);
     const [sections, setSections] = useState(userSections);
     const [userSkills, setUserSkills] = useState(["python"]);
-
-    // const changeUserSkills = (skill) => {
-    //     setUserSkills([...userSkills, skill]);
-    //     console.log(skill);
-    // };
-
+    const handleCustomSectionChange = (sectionName, fieldName, fieldValue) => {
+        setCustomSections(
+            customSections.map((section) => {
+                if (section.sectionName === sectionName) {
+                    return {
+                        ...section,
+                        sectionSections: section.sectionSections.map((section) => {
+                            return {
+                                ...section,
+                                sectionFields: section.sectionFields.map((field) => {
+                                    if (field.fieldName === fieldName) {
+                                        return {
+                                            ...field,
+                                            fieldValue: fieldValue,
+                                        };
+                                    }
+                                    return field;
+                                }),
+                            };
+                        }),
+                    };
+                }
+                return section;
+            })
+        );
+    }
     const handleSectionChange = (sectionName, fieldName, fieldValue) => {
         setSections(
             sections.map((section) => {
@@ -90,14 +148,22 @@ export default function ProfileInfoSection() {
             })
         );
     };
-
+    const saveChanges = () => {} 
     return (
         <div className="profile-info-section">
             <div className="profile-picture">
                 <img src={profileHolder} />
             </div>
             <div className="profile-data-sections">
-                {sections &&
+                {
+                    sections && (
+                        <Section
+                            sectionData={sections[0]}
+                            sectionChange={handleSectionChange}
+                        />
+                    )
+                }
+                {/* {sections &&
                     sections.map((section, index) => {
                         return (
                             <Section
@@ -106,13 +172,29 @@ export default function ProfileInfoSection() {
                                 key={index}
                             />
                         );
-                    })}
+                    })} */}
+                {
+                    customSections && (
+                        customSections.map((section, index) => {
+                            return (
+                                <CustomSection
+                                    sectionData={section}
+                                    sectionChange={handleCustomSectionChange}
+                                    key={index}
+                                />
+                            );
+                        })
+                    )
+                }
             </div>
             <div className="skills-section">
                 <Skills
                     skills={userSkills}
                     changeUserSkills={setUserSkills}
                 />
+            </div>
+            <div className="save-button" onClick={saveChanges}>
+                Save
             </div>
         </div>
     );

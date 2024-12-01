@@ -5,13 +5,13 @@ import Profile from './pages/profilePage/profilePage'
 function App() {
   return (
     <div className='app'>
-  <Router>  
-    <Routes>
-      <Route path="applicant/:userName/profile/" element={<Profile/>} />
-      <Route path="applicant/:userName/profile/:profileSection" element={<Profile/>} />
-      <Route path="/home" element={<UserHome/>}></Route>
-    </Routes> 
-  </Router>
+      <Router>  
+        <Routes>
+          <Route path="user/:userName/profile/" element={<Profile/>} />
+          <Route path="user/:userName/profile/:profileSection" element={<Profile/>} />
+          <Route path="/home" element={<UserHome/>}></Route>
+        </Routes> 
+      </Router>
     </div>
   )
 }

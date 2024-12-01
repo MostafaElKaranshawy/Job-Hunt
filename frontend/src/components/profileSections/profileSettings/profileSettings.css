@@ -1,0 +1,49 @@
+.profile-settings{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: calc(100% - 40px);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: rgb(0, 85, 0);
+    margin: 20px 0;
+}
+
+.settings-header{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: calc(100% - 80px);
+    padding: 0 20px;
+    margin: 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+.settings-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: calc(100% - 40px);
+}
+
+.save-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0, 150, 0);
+    color: white;
+    font-size: 15px;
+    border-radius:10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    padding: 5px 20px;
+    align-self: flex-end;
+    margin: 20px;
+}
+.save-button:hover{
+    background-color: rgb(0, 85, 0);
+}

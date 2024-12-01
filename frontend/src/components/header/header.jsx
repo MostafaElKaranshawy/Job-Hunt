@@ -19,7 +19,7 @@ function Header() {
                     </li>
                     
                     <li>
-                        <NavLink to={`/applicant/${userName}/profile`} className="menu-item">
+                        <NavLink to={`/user/${userName}/profile`} className="menu-item">
                             <i className="fa-solid fa-user-tie"></i>
                             <p>Profile</p>
                         </NavLink>
