@@ -125,6 +125,22 @@ export default function ProfileInfoSection() {
             })
         );
     };
+    const handleRemoveSection = (parentSectionName, sectionName) => {
+        setCustomSections(
+            customSections.map((section) => {
+                if (section.sectionName === parentSectionName) {
+                    return {
+                        ...section,
+                        sectionSections: section.sectionSections.filter(
+                            (subSection) => subSection.sectionName !== sectionName
+                        ),
+                    };
+                }
+                return section;
+            })
+        );
+    };
+    
     const handleSectionChange = (sectionName, fieldName, fieldValue) => {
         setSections(
             sections.map((section) => {
@@ -179,6 +195,7 @@ export default function ProfileInfoSection() {
                                 sectionData={section}
                                 sectionChange={handleCustomSectionChange}
                                 addSection={handleAddSection}
+                                removeSection={handleRemoveSection}
                             />
                         ))
                     )

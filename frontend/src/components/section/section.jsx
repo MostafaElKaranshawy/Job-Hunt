@@ -1,7 +1,7 @@
 import React from "react";
 import "./section.css";
 
-export default function Section({ sectionData, sectionChange }) {
+export default function Section({ sectionData, sectionChange, errors }) {
     const handleFieldChange = (e, fieldIndex) => {
         const updatedFieldValue = e.target.value;
         sectionChange(
@@ -18,12 +18,17 @@ export default function Section({ sectionData, sectionChange }) {
                 {sectionData.sectionFields.map((field, index) => (
                     <div className="section-field" key={index}>
                         <div className="field-name">{field.fieldName}</div>
-                        <input
-                            className="field-value"
-                            value={field.fieldValue}
-                            name={field.fieldName}
-                            onChange={(e) => handleFieldChange(e, index)}
-                        />
+                        <div className="input">
+                            <input
+                                className={`field-value ${errors && errors[field.fieldName] && 'error-field'}`}
+                                value={field.fieldValue}
+                                name={field.fieldName}
+                                onChange={(e) => handleFieldChange(e, index)}
+                            />
+                            {errors && errors[field.fieldName] && (
+                                <div className="error">{errors[field.fieldName]}</div>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>

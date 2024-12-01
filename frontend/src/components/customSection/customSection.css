@@ -48,6 +48,26 @@
     align-items: center;
     width: 100%;
 }
+.section-container{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.section-container .delete-section{
+    position: absolute;
+    right: 40px;
+    top: 20px;
+}
+.delete-section{
+    font-size: 20px;
+    cursor: pointer;
+    color :rgb(0 150 0);
+}
+.delete-section:hover{
+    color: rgb(255, 0, 0);
+}
 .section-added{
     width: calc(100% - 40px);
     display: flex;
