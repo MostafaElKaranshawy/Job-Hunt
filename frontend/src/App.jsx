@@ -1,15 +1,18 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import SignUpPage from './pages/signUpPage/SignUpPage'
-function App() {
-  return (
-    <>
-  <Router>  
-    <Routes>
-      <Route path="/" element={<SignUpPage/>}/>
-    </Routes> 
-  </Router>
-    </>
-  )
-}
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProfilePage from './pages/profilePage/ProfilePage';
+import Jobs from './pages/jobsPage/Jobs';
 
-export default App
+const App = () => {
+  return (
+    <div className="app">
+    <Router>
+        <Routes>
+          <Route path="/" element={<ProfilePage/>} />
+          <Route path="/jobs" element={<Jobs/>} />
+        </Routes>
+    </Router>
+    </div>
+  );
+};
+
+export default App;
