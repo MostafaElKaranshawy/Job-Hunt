@@ -1,0 +1,162 @@
+.main {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  max-width: none;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.btn {
+  font-size: 14px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary {
+  background-color: #326740f0;
+  color: white;
+  margin-left: 1300px;
+  margin-right: -75px;
+}
+
+.btn-primary:hover {
+  background-color: #254d30f0;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.box {
+  flex: none;
+  width: 100% !important;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+}
+
+.box h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  text-align: center;
+}
+
+.box .d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box .me-2 {
+  margin-right: 10px;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  padding: 20px 0;
+}
+
+.profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #f0f0f0;
+  margin-bottom: 10px;
+}
+
+.change-photo-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: none;
+  color: white;
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.change-photo-icon:hover {
+  background-color: #8080806a;
+}
+
+.change-photo-icon:active {
+  transform: scale(0.95);
+}
+
+.profile-name h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.info-text {
+  font-size: 18px;
+  color: #333;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.name{
+    width: auto;
+    margin-right: 10px;
+    font-size: 20px;
+}
