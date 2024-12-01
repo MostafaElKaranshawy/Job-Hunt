@@ -2,24 +2,22 @@ package com.software.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.List;
 
 
 @Entity
 @Data
 @Table(name = "applicant")
-public class Applicant {
+public class Applicant{
 
     @Id
     @Column(name = "applicant_id")
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "applicant_id", nullable = false)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "applicant_id", nullable = false, referencedColumnName = "id")
     @MapsId
     private User user;
-
 
     @Column( nullable = false )
     private String firstName;

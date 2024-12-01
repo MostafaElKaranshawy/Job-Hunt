@@ -1,5 +1,6 @@
 package com.software.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.software.backend.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,11 +18,12 @@ public class User {
     private Integer id;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Applicant applicant;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Company company;
-
 
 
     @Column(
