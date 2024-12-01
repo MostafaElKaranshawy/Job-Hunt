@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useCallback, useEffect, useState } from 'react';
 import './ProfilePage.css';
-import Sidebar from '../../sideBar/Sidebar';
+import Sidebar from '../../components/sideBar/Sidebar';
 
 function ProfilePage(){
     const[companyInfo, setCompanyInfo] = useState({
