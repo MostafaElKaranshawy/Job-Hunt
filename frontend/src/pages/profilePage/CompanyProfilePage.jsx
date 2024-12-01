@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useCallback, useEffect, useState } from 'react';
-import './ProfilePage.css';
+import './CompanyProfilePage.css';
 import Sidebar from '../../components/sideBar/Sidebar';
 
-function ProfilePage(){
+function CompanyProfilePage(){
     const[companyInfo, setCompanyInfo] = useState({
         company_name: "toto",
         company_email: "toto",
@@ -269,5 +269,5 @@ function ProfilePage(){
     );
 }
 
-export default ProfilePage;
+export default CompanyProfilePage;
 
