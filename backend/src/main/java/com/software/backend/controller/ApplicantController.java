@@ -8,12 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "applicant")
+@RequestMapping(path = "users")
 public class ApplicantController {
     @Autowired
     ApplicantServices service;
 
-    @GetMapping("/{username}")
+    @GetMapping("/{username}/profile")
     public ResponseEntity<ApplicantDTO> getApplicant(@PathVariable String username){
         ApplicantDTO dto = service.getApplicant(username);
         if(dto != null)
@@ -21,9 +21,9 @@ public class ApplicantController {
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    @PutMapping("/update")
-    public void updateApplicant(@RequestBody ApplicantDTO dto){
-        service.updateApplicant(dto);
+    @PutMapping("/{username}/profile")
+    public void updateApplicant(@PathVariable String username, @RequestBody ApplicantDTO dto){
+        service.updateApplicant(username,dto);
     }
 
 }

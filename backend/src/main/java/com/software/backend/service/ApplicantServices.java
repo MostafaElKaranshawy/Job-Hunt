@@ -26,9 +26,9 @@ public class ApplicantServices {
         }
         return null;
     }
-    public void updateApplicant(ApplicantDTO dto) {
-            if (userRepo.existsByUsername(dto.getUsername())) {
-            User user = userRepo.findByUsername(dto.getUsername()).orElseThrow(() ->
+    public void updateApplicant(String username, ApplicantDTO dto) {
+            if (userRepo.existsByUsername(username)) {
+            User user = userRepo.findByUsername(username).orElseThrow(() ->
                     new EntityNotFoundException("User not found for update."));
 
             Applicant applicant = mapper.ApplicantDTOToApplicant(dto);
