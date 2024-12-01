@@ -54,6 +54,23 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
     
         sectionChange(sectionData.sectionName, { ...sectionData, sectionSections: updatedSections });
     };
+    const handleChange = (sectionName, fieldName, fieldValue) => {
+        setNewSection((prev) => ({
+            ...prev,
+            sectionFields: prev.sectionFields.map((field) =>
+                field.fieldName === fieldName
+                    ? { ...field, fieldValue }
+                    : field
+            ),
+        }));
+
+        // Clear error for the field when corrected
+        setErrors((prevErrors) => {
+            const { [fieldName]: _, ...rest } = prevErrors;
+            return rest;
+        });
+    }
+    
     return (
         <div className="custom-section">
             <div className="section-header">
@@ -85,22 +102,7 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                     <div className="section-added">
                         <Section
                             sectionData={newSection}
-                            sectionChange={(sectionName, fieldName, fieldValue) => {
-                                setNewSection((prev) => ({
-                                    ...prev,
-                                    sectionFields: prev.sectionFields.map((field) =>
-                                        field.fieldName === fieldName
-                                            ? { ...field, fieldValue }
-                                            : field
-                                    ),
-                                }));
-
-                                // Clear error for the field when corrected
-                                setErrors((prevErrors) => {
-                                    const { [fieldName]: _, ...rest } = prevErrors;
-                                    return rest;
-                                });
-                            }}
+                            sectionChange={handleChange}
                             errors={errors}
                         />
 

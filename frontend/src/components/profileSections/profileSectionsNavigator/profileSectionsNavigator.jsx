@@ -5,7 +5,6 @@ import JobsApplicationSection from "../jobsApplicationsSection/jobsApplicationSe
 import ProfileSettings from "../profileSettings/profileSettings";
 import "./profileSectionsNavigator.css";
 export default function ProfileSectionNavigator({profileSection}) {
-    console.log(profileSection)
     return (
         <div className="profile-section-nav">
             {
