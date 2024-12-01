@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ProfilePage from './pages/profilePage/ProfilePage';
+import CompanyProfilePage from './pages/profilePage/CompanyProfilePage';
 import Jobs from './pages/jobsPage/Jobs';
 
 const App = () => {
@@ -7,7 +7,7 @@ const App = () => {
     <div className="app">
     <Router>
         <Routes>
-          <Route path="/" element={<ProfilePage/>} />
+          <Route path="/" element={<CompanyProfilePage/>} />
           <Route path="/jobs" element={<Jobs/>} />
         </Routes>
     </Router>
