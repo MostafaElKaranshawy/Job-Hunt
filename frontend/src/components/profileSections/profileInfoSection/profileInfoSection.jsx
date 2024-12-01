@@ -32,7 +32,7 @@ export default function ProfileInfoSection() {
                     sectionName: "Education 1",
                     sectionFields: [
                         {
-                            fieldName: "Scool",
+                            fieldName: "School",
                             fieldValue: "MIT",
                         },
                         {
@@ -53,7 +53,7 @@ export default function ProfileInfoSection() {
                     sectionName: "Education 2",
                     sectionFields: [
                         {
-                            fieldName: "Scool",
+                            fieldName: "School",
                             fieldValue: "MIT",
                         },
                         {
@@ -101,32 +101,30 @@ export default function ProfileInfoSection() {
     ]);
     const [sections, setSections] = useState(userSections);
     const [userSkills, setUserSkills] = useState(["python"]);
-    const handleCustomSectionChange = (sectionName, fieldName, fieldValue) => {
+    const handleCustomSectionChange = (sectionName, updatedSection) => {
         setCustomSections(
             customSections.map((section) => {
                 if (section.sectionName === sectionName) {
+                    return updatedSection;
+                }
+                return section;
+            })
+        );
+    };
+    
+    const handleAddSection = (parentSectionName, newSection) => {
+        setCustomSections(
+            customSections.map((section) => {
+                if (section.sectionName === parentSectionName) {
                     return {
                         ...section,
-                        sectionSections: section.sectionSections.map((section) => {
-                            return {
-                                ...section,
-                                sectionFields: section.sectionFields.map((field) => {
-                                    if (field.fieldName === fieldName) {
-                                        return {
-                                            ...field,
-                                            fieldValue: fieldValue,
-                                        };
-                                    }
-                                    return field;
-                                }),
-                            };
-                        }),
+                        sectionSections: [...section.sectionSections, newSection],
                     };
                 }
                 return section;
             })
         );
-    }
+    };
     const handleSectionChange = (sectionName, fieldName, fieldValue) => {
         setSections(
             sections.map((section) => {
@@ -155,15 +153,15 @@ export default function ProfileInfoSection() {
                 <img src={profileHolder} />
             </div>
             <div className="profile-data-sections">
-                {
+                {/* {
                     sections && (
                         <Section
                             sectionData={sections[0]}
                             sectionChange={handleSectionChange}
                         />
                     )
-                }
-                {/* {sections &&
+                } */}
+                {sections &&
                     sections.map((section, index) => {
                         return (
                             <Section
@@ -172,18 +170,17 @@ export default function ProfileInfoSection() {
                                 key={index}
                             />
                         );
-                    })} */}
+                    })}
                 {
                     customSections && (
-                        customSections.map((section, index) => {
-                            return (
-                                <CustomSection
-                                    sectionData={section}
-                                    sectionChange={handleCustomSectionChange}
-                                    key={index}
-                                />
-                            );
-                        })
+                        customSections.map((section, index) => (
+                            <CustomSection
+                                key={index}
+                                sectionData={section}
+                                sectionChange={handleCustomSectionChange}
+                                addSection={handleAddSection}
+                            />
+                        ))
                     )
                 }
             </div>

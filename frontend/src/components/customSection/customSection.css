@@ -9,6 +9,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin: 20px;
     width: calc(100% - 80px);
+    position: relative;
 }
 .section-header{
     font-size: 1.5rem;
@@ -24,7 +25,7 @@
     font-size: 1.5rem;
 }
 .add-section{
-    background-color: rgb(0,85,0);
+    background-color: rgb(0,150,0);
     color: white;
     display: flex;
     align-items: center;
@@ -34,6 +35,11 @@
     font-size: 20px;
     border-radius: 50%;
     cursor: pointer;
+    transition: 0.3s;
+}
+.add-section:hover{
+    transform: rotate(135deg);
+    background-color: rgb(0,85,0);
 }
 .section-body{
     display: flex;
@@ -41,4 +47,43 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+.section-added{
+    width: calc(100% - 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    z-index: 100;
+    flex-direction: column;
+    background-color: #eee;
+    padding: 20px;
+    padding-bottom: 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(0 150 0);
+}
+
+.section-added .buttons{
+    display: flex;
+}
+
+.cancel-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(255, 0, 0);
+    color: white;
+    font-size: 15px;
+    border-radius:10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    padding: 5px 20px;
+    align-self: flex-end;
+    margin: 20px;
+}
+.cancel-button:hover{
+    background-color: rgb(200, 0, 0);
 }
