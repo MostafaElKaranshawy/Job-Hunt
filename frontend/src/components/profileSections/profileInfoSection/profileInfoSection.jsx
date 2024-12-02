@@ -96,7 +96,7 @@ export default function ProfileInfoSection() {
             })
         );
     };
-    
+
     // Adding a section
     const handleAddSection = async (parentSectionName, newSection) => {
         if (parentSectionName === "Education" || parentSectionName === "Experience") {
@@ -183,9 +183,9 @@ export default function ProfileInfoSection() {
     
         const updatedData = {
             ...personalInfo,
-            skills: userSkills,
-            educationList: educationList || [],
-            experienceList: experienceList || [],
+            // skills: userSkills,
+            // educationList: educationList || [],
+            // experienceList: experienceList || [],
         };
     
         console.log("Updated User Data: ", updatedData);
@@ -214,6 +214,8 @@ export default function ProfileInfoSection() {
                                 sectionData={section}
                                 sectionChange={handleSectionChange}
                                 key={index}
+                                save={saveChanges}
+                                cancel={getUserData}
                             />
                         );
                     })}
@@ -236,9 +238,6 @@ export default function ProfileInfoSection() {
                     skills={userSkills}
                     changeUserSkills={setUserSkills}
                 />
-            </div>
-            <div className="save-button" onClick={saveChanges}>
-                Save
             </div>
         </div>
     );

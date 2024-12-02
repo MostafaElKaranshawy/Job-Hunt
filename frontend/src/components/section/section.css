@@ -12,6 +12,20 @@
     padding: 20px;
 }
 
+.section-header .section-options{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.section-options .save-button{
+    margin: 20px 0
+}
+.section-options i{
+    cursor: pointer;
+}
+.section-options i:hover{
+    color: rgb(0, 150,0);
+}
 .section .section-name{
     font-size: 20px;
     font-weight: bold;

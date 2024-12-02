@@ -30,9 +30,22 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
         setEditSectionVisible(section.sectionName);
     };
 
-    const handleSaveEditedSection = (sectionName) => {
-        sectionChange(sectionData.sectionName, { ...sectionData });
+    const handleSaveEditedSection = (sectionName, editedFields) => {
+        const updatedSections = sectionData.sectionSections.map((subSection) => {
+            if (subSection.sectionName === sectionName) {
+                return {
+                    ...subSection,
+                    sectionFields: editedFields,
+                };
+            }
+            return subSection;
+        });
+        sectionChange(sectionData.sectionName, { ...sectionData, sectionSections: updatedSections });
         setEditSectionVisible(null);
+    };
+
+    const handleCancelEditSection = () => {
+        setEditSectionVisible(null);  // Simply hide the edit mode
     };
 
     const handleFieldChange = (sectionName, fieldName, fieldValue) => {
@@ -76,6 +89,8 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                                 sectionChange={(fieldName, fieldValue) =>
                                     handleFieldChange(section.sectionName, fieldName, fieldValue)
                                 }
+                                save={(editedFields) => handleSaveEditedSection(section.sectionName, editedFields)}
+                                cancel={handleCancelEditSection}
                             />
                         ) : (
                             <Section
@@ -85,7 +100,7 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                         )}
                         <div className="actions">
                             {editSectionVisible === section.sectionName ? (
-                                <button onClick={() => handleSaveEditedSection(section.sectionName)}>
+                                <button onClick={() => handleSaveEditedSection(section.sectionName, section.sectionFields)}>
                                     Save
                                 </button>
                             ) : (
@@ -112,21 +127,9 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                                 }))
                             }
                             errors={errors}
+                            cancel={() => setAddSectionVisible(false)}
+                            save={() => addSection(sectionData.sectionName, newSection)}
                         />
-                        <div className="buttons">
-                            <div
-                                className="cancel-button"
-                                onClick={() => setAddSectionVisible(false)}
-                            >
-                                Cancel
-                            </div>
-                            <div
-                                className="save-button"
-                                onClick={() => addSection(sectionData.sectionName, newSection)}
-                            >
-                                Save
-                            </div>
-                        </div>
                     </div>
                 )}
             </div>
