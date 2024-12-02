@@ -122,14 +122,77 @@ export default function ProfileInfoSection() {
     };
     
     // Editing a section
+    // const handleEditSection = async (parentSectionName, id, editedSection) => {
+    //     console.log(parentSectionName, id, editedSection)
+    //     const sectionData = editedSection.reduce((acc, field) => {
+    //         return {
+    //             ...acc,
+    //             [toCamelCase(field.fieldName)]: field.fieldValue || "", // Use empty string if fieldValue is undefined
+    //         };
+    //     }, {});
+    //     if (parentSectionName === "Education" || parentSectionName === "Experience") {
+    //         await handleCustomSectionOperation(
+    //             'PUT',
+    //             parentSectionName,
+    //             sectionData,
+    //             id
+    //         );
+    //     }
+    //     await refreshCustomSections(); // Refresh data after modification
+    // };
     const handleEditSection = async (parentSectionName, id, editedSection) => {
-        console.log(parentSectionName, id, editedSection)
-        const sectionData = editedSection.reduce((acc, field) => {
-            return {
-                ...acc,
-                [toCamelCase(field.fieldName)]: field.fieldValue || "", // Use empty string if fieldValue is undefined
-            };
-        }, {});
+        console.log(parentSectionName, id, editedSection);
+    
+        const errors = {};
+        const sectionData = {};
+    
+        // Loop through the editedSection to validate fields
+        editedSection.forEach((field) => {
+            // Check if the field is empty
+            if (!field.fieldValue) {
+                errors[field.fieldName] = "This field is required.";
+            } else {
+                sectionData[toCamelCase(field.fieldName)] = field.fieldValue || "";
+            }
+        });
+    
+        // Validate start and end dates if applicable
+        const startDate = editedSection.find(field => field.fieldName === "Start Date")?.fieldValue;
+        const endDate = editedSection.find(field => field.fieldName === "End Date")?.fieldValue;
+    
+        if (startDate && endDate) {
+            // Ensure End Date is after Start Date
+            if (new Date(endDate) <= new Date(startDate)) {
+                errors["End Date"] = "End Date should be after Start Date.";
+            }
+        }
+        setCustomSections([
+            ...customSections.map((section) => {
+                if (section.sectionName === parentSectionName) {
+                    return {
+                        ...section,
+                        sectionSections: section.sectionSections.map((customSection) => {
+                            if (customSection.id === id) {
+                                return {
+                                    ...customSection,
+                                    sectionFields: editedSection,
+                                    sectionErrors: errors,
+                                };
+                            }
+                            return customSection;
+                        }),
+                    };
+                }
+                return section;
+            }),
+        ])
+        if (Object.keys(errors).length > 0) {
+            // If there are errors, return and don't proceed with the update
+            console.log("Validation errors: ", errors);
+            return;
+        }
+    
+        // If no errors, proceed with the PUT request to update the section
         if (parentSectionName === "Education" || parentSectionName === "Experience") {
             await handleCustomSectionOperation(
                 'PUT',
@@ -138,8 +201,10 @@ export default function ProfileInfoSection() {
                 id
             );
         }
+    
         await refreshCustomSections(); // Refresh data after modification
     };
+    
     const handleCustomSectionChange = (sectionName, fieldName, fieldValue, sectionType) => {
         setCustomSections(
             customSections.map((section) => {
@@ -171,7 +236,6 @@ export default function ProfileInfoSection() {
     }
     // Refresh sections data
     const refreshCustomSections = async () => {
-        // console.log(userData.id)
         const educationData = await handleCustomSectionOperation('GET', 'Education', null, userData.id);
         const experienceData = await handleCustomSectionOperation('GET', 'Experience', null, userData.id);
     
@@ -181,8 +245,9 @@ export default function ProfileInfoSection() {
                 sectionSections: educationData? educationData.map((education, index)=>{
                     return {
                         id: education.id,
-                        sectionName: "Education " + index,
-                        sectionFields: parseEducation(education)
+                        sectionName: "Education " + (index+1),
+                        sectionFields: parseEducation(education),
+                        sectionErrors:[]
                     }
                 }) : [],
             },
@@ -191,8 +256,9 @@ export default function ProfileInfoSection() {
                 sectionSections: experienceData?  experienceData.map((experience, index)=>{
                     return {
                         id: experience.id,
-                        sectionName: "Experience " + index,
-                        sectionFields: parseExperience(experience)
+                        sectionName: "Experience " + (index+1),
+                        sectionFields: parseExperience(experience),
+                        sectionErrors:[]
                     }
                 }): [],
             },

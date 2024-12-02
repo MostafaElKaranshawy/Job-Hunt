@@ -8,22 +8,22 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
         sectionName: `${sectionData.sectionName} ${sectionData.sectionSections.length + 1}`,
         sectionFields: sectionData.sectionName === "Education"
             ? [
-                { fieldName: "Institution", fieldValue: "" },
-                { fieldName: "Degree", fieldValue: "" },
-                { fieldName: "Field Of Study", fieldValue: "" },
-                { fieldName: "Start Date", fieldValue: "" },
-                { fieldName: "End Date", fieldValue: "" },
+                { fieldName: "Institution", fieldValue: "", fieldType: "text" },
+                { fieldName: "Degree", fieldValue: "" , fieldType: "text"},
+                { fieldName: "Field Of Study", fieldValue: "" , fieldType: "text"},
+                { fieldName: "Start Date", fieldValue: "" , fieldType: "number"},
+                { fieldName: "End Date", fieldValue: "" , fieldType: "number"},
               ]
             : [
-                { fieldName: "Title", fieldValue: "" },
-                { fieldName: "Company", fieldValue: "" },
-                { fieldName: "Location", fieldValue: "" },
-                { fieldName: "Start Date", fieldValue: "" },
-                { fieldName: "End Date", fieldValue: "" },
-                { fieldName: "Description", fieldValue: "" },
+                { fieldName: "Title", fieldValue: "", fieldType: "text" },
+                { fieldName: "Company", fieldValue: "", fieldType: "text" },
+                { fieldName: "Location", fieldValue: "", fieldType: "text" },
+                { fieldName: "Start Date", fieldValue: "", fieldType: "date" },
+                { fieldName: "End Date", fieldValue: "" , fieldType: "date"},
+                { fieldName: "Description", fieldValue: "", fieldType: "text" },
               ]
     });
-    const [errors, setErrors] = useState({});
+    const [newSectionErrors, setNewSectionErrors] = useState({});
 
     const handleFieldChange = (sectionName, fieldName, fieldValue) => {
         const updatedSections = sectionData.sectionSections.map((subSection) => {
@@ -39,7 +39,6 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
             }
             return subSection;
         });
-
         sectionChange(sectionData.sectionName, { ...sectionData, sectionSections: updatedSections });
     };
 
@@ -50,9 +49,13 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                 errors[field.fieldName] = "This field is required.";
             }
         });
-
+        if(newSection.sectionFields[3].fieldValue > newSection.sectionFields[4].fieldValue){
+            errors["End Date"] = "End Date should be greater than Start Date";
+        }
+        
         if (Object.keys(errors).length > 0) {
-            setErrors(errors);
+            setNewSectionErrors(errors);
+
             return;
         }
         addSection(sectionData.sectionName, newSection);
@@ -64,10 +67,10 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
             <div className="section-header">
                 <div className="section-name">{sectionData.sectionName}</div>
                 <div
-                    className="add-section"
+                    className={`add-section ${addSectionVisible ? "active-add-section" : ""}`}
                     onClick={() => {
                         setAddSectionVisible(!addSectionVisible);
-                        setErrors({});
+                        setNewSectionErrors({});
                     }}
                 >
                     +
@@ -80,8 +83,10 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                             sectionData={section}
                             sectionChange={handleFieldChange}
                             save={(editedFields) => editSection(sectionData.sectionName, section.id, editedFields)} // Pass editedFields to editSection
-                            cancel={refreshCustomSections}
+                            cancel={()=>{refreshCustomSections}}
+                            errors={section.sectionErrors}
                         />
+                        {/* {console.log(sectionData.sectionErrors)} */}
                         <i className="fa-solid fa-trash delete-section" onClick={()=>{
                             removeSection(sectionData.sectionName, section.id);
                         }} />
@@ -101,13 +106,10 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                                     ),
                                 }))
                             }
-                            errors={errors}
+                            errors={newSectionErrors}
                             cancel={() => setAddSectionVisible(false)}
                             save={handleSaveNewSection}
                         />
-                        <i className="fa-solid fa-trash delete-section" onClick={()=>{
-                            setAddSectionVisible(false);
-                        }}/>
                     </div>
                 )}
             </div>

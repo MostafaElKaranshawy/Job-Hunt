@@ -4,7 +4,6 @@ import "./section.css";
 export default function Section({ sectionData, sectionChange, errors, save, cancel }) {
     const [editedFields, setEditedFields] = useState(sectionData.sectionFields);
     const [isEditing, setIsEditing] = useState(false);
-
     const handleFieldChange = (e, fieldIndex) => {
         const updatedFieldValue = e.target.value;
         setEditedFields((prevFields) => {
@@ -20,6 +19,9 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
     const handleSave = () => {
         save(editedFields);
         setIsEditing(false);  // Exit edit mode after saving
+        if(errors){
+            setIsEditing(true);
+        }
     };
 
     const handleCancel = () => {
@@ -32,7 +34,7 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
         <div className="section">
             <div className="section-header">
                 <div className="section-name">{sectionData.sectionName}</div>
-                <div className="section-options">
+                <div className="section-edit">
                     {
                     !isEditing && (
                         <i className="fa-solid fa-pen-to-square" onClick={() => setIsEditing(true)}></i>
@@ -43,15 +45,17 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
                 {editedFields.map((field, index) => (
                     <div className="section-field" key={index}>
                         <div className="field-name">{field.fieldName}</div>
-                        <input
-                            type={field.fieldType}
-                            name={field.fieldName}  // Add the name attribute here
-                            className={`field-value ${errors && errors[field.fieldName] && "error-field"}`}
-                            value={field.fieldValue}
-                            onChange={(e) => handleFieldChange(e, index)}
-                            disabled={!isEditing} // Disable input when not in edit mode
-                        />
-                        {errors && errors[field.fieldName] && <div className="error">{errors[field.fieldName]}</div>}
+                        <div>
+                            <input
+                                type={field.fieldType}
+                                name={field.fieldName}  // Add the name attribute here
+                                className={`field-value ${errors && errors[field.fieldName] && "error-field"}`}
+                                value={field.fieldValue}
+                                onChange={(e) => handleFieldChange(e, index)}
+                                disabled={!isEditing} // Disable input when not in edit mode
+                            />
+                            {errors && errors[field.fieldName] && <div className="error">{errors[field.fieldName]}</div>}
+                        </div>
                     </div>
                 ))}
             </div>
