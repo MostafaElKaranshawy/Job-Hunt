@@ -57,8 +57,8 @@
 }
 .section-container .delete-section{
     position: absolute;
-    right: 40px;
-    top: 20px;
+    right: 80px;
+    top: 40px;
 }
 .delete-section{
     font-size: 20px;
@@ -83,6 +83,7 @@
     padding-bottom: 0;
     border-radius: 10px;
     box-shadow: 0 0 10px rgb(0 150 0);
+    position: relative;
 }
 
 .section-added .buttons{

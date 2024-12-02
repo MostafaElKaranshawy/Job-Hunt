@@ -54,6 +54,7 @@ async function handleCustomSectionOperation(
         else if(operation == 'PUT' || operation == 'DELETE'){
             url = `${backendURL}/users/profile/${sectionType.toLowerCase()}/${id}`;
         }
+        console.log(operation, id, url )
         let options = {
             method: operation, // 'GET', 'POST', 'PUT', 'DELETE
             headers: {
@@ -73,6 +74,7 @@ async function handleCustomSectionOperation(
         }
         if(operation == 'GET'){
             const json = await response.json();
+            console.log(json)
             return json
         }
     } catch (error) {

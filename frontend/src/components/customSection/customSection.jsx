@@ -82,11 +82,9 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                             save={(editedFields) => editSection(sectionData.sectionName, section.id, editedFields)} // Pass editedFields to editSection
                             cancel={refreshCustomSections}
                         />
-                        <div className="delete-section" onClick={()=>{
+                        <i className="fa-solid fa-trash delete-section" onClick={()=>{
                             removeSection(sectionData.sectionName, section.id);
-                        }}>
-                            delete
-                        </div>
+                        }} />
                     </div>
                 ))}
                 {addSectionVisible && (
@@ -107,6 +105,9 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                             cancel={() => setAddSectionVisible(false)}
                             save={handleSaveNewSection}
                         />
+                        <i className="fa-solid fa-trash delete-section" onClick={()=>{
+                            setAddSectionVisible(false);
+                        }}/>
                     </div>
                 )}
             </div>

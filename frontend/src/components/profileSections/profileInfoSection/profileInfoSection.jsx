@@ -179,7 +179,6 @@ export default function ProfileInfoSection() {
             {   
                 sectionName: "Education",
                 sectionSections: educationData? educationData.map((education, index)=>{
-                    // console.log(education.id)
                     return {
                         id: education.id,
                         sectionName: "Education " + index,

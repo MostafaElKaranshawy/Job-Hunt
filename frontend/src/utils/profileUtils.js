@@ -14,9 +14,9 @@ function parseExperience(experience){
         { fieldName: "Title", fieldValue: experience.title, fieldType: "text" },
         { fieldName: "Company", fieldValue: experience.company, fieldType: "text" },
         { fieldName: "Location", fieldValue: experience.location, fieldType: "text" },
-        { fieldName: "Start Date", fieldValue: experience.startDate, fieldType: "number" },
-        { fieldName: "End Date", fieldValue: experience.endDate, fieldType: "number" },
-        { fieldName: "Description", fieldValue: experience.description, fieldType: "text" },
+        { fieldName: "Start Date", fieldValue: experience.startDate, fieldType: "date" },
+        { fieldName: "End Date", fieldValue: experience.endDate, fieldType: "date" },
+        { fieldName: "Description", fieldValue: experience.description, fieldType: "textArea" },
 
     ]);
 }

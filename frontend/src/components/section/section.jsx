@@ -33,15 +33,10 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
             <div className="section-header">
                 <div className="section-name">{sectionData.sectionName}</div>
                 <div className="section-options">
-                    {isEditing ? (
-                        <>
-                            <button onClick={handleSave}>Save</button>
-                            <button onClick={handleCancel}>Cancel</button>
-                        </>
-                    ) : (
-                        <button onClick={() => setIsEditing(true)}>Edit</button>
+                    {
+                    !isEditing && (
+                        <i className="fa-solid fa-pen-to-square" onClick={() => setIsEditing(true)}></i>
                     )}
-                    {/* <button onClick={() => removeSection(sectionData.sectionName, sectionData.id)}>Delete</button> */}
                 </div>
             </div>
             <div className="section-fields">
@@ -49,6 +44,7 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
                     <div className="section-field" key={index}>
                         <div className="field-name">{field.fieldName}</div>
                         <input
+                            type={field.fieldType}
                             name={field.fieldName}  // Add the name attribute here
                             className={`field-value ${errors && errors[field.fieldName] && "error-field"}`}
                             value={field.fieldValue}
@@ -59,6 +55,13 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
                     </div>
                 ))}
             </div>
+            {
+                isEditing && (
+                <div className="section-options">
+                    <div onClick={handleSave} className="save-button">Save</div>
+                    <div onClick={handleCancel} className="cancel-button">Cancel</div>
+                </div>
+            )}
         </div>
     );
 }
