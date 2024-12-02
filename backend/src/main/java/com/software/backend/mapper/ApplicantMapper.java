@@ -12,12 +12,10 @@ public interface ApplicantMapper {
 
     @Mapping(source = "user.username", target = "username")
     ApplicantDTO applicantToApplicantDTO(Applicant applicant);
-    @Mapping(source = "username", target = "user.username")
-    Applicant ApplicantDTOToApplicant(ApplicantDTO applicantDTO);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "user", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
     void updateApplicantFromDTO(ApplicantDTO dto, @MappingTarget Applicant applicant);
 
 }
