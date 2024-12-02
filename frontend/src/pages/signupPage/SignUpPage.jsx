@@ -9,6 +9,7 @@ function SignUpPage() {
 
     return (
         <>
+        <div className="signup-page">
             <button
                 className="employer-button"
                 onClick={() => setIsEmployer(!isEmployer)}
@@ -17,11 +18,10 @@ function SignUpPage() {
             </button>
             {isEmployer ? (
                 <div className="employer-signup">
-                    <h2>Employer Sign-Up Form</h2>
                     <EmployerSignUp />
                 </div>
             ) : (
-                <div className="signup-container">
+                <div className="employee-signup">
                     <EmployeeSignUp />
                     <div className="orLineContainer">
                        <hr />
@@ -31,6 +31,7 @@ function SignUpPage() {
                     <GoogleOAuth />
                 </div>
             )}
+         </div>
         </>
     );
 }
