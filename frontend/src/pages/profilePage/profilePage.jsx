@@ -8,6 +8,7 @@ import "./profilePage.css";
 export default function ProfilePage() {
     const { userName, profileSection } = useParams();
     const currentSection = profileSection || '';
+    
     return (
         <div className="profile-page">
             <Header/>
