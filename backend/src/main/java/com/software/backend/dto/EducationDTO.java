@@ -18,9 +18,9 @@ public class EducationDTO {
     @Override
     public String toString() {
         return "EducationDTO{" +
-                "degree='" + degree + '\'' +
-                ", institution='" + institution + '\'' +
-                ", fieldOfStudy='" + fieldOfStudy + '\'' +
+                "degree=" + degree +
+                ", institution=" + institution +
+                ", fieldOfStudy=" + fieldOfStudy +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 '}';

@@ -21,12 +21,13 @@ public class EducationServices {
     EducationRepository repo;
     @Autowired
     EducationMapper mapper;
-    public void addEducation(Integer applicantId, EducationDTO dto) {
-        Applicant applicant = ApplicantRepo.findById(applicantId)
-                .orElseThrow(() -> new EntityNotFoundException("Applicant not found for id: " + applicantId));
+    public boolean addEducation(Integer applicantId, EducationDTO dto) {
+        Applicant applicant = ApplicantRepo.findById(applicantId).orElse(null);
+        if(applicant == null) return false;
         Education education = mapper.toEntity(dto);
         education.setApplicant(applicant);
         repo.save(education);
+        return true;
     }
     public List<EducationDTO> getEducation(Integer applicantId) {
         Applicant applicant = ApplicantRepo.findById(applicantId)
@@ -37,5 +38,19 @@ public class EducationServices {
         return educationList.stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
+    }
+    public boolean updateEducation(Integer educationId, EducationDTO updatedEducationDTO) {
+        Education educationToUpdate = repo.findById(educationId).orElse(null);
+        if(educationToUpdate == null) return false;
+        mapper.updateEntityFromDTO(updatedEducationDTO, educationToUpdate);
+        repo.save(educationToUpdate);
+        return true;
+    }
+
+    public boolean deleteEducation(Integer educationId) {
+        Education education = repo.findById(educationId).orElse(null);
+        if(education == null) return false;
+        repo.delete(education);
+        return true;
     }
 }

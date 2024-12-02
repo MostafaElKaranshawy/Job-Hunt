@@ -49,4 +49,17 @@ public class Applicant{
         inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private List<Skill> skills;
+
+    @Override
+    public String toString() {
+        return "Applicant {" +
+                "id='" + id + '\'' +
+                ", username='" + user.getUsername() +
+                ", phoneNumber='" + phoneNumber +
+                ", address=" + address +
+                ", city=" + city +
+                ", state" + state +
+                ", country" + country +
+                '}';
+    }
 }
