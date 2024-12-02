@@ -12,9 +12,7 @@ public interface ApplicantMapper {
     ApplicantMapper INSTANCE = Mappers.getMapper(ApplicantMapper.class);
 
     @Mapping(source = "user.username", target = "username")
-    @Mapping(source = "user.email", target = "email")
     ApplicantDTO applicantToApplicantDTO(Applicant applicant);
     @Mapping(source = "username", target = "user.username")
-    @Mapping(source = "email", target = "user.email")
     Applicant ApplicantDTOToApplicant(ApplicantDTO applicantDTO);
 }
