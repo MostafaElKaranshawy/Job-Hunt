@@ -1,9 +1,9 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams} from "react-router-dom";
 import "./header.css";
 import logo from "../../assets/logo.png";
 function Header() {
-    let userName = 'mostafaelkaranshawy0'
+    const { userName } = useParams();
     return (
         <div className="header">
             <div className="logo">

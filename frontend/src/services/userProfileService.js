@@ -71,9 +71,93 @@ async function handleCustomSectionOperation(
     }
 }
 
+async function getAllSkills() {
+    const url = `${backendURL}/skills}`;
+    try {
+        const response = await fetch(url, {
+            method: 'PUT', // Specify the method here
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
 
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+async function getUserSkills(userName) {
+    const url = `${backendURL}/users/${userName}/profile/skills`;
+    try {
+        const response = await fetch(url, {
+            method: 'GET', // Specify the method here
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+        return json;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+async function addSkill(userName, skillId) {
+    const url = `${backendURL}/users/${userName}/profile/skill`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST', // Specify the method here
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: skillId
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+async function removeSkill(userName, skillId) {
+    const url = `${backendURL}/users/${userName}/profile/skill`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST', // Specify the method here
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: skillId
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 export{
     getUserProfile,
     editUserProfile,
-    handleCustomSectionOperation
+    handleCustomSectionOperation,
+    getAllSkills,
+    getUserSkills,
+    addSkill,
+    removeSkill
 }

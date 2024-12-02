@@ -14,7 +14,10 @@ import { parseEducation,
 
 import { getUserProfile, 
     editUserProfile,
-    handleCustomSectionOperation
+    handleCustomSectionOperation,
+    getUserSkills,
+    addSkill,
+    removeSkill
 } from "../../../services/userProfileService";
 export default function ProfileInfoSection() {
     const { userName } = useParams();
@@ -37,7 +40,6 @@ export default function ProfileInfoSection() {
                 sectionFields: [
                     { fieldName: "First Name", fieldValue: userData.firstName, fieldType: "text"},
                     { fieldName: "Last Name", fieldValue: userData.lastName, fieldType: "text"},
-                    { fieldName: "Email", fieldValue: userData.email, fieldType: "text"},
                     { fieldName: "Phone Number", fieldValue: userData.phoneNumber, fieldType: "text"},
                     { fieldName: "Country", fieldValue: userData.country, fieldType: "text"},
                     { fieldName: "State", fieldValue: userData.state, fieldType: "text"},
@@ -46,7 +48,6 @@ export default function ProfileInfoSection() {
                 ],
             },
         ]);
-        
         setUserSkills(userData.skills);
         
         setCustomSections([
@@ -183,30 +184,34 @@ export default function ProfileInfoSection() {
     
         const updatedData = {
             ...personalInfo,
-            // skills: userSkills,
+            skills: userSkills,
             // educationList: educationList || [],
             // experienceList: experienceList || [],
         };
     
         console.log("Updated User Data: ", updatedData);
-        // Send this updatedData to your backend via editUserProfile or any other service function
+        
         await editUserProfile(userName, updatedData);
-        // await getUserData(userName)
+        await getUserData(userName)
     } 
+    const handleGetUserSkills = async () => {
+        const skillsData = await getUserSkills(userName);
+        setUserSkills(skillsData)
+    }
+    const addUserSkill = async (skillid) => {
+        await addSkill(userName, skillid);
+        await handleGetUserSkills()
+    }
+    const removeUserSkill = async (skillid) => {
+        await removeSkill(userName, skillid);
+        await handleGetUserSkills()
+    }
     return (
         <div className="profile-info-section">
             <div className="profile-picture">
                 <img src={profileHolder} />
             </div>
             <div className="profile-data-sections">
-                {/* {
-                    sections && (
-                        <Section
-                            sectionData={sections[0]}
-                            sectionChange={handleSectionChange}
-                        />
-                    )
-                } */}
                 {sections &&
                     sections.map((section, index) => {
                         return (
@@ -237,7 +242,9 @@ export default function ProfileInfoSection() {
                 <Skills
                     skills={userSkills}
                     changeUserSkills={setUserSkills}
-                />
+                    addSkill={addUserSkill}
+                    removeSkill={removeUserSkill}
+                    />
             </div>
         </div>
     );
