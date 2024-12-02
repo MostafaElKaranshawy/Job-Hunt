@@ -33,6 +33,7 @@ export default function ProfileInfoSection() {
     },[userName])
     async function getUserData() {
         const userData = await getUserProfile(userName);
+        console.log(userData)
         setUserData(userData)
         setUserSections([
             {
@@ -48,28 +49,13 @@ export default function ProfileInfoSection() {
                 ],
             },
         ]);
-        setUserSkills(userData.skills);
-        
-        setCustomSections([
-            {
-                sectionName: "Education",
-                sectionSections: userData.educationList.map((education, index) => ({
-                    id: education.id,
-                    sectionName: `Education ${index + 1}`,
-                    sectionFields: parseEducation(education)
-                })),
-            },
-            {
-                sectionName: "Experience",
-                sectionSections: userData.experienceList.map((experience, index) => ({
-                    sectionName: `Experience ${index + 1}`,
-                    sectionFields: parseExperience(experience)
-                })),
-            },
-        ]);
-        
-        console.log(userData)
     }
+    useEffect(() => {
+        if (userData.id) {
+            // handleGetUserSkills();
+            refreshCustomSections();
+        }
+    }, [userData]);
     useEffect(()=>{
         if(userSections){
             setSections(userSections)
@@ -77,6 +63,7 @@ export default function ProfileInfoSection() {
     },[userSections])
 
     const handleSectionChange = (sectionName, fieldName, fieldValue) => {
+        console.log(sectionName, fieldName, fieldValue)
         setSections(
             sections.map((section) => {
                 if (section.sectionName === sectionName) {
@@ -93,6 +80,7 @@ export default function ProfileInfoSection() {
                         }),
                     };
                 }
+                console.log(section)
                 return section;
             })
         );
@@ -100,93 +88,125 @@ export default function ProfileInfoSection() {
 
     // Adding a section
     const handleAddSection = async (parentSectionName, newSection) => {
+        const sectionData = newSection.sectionFields.reduce((acc, field) => {
+            return {
+                ...acc,
+                [toCamelCase(field.fieldName)]: field.fieldValue || "", // Use empty string if fieldValue is undefined
+            };
+        }, {});
+        
+        console.log(sectionData)
         if (parentSectionName === "Education" || parentSectionName === "Experience") {
             await handleCustomSectionOperation(
                 'POST',
                 parentSectionName,
-                userName,
-                newSection
+                sectionData,
+                userData.id
             );
         }
         await refreshCustomSections(); // Refresh data after modification
     };
     
     // Removing a section
-    const handleRemoveSection = async (parentSectionName, sectionName) => {
-        setCustomSections(
-            customSections.map((section) => {
-                if (section.sectionName === parentSectionName) {
-                    return {
-                        ...section,
-                        sectionSections: section.sectionSections.filter(
-                            (subSection) => subSection.sectionName !== sectionName
-                        ),
-                    };
-                }
-                return section;
-            })
-        );
-        await refreshCustomSections(); // Refresh data after modification
-    };
-    
-    // Editing a section
-    const handleEditSection = async (parentSectionName, editedSection) => {
+    const handleRemoveSection = async (parentSectionName, sectionId) => {
+        console.log(parentSectionName, sectionId)
         if (parentSectionName === "Education" || parentSectionName === "Experience") {
             await handleCustomSectionOperation(
-                'PUT',
+                'DELETE',
                 parentSectionName,
-                userName,
-                editedSection
+                null,
+                sectionId
             );
         }
         await refreshCustomSections(); // Refresh data after modification
     };
     
+    // Editing a section
+    const handleEditSection = async (parentSectionName, id, editedSection) => {
+        console.log(parentSectionName, id, editedSection)
+        const sectionData = editedSection.reduce((acc, field) => {
+            return {
+                ...acc,
+                [toCamelCase(field.fieldName)]: field.fieldValue || "", // Use empty string if fieldValue is undefined
+            };
+        }, {});
+        if (parentSectionName === "Education" || parentSectionName === "Experience") {
+            await handleCustomSectionOperation(
+                'PUT',
+                parentSectionName,
+                sectionData,
+                id
+            );
+        }
+        await refreshCustomSections(); // Refresh data after modification
+    };
+    const handleCustomSectionChange = (sectionName, fieldName, fieldValue, sectionType) => {
+        setCustomSections(
+            customSections.map((section) => {
+                if (section.sectionName === sectionName) {
+                    return {
+                        ...section,
+                        sectionSections: section.sectionSections.map((customSection) => {
+                            if (customSection.sectionName === sectionName) {
+                                return {
+                                    ...customSection,
+                                    sectionFields: customSection.sectionFields.map((field) => {
+                                        if (field.fieldName === fieldName) {
+                                            return {
+                                                ...field,
+                                                fieldValue: fieldValue,
+                                            };
+                                        }
+                                        return field;
+                                    }),
+                                };
+                            }
+                            return customSection;
+                        }),
+                    };
+                }
+                return section;
+            })
+        );
+    }
     // Refresh sections data
     const refreshCustomSections = async () => {
-        const educationData = await handleCustomSectionOperation('GET', 'Education', userName);
-        const experienceData = await handleCustomSectionOperation('GET', 'Experience', userName);
+        // console.log(userData.id)
+        const educationData = await handleCustomSectionOperation('GET', 'Education', null, userData.id);
+        const experienceData = await handleCustomSectionOperation('GET', 'Experience', null, userData.id);
     
         setCustomSections([
-            {
+            {   
                 sectionName: "Education",
-                sectionSections: educationData || [],
+                sectionSections: educationData? educationData.map((education, index)=>{
+                    // console.log(education.id)
+                    return {
+                        id: education.id,
+                        sectionName: "Education " + index,
+                        sectionFields: parseEducation(education)
+                    }
+                }) : [],
             },
             {
                 sectionName: "Experience",
-                sectionSections: experienceData || [],
+                sectionSections: experienceData?  experienceData.map((experience, index)=>{
+                    return {
+                        id: experience.id,
+                        sectionName: "Experience " + index,
+                        sectionFields: parseExperience(experience)
+                    }
+                }): [],
             },
         ]);
     };
     
-    // Initial data fetch
-    useEffect(() => {
-        refreshCustomSections();
-    }, []);
     async function saveChanges(){
         // Personal Information
         const personalInfo = parseSection(
             sections.find(section => section.sectionName === "Personal Info")
         );
-        
-        // Education List
-        const educationList = customSections
-            .find(section => section.sectionName === "Education")
-            ?.sectionSections.map(parseSection);
-        
-        // Experience List
-        const experienceList = customSections
-            .find(section => section.sectionName === "Experience")
-            ?.sectionSections.map(parseSection);
-        
-    
-        console.log(educationList)
-    
         const updatedData = {
-            ...personalInfo,
-            skills: userSkills,
-            // educationList: educationList || [],
-            // experienceList: experienceList || [],
+            ...personalInfo
         };
     
         console.log("Updated User Data: ", updatedData);
@@ -230,9 +250,11 @@ export default function ProfileInfoSection() {
                             <CustomSection
                                 key={index}
                                 sectionData={section}
-                                sectionChange={handleEditSection}
+                                sectionChange={handleCustomSectionChange}
+                                editSection={handleEditSection}
                                 addSection={handleAddSection}
                                 removeSection={handleRemoveSection}
+                                refreshCustomSections={refreshCustomSections}
                             />
                         ))
                     )

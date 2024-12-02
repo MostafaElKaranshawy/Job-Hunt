@@ -43,19 +43,26 @@ async function editUserProfile(userName, userData) {
 async function handleCustomSectionOperation(
     operation,
     sectionType,
-    userName,
-    sectionData = null
+    sectionData = null,
+    id
 ) {
     try {
-        const url = `${backendURL}/users/${userName}/profile/${sectionType.toLowerCase()}`;
+        let url = ''
+        if(operation == 'GET' || operation == 'POST'){
+            url = `${backendURL}/users/${id}/profile/${sectionType.toLowerCase()}`;
+        }
+        else if(operation == 'PUT' || operation == 'DELETE'){
+            url = `${backendURL}/users/profile/${sectionType.toLowerCase()}/${id}`;
+        }
         let options = {
-            method: operation, // 'GET', 'POST', or 'PUT'
+            method: operation, // 'GET', 'POST', 'PUT', 'DELETE
             headers: {
                 'Content-Type': 'application/json',
             },
         };
 
         if (operation !== 'GET') {
+            console.log(sectionData)
             options.body = JSON.stringify(sectionData);
         }
 
@@ -64,9 +71,12 @@ async function handleCustomSectionOperation(
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-
-        return await response.json();
+        if(operation == 'GET'){
+            const json = await response.json();
+            return json
+        }
     } catch (error) {
+        console.log(error)
         console.error(`Error in ${operation} ${sectionType}:`, error.message);
     }
 }
@@ -75,7 +85,7 @@ async function getAllSkills() {
     const url = `${backendURL}/skills}`;
     try {
         const response = await fetch(url, {
-            method: 'PUT', // Specify the method here
+            method: 'GET', // Specify the method here
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -135,7 +145,7 @@ async function removeSkill(userName, skillId) {
     const url = `${backendURL}/users/${userName}/profile/skill`;
     try {
         const response = await fetch(url, {
-            method: 'POST', // Specify the method here
+            method: 'DELETE', // Specify the method here
             headers: {
                 'Content-Type': 'application/json',
             },

@@ -1,6 +1,6 @@
 import { parse } from "dotenv";
 
-function parseEducation(educationData){
+function parseEducation(education){
     return ([
         { fieldName: "Institution", fieldValue: education.institution, fieldType: "text" },
         { fieldName: "Degree", fieldValue: education.degree, fieldType: "text" },
@@ -9,13 +9,15 @@ function parseEducation(educationData){
         { fieldName: "End Date", fieldValue: education.endDate, fieldType: "number" },
     ]);
 }
-function parseExperience(educationData){
+function parseExperience(experience){
     return ([
-        { fieldName: "Institution", fieldValue: education.institution, fieldType: "text" },
-        { fieldName: "Degree", fieldValue: education.degree, fieldType: "text" },
-        { fieldName: "Field Of Study", fieldValue: education.fieldOfStudy, fieldType: "text" },
-        { fieldName: "Start Date", fieldValue: education.startDate, fieldType: "number" },
-        { fieldName: "End Date", fieldValue: education.endDate, fieldType: "number" },
+        { fieldName: "Title", fieldValue: experience.title, fieldType: "text" },
+        { fieldName: "Company", fieldValue: experience.company, fieldType: "text" },
+        { fieldName: "Location", fieldValue: experience.location, fieldType: "text" },
+        { fieldName: "Start Date", fieldValue: experience.startDate, fieldType: "number" },
+        { fieldName: "End Date", fieldValue: experience.endDate, fieldType: "number" },
+        { fieldName: "Description", fieldValue: experience.description, fieldType: "text" },
+
     ]);
 }
 

@@ -53,7 +53,7 @@ export default function Skills({ skills, changeUserSkills, addSkill, removeSkill
         }
     }, username)
     const getSkills = async () => {
-        await getAllSkills()
+        return await getAllSkills()
     }
     useEffect(() => {
         if (search.trim() === "") {

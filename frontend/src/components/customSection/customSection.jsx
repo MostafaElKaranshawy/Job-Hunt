@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import Section from "../section/section";
 import "./customSection.css";
 
-export default function CustomSection({ sectionData, sectionChange, addSection, removeSection }) {
+export default function CustomSection({ sectionData, sectionChange, addSection, editSection, removeSection, refreshCustomSections }) {
     const [addSectionVisible, setAddSectionVisible] = useState(false);
-    const [editSectionVisible, setEditSectionVisible] = useState(null);
     const [newSection, setNewSection] = useState({
         sectionName: `${sectionData.sectionName} ${sectionData.sectionSections.length + 1}`,
         sectionFields: sectionData.sectionName === "Education"
@@ -26,28 +25,6 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
     });
     const [errors, setErrors] = useState({});
 
-    const handleEditSection = (section) => {
-        setEditSectionVisible(section.sectionName);
-    };
-
-    const handleSaveEditedSection = (sectionName, editedFields) => {
-        const updatedSections = sectionData.sectionSections.map((subSection) => {
-            if (subSection.sectionName === sectionName) {
-                return {
-                    ...subSection,
-                    sectionFields: editedFields,
-                };
-            }
-            return subSection;
-        });
-        sectionChange(sectionData.sectionName, { ...sectionData, sectionSections: updatedSections });
-        setEditSectionVisible(null);
-    };
-
-    const handleCancelEditSection = () => {
-        setEditSectionVisible(null);  // Simply hide the edit mode
-    };
-
     const handleFieldChange = (sectionName, fieldName, fieldValue) => {
         const updatedSections = sectionData.sectionSections.map((subSection) => {
             if (subSection.sectionName === sectionName) {
@@ -64,6 +41,22 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
         });
 
         sectionChange(sectionData.sectionName, { ...sectionData, sectionSections: updatedSections });
+    };
+
+    const handleSaveNewSection = () => {
+        const errors = {};
+        newSection.sectionFields.forEach((field) => {
+            if (!field.fieldValue) {
+                errors[field.fieldName] = "This field is required.";
+            }
+        });
+
+        if (Object.keys(errors).length > 0) {
+            setErrors(errors);
+            return;
+        }
+        addSection(sectionData.sectionName, newSection);
+        setAddSectionVisible(false);
     };
 
     return (
@@ -83,32 +76,16 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
             <div className="section-body">
                 {sectionData.sectionSections.map((section, index) => (
                     <div className="section-container" key={index}>
-                        {editSectionVisible === section.sectionName ? (
-                            <Section
-                                sectionData={section}
-                                sectionChange={(fieldName, fieldValue) =>
-                                    handleFieldChange(section.sectionName, fieldName, fieldValue)
-                                }
-                                save={(editedFields) => handleSaveEditedSection(section.sectionName, editedFields)}
-                                cancel={handleCancelEditSection}
-                            />
-                        ) : (
-                            <Section
-                                sectionData={section}
-                                sectionChange={handleFieldChange}
-                            />
-                        )}
-                        <div className="actions">
-                            {editSectionVisible === section.sectionName ? (
-                                <button onClick={() => handleSaveEditedSection(section.sectionName, section.sectionFields)}>
-                                    Save
-                                </button>
-                            ) : (
-                                <button onClick={() => handleEditSection(section)}>Edit</button>
-                            )}
-                            <button onClick={() => removeSection(sectionData.sectionName, section.sectionName)}>
-                                Delete
-                            </button>
+                        <Section
+                            sectionData={section}
+                            sectionChange={handleFieldChange}
+                            save={(editedFields) => editSection(sectionData.sectionName, section.id, editedFields)} // Pass editedFields to editSection
+                            cancel={refreshCustomSections}
+                        />
+                        <div className="delete-section" onClick={()=>{
+                            removeSection(sectionData.sectionName, section.id);
+                        }}>
+                            delete
                         </div>
                     </div>
                 ))}
@@ -116,7 +93,7 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                     <div className="section-added">
                         <Section
                             sectionData={newSection}
-                            sectionChange={(fieldName, fieldValue) =>
+                            sectionChange={(sectionName, fieldName, fieldValue) =>
                                 setNewSection((prev) => ({
                                     ...prev,
                                     sectionFields: prev.sectionFields.map((field) =>
@@ -128,7 +105,7 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                             }
                             errors={errors}
                             cancel={() => setAddSectionVisible(false)}
-                            save={() => addSection(sectionData.sectionName, newSection)}
+                            save={handleSaveNewSection}
                         />
                     </div>
                 )}
