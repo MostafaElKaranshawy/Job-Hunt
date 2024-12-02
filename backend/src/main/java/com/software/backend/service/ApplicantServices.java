@@ -2,6 +2,7 @@ package com.software.backend.service;
 
 import com.software.backend.dto.ApplicantDTO;
 import com.software.backend.entity.Applicant;
+import com.software.backend.entity.Education;
 import com.software.backend.entity.User;
 import com.software.backend.mapper.ApplicantMapper;
 import com.software.backend.repository.ApplicantRepository;
@@ -27,16 +28,18 @@ public class ApplicantServices {
         return null;
     }
     public void updateApplicant(String username, ApplicantDTO dto) {
-            if (userRepo.existsByUsername(username)) {
-            User user = userRepo.findByUsername(username).orElse(null);
+        User user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found for username: " + username));
 
-            Applicant applicant = mapper.ApplicantDTOToApplicant(dto);
-            applicant.setUser(user);
-            repo.save(applicant);
-        } else {
-            throw new EntityNotFoundException("Applicant not found for update.");
+        Applicant existingApplicant = repo.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Applicant not found for user: " + username));
 
-        }
+        mapper.updateApplicantFromDTO(dto, existingApplicant);
+
+        repo.save(existingApplicant);
     }
 
+
+    public void addEducation(String id, Education education) {
+    }
 }
