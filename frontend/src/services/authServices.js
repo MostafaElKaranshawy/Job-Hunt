@@ -1,4 +1,4 @@
-export const employeerSignUp = async (formData) => {
+export const employerSignUp = async (formData) => {
   const response = await fetch("http://localhost:8080/auth/employeer/signUp", {
     method: "POST",
     headers: {

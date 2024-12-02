@@ -1,0 +1,27 @@
+.signup-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+    width:50%;
+}
+form{
+    width: 100%;
+}
+form div{
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  form div label{
+    font-size: 1.2rem;
+    color: #666;
+  }
+  form div input{
+    width: 100%;
+    padding: 10px;
+  }

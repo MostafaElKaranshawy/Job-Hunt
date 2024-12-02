@@ -1,0 +1,18 @@
+.orLineContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.orLineContainer span {
+  margin: 0 10px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.orLineContainer hr {
+  width: 100%;
+  border: 0.5px solid #ddd;
+}
