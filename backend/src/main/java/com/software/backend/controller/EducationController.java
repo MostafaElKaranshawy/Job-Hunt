@@ -2,11 +2,13 @@ package com.software.backend.controller;
 
 import com.software.backend.dto.EducationDTO;
 import com.software.backend.service.EducationServices;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,17 +25,23 @@ public class EducationController {
             return new ResponseEntity<>("Applicant not found", HttpStatus.NOT_FOUND);
     }
     @GetMapping("/{id}/profile/education")
-    public List<EducationDTO> getEducation(@PathVariable Integer id){
-        return service.getEducation(id);
+    public ResponseEntity<List<EducationDTO>> getEducation(@PathVariable Integer id){
+        try {
+            List<EducationDTO> educationList = service.getEducation(id);
+            return ResponseEntity.ok(educationList);
+        }
+        catch (EntityNotFoundException e){
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
     }
-    @PutMapping("/{id}/profile/education")
+    @PutMapping("/profile/education/{id}")
     public ResponseEntity<String> updateEducation(@PathVariable Integer id, @RequestBody EducationDTO dto){
         if(service.updateEducation(id, dto))
             return ResponseEntity.ok("Education updated successfully");
         else
             return new ResponseEntity<>("Education not found", HttpStatus.NOT_FOUND);
     }
-    @DeleteMapping("/{educationId}/profile/education")
+    @DeleteMapping("/profile/education/{educationId}")
     public ResponseEntity<String> deleteEducation(@PathVariable Integer educationId){
         if(service.deleteEducation(educationId))
             return ResponseEntity.ok("Education deleted successfully");
