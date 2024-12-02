@@ -52,6 +52,7 @@ public class Education {
             referencedColumnName = "applicant_id",
             nullable = false
     )
+    @JsonIgnore
     private Applicant applicant; // Many-to-one relationship with Applicant
 }
 

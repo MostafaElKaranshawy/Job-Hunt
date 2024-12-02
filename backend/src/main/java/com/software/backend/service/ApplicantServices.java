@@ -1,15 +1,21 @@
 package com.software.backend.service;
 
 import com.software.backend.dto.ApplicantDTO;
+import com.software.backend.dto.EducationDTO;
 import com.software.backend.entity.Applicant;
 import com.software.backend.entity.Education;
 import com.software.backend.entity.User;
 import com.software.backend.mapper.ApplicantMapper;
+import com.software.backend.mapper.EducationMapper;
 import com.software.backend.repository.ApplicantRepository;
+import com.software.backend.repository.EducationRepository;
 import com.software.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ApplicantServices {
@@ -39,7 +45,4 @@ public class ApplicantServices {
         repo.save(existingApplicant);
     }
 
-
-    public void addEducation(String id, Education education) {
-    }
 }

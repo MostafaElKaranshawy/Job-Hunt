@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
 
-
 @Entity
 @Data
 @Table(name = "applicant")
@@ -51,15 +50,3 @@ public class Applicant{
     )
     private List<Skill> skills;
 }
-
-
-/*
-* address   (done)
-* city   (done)
-* state   (done)
-* country   (done)
-* resume  (to be put after specifying how exactly will it be dealt with in java)
-*
-*
-*
-* */
