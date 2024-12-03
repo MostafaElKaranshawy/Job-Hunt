@@ -60,7 +60,7 @@ function EmployeeSignUp() {
 
   return (
     <div className="signup-container">
-      <h1>Create your account and start applying for jobs</h1>
+      <h1>Sign up</h1>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="firstName">First Name</label>

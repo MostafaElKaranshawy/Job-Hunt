@@ -1,6 +1,6 @@
-Container for the signup form
 .signup-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -9,10 +9,6 @@ Container for the signup form
   font-size: 1.8rem;
   margin-bottom: 20px;
   color: #333;
-}
-
-form {
-  width: 80%;
 }
 
 /* Individual input groups */

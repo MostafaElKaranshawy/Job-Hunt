@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import UserLogIn from "../../components/userLogIn/UserLogIn";
+import GoogleOAuth from "../../components/googleOAuthLogIn/GoogleOAuthLogIn";
 import "./LogInPage.css";
 
 function LogInPage() {
@@ -8,10 +8,12 @@ function LogInPage() {
         <>
         <div className="login-page">
             <UserLogIn />
-            <div className="signup-link">
-                <p>Don't have an account?</p>
-                <Link to="/">Sign up</Link>
+            <div className="orLineContainer">
+                <hr />
+                <span> or </span>
+                <hr />
             </div>
+            <GoogleOAuth mode="login"/>
         </div>
         </>
     );

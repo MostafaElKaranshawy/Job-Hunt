@@ -14,9 +14,8 @@ function GoogleOAuth({ mode }) {
   const handleError = (error) => {
     console.log("Login Failed:", error);
   };
-
   return (
-    <GoogleOAuthProvider clientId="992406545501-gsf4drs652b27m7886oq1ttlfrq3o14t.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <div
         style={{
           display: 'flex',

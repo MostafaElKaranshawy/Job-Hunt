@@ -43,7 +43,7 @@ public class AuthService {
         if(verifiedToken != null) {
             JsonWebToken.Payload payload = verifiedToken.getPayload();
             String email = (String) payload.get("email");
-            String name = (String) payload.get("firstName");
+            String name = (String) payload.get("name");
             System.out.println("name  :" + name);
             System.out.println("email :" + email);
 
