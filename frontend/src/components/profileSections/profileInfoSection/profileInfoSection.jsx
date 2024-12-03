@@ -15,9 +15,6 @@ import { parseEducation,
 import { getUserProfile, 
     editUserProfile,
     handleCustomSectionOperation,
-    getUserSkills,
-    addSkill,
-    removeSkill
 } from "../../../services/userProfileService";
 export default function ProfileInfoSection() {
     const { userName } = useParams();
@@ -279,18 +276,6 @@ export default function ProfileInfoSection() {
         await editUserProfile(userName, updatedData);
         await getUserData(userName)
     } 
-    const handleGetUserSkills = async () => {
-        const skillsData = await getUserSkills(userName);
-        setUserSkills(skillsData)
-    }
-    const addUserSkill = async (skillid) => {
-        await addSkill(userName, skillid);
-        await handleGetUserSkills()
-    }
-    const removeUserSkill = async (skillid) => {
-        await removeSkill(userName, skillid);
-        await handleGetUserSkills()
-    }
     return (
         <div className="profile-info-section">
             <div className="profile-picture">
@@ -326,12 +311,7 @@ export default function ProfileInfoSection() {
                 }
             </div>
             <div className="skills-section">
-                <Skills
-                    skills={userSkills}
-                    changeUserSkills={setUserSkills}
-                    addSkill={addUserSkill}
-                    removeSkill={removeUserSkill}
-                    />
+                <Skills />
             </div>
         </div>
     );

@@ -17,16 +17,16 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
     };
 
     const handleSave = () => {
-        save(editedFields);
         setIsEditing(false);  // Exit edit mode after saving
-        if(errors){
+        save(editedFields);
+        if(errors.length > 0){
             setIsEditing(true);
         }
     };
 
     const handleCancel = () => {
-        cancel();
         setIsEditing(false);  // Exit edit mode if canceled
+        cancel();
         setEditedFields(sectionData.sectionFields);
     };
 
