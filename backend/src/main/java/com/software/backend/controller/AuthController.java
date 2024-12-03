@@ -1,13 +1,23 @@
 package com.software.backend.controller;
 
+import com.software.backend.auth.AuthenticationRequest;
+import com.software.backend.auth.AuthenticationResponse;
+import com.software.backend.auth.AuthenticationService;
+import com.software.backend.auth.RegisterRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.exception.BusinessException;
 import com.software.backend.service.ApplicantAuthService;
 import com.software.backend.service.CompanyAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+
 
 import com.software.backend.service.AuthService;
 
@@ -25,6 +35,9 @@ public class AuthController {
     @Autowired
     private CompanyAuthService companyAuthService;
 
+    @Autowired
+    private AuthenticationService service;
+
     // Google Sign-Up Endpoint
     @PostMapping("/google/signUp")
     @CrossOrigin(origins = "http://localhost:5173")
@@ -34,12 +47,38 @@ public class AuthController {
         boolean created = authService.googleSignUp(idToken);
         return ResponseEntity.ok("");
     }
+
     @PostMapping("/signUp")
     @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<?> signUp(@RequestBody String idToken) {
 
         return ResponseEntity.ok("");
     }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(
+            @RequestBody RegisterRequest request
+    ) {
+        return ResponseEntity.ok(service.register(request));
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody AuthenticationRequest request
+    ) {
+        return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @PostMapping("/refresh-token")
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        service.refreshToken(request, response);
+    }
+
+
 
     // normal sign up
     @PostMapping("/signup/applicant")
