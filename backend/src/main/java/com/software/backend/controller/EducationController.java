@@ -34,9 +34,9 @@ public class EducationController {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/profile/education/{id}")
-    public ResponseEntity<String> updateEducation(@PathVariable Integer id, @RequestBody EducationDTO dto){
-        if(service.updateEducation(id, dto))
+    @PutMapping("/profile/education/{educationId}")
+    public ResponseEntity<String> updateEducation(@PathVariable Integer educationId, @RequestBody EducationDTO dto){
+        if(service.updateEducation(educationId, dto))
             return ResponseEntity.ok("Education updated successfully");
         else
             return new ResponseEntity<>("Education not found", HttpStatus.NOT_FOUND);

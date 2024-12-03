@@ -2,6 +2,8 @@ package com.software.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,14 +43,7 @@ public class Applicant{
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Experience> experienceList;
 
-
-    @ManyToMany
-    @JoinTable(
-        name = "applicant_skill",
-        joinColumns = @JoinColumn(name = "applicant_id"),
-        inverseJoinColumns = @JoinColumn(name = "skill_id")
-    )
-    private List<Skill> skills;
+    private List<String> skills;
 
     @Override
     public String toString() {
@@ -60,6 +55,7 @@ public class Applicant{
                 ", city=" + city +
                 ", state" + state +
                 ", country" + country +
+                ", Skills: "+ skills +
                 '}';
     }
 }
