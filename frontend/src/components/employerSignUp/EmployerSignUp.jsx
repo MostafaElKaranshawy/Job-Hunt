@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { employerSignUp } from "../../services/authServices";
+import { Link } from "react-router-dom";
 import "./EmployerSignUp.css";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import { isValidPhoneNumber} from "libphonenumber-js";
 function EmployerSignUp() {
   // Form states
   const [formData, setFormData] = useState({
@@ -11,17 +9,9 @@ function EmployerSignUp() {
     lastName: "",
     companyName: "",
     email: "",
-    mobileNumber: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
-  const [selectedCountry, setSelectedCountry] = useState("eg");
-
-
-   
-  const handleCountryChange = (country) => {
-    setSelectedCountry(country); // Update the selected country
-  };
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,13 +20,6 @@ function EmployerSignUp() {
       [name]: value,
     });
     setErrors({ ...errors, [name]: "" });
-  };
-  const handlePhoneChange = (value) => {
-    setFormData({
-      ...formData,
-      mobileNumber: value,
-    });
-    setErrors({ ...errors, mobileNumber: "" });
   };
 
   // Validation function
@@ -50,19 +33,6 @@ function EmployerSignUp() {
     } else if (!/^\S+@gmail\.com$/.test(formData.email)) {
       newErrors.email =
         "Email must be a valid Gmail address (e.g., example@gmail.com).";
-    }
-    if (!formData.mobileNumber) {
-      newErrors.mobileNumber = "Mobile number is required.";
-    } else {
-      try {
-        console.log(selectedCountry);
-        console.log(formData.mobileNumber);
-        if (!isValidPhoneNumber(formData.mobileNumber, selectedCountry)) {
-          newErrors.mobileNumber = "Mobile number is invalid.";
-        }
-      } catch (error) {
-        newErrors.mobileNumber = "Mobile number is invalid.";
-      }
     }
     if (!formData.password) {
       newErrors.password = "Password is required.";
@@ -130,22 +100,6 @@ function EmployerSignUp() {
             <p className="error">{errors.lastName}</p>
           )}
         </div>
-
-        <div>
-          <label htmlFor="mobileNumber">Mobile Number</label>
-          <PhoneInput 
-            country={selectedCountry}
-            value={formData.mobileNumber}
-            onChange={handlePhoneChange}
-            onCountryChange={handleCountryChange}
-            enableSearch={true}
-            className={errors.mobileNumber ? "error-input" : ""}
-          />
-          {errors.mobileNumber && (
-            <p className="error">{errors.mobileNumber}</p>
-          )}
-        </div>
-
         <div>
           <label htmlFor="email">Business Email</label>
           <input
@@ -179,9 +133,8 @@ function EmployerSignUp() {
           Sign Up
         </button>
       </form>
-      <p className="logIn">
-        Already have an account? <a href="/login">Log in</a>
-      </p>
+      <p className="logIn"> Already have an account? </p>
+      <Link to="/login">log in</Link>
     </div>
   );
 }

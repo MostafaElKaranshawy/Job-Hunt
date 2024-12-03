@@ -27,8 +27,6 @@ public class Applicant {
     @Column( nullable = false )
     private String lastName;
 
-    private String phoneNumber;
-
     private String address;
 
     private String city;

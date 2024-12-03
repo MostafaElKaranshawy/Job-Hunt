@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { employeeSignUp } from "../../services/authServices";
+import { Link } from "react-router-dom";
 import "./EmployeeSignUp.css";
 
 function EmployeeSignUp() {
@@ -126,8 +127,10 @@ function EmployeeSignUp() {
         <button type="submit">Sign Up</button>
       </form>
       <p className="login">
-        Already have an account? <a href="/login">Log in</a>
+        Already have an account?
       </p>
+      <Link to="/login">Log in</Link>
+
     </div>
   );
 }

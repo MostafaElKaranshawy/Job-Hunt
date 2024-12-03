@@ -21,12 +21,17 @@ public class AuthController {
     // Google Sign-Up Endpoint
     @PostMapping("/google/signUp")
     @CrossOrigin(origins = "http://localhost:5173")
-    public ResponseEntity<?> googleSignUp(@RequestBody GoogleAuthDto googleAuthDto) {
+    public ResponseEntity<?> googleSignUp(@RequestBody String idToken) {
         System.out.println("Google Sign-Up Endpoint");
-        System.out.println(googleAuthDto.getIdToken());
+        System.out.println(idToken);
+        boolean created = authService.googleSignUp(idToken);
+        return ResponseEntity.ok("");
+    }
+    @PostMapping("/signUp")
+    @CrossOrigin(origins = "http://localhost:5173")
+    public ResponseEntity<?> signUp(@RequestBody String idToken) {
 
-        boolean created = authService.googleSignUp(googleAuthDto);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok("");
     }
 
 

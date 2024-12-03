@@ -1,14 +1,20 @@
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { googleSignUp } from "../../services/authServices";
+import { googleSignUp, googleLogIn } from "../../services/authServices";
 
-function GoogleOAuth() {
+function GoogleOAuth({ mode }) {
   const handleSuccess = (response) => {
-    console.log('Login Success:', response);
-    googleSignUp(response);
+    console.log("Login Success:", response);
+    if (mode === "signup") {
+      googleSignUp(response); 
+    } else if (mode === "login") {
+      googleLogIn(response); 
+    }
   };
+
   const handleError = (error) => {
-    console.log('Login Failed:', error);
+    console.log("Login Failed:", error);
   };
+
   return (
     <GoogleOAuthProvider clientId="992406545501-gsf4drs652b27m7886oq1ttlfrq3o14t.apps.googleusercontent.com">
       <div
@@ -23,7 +29,8 @@ function GoogleOAuth() {
           onError={handleError}
           theme="outline"
           className="googleButton"
-          text="Sign Up with Google"
+          prompt="none"
+          text={mode === "signup" ? "Sign Up with Google" : "Login with Google"}
         />
       </div>
     </GoogleOAuthProvider>

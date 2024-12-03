@@ -47,6 +47,8 @@ public class User {
     )
     private UserType userType;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @CreationTimestamp
     @Column(

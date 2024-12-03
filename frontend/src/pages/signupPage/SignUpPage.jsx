@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import GoogleOAuth from "../../components/googleOAuthLogIn/GoogleOAuthLogIn";
 import EmployeeSignUp from "../../components/employeeSignUp/EmployeeSignUp";
 import EmployerSignUp from "../../components/employerSignUp/EmployerSignUp";
@@ -28,8 +29,9 @@ function SignUpPage() {
                        <span> or </span>
                        <hr />
                     </div>
-                    <GoogleOAuth />
+                    <GoogleOAuth mode="signup"/>
                 </div>
+          
             )}
          </div>
         </>
