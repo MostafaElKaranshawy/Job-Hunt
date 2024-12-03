@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./skills.css";
 import { useParams } from "react-router-dom";
-import { fetchSkills } from "../../services/userProfileService";
+import { fetchSkills, getUserSkills, editUserSkills } from "../../services/userProfileService";
 
 export default function Skills() {
     const { username } = useParams();
@@ -23,6 +23,11 @@ export default function Skills() {
 
     useEffect(() => {
         fetchAndSetSkills();
+        if(username){
+            getUserSkills(username).then((skills) => {
+                setSkills(skills);
+            });
+        }
     }, [username]);
 
     useEffect(() => {
@@ -42,8 +47,8 @@ export default function Skills() {
 
     // Handle toggling skills in the list
     const handleSkillToggle = (skill) => {
-        if (skills.some((s) => s.skillName === skill.skillName)) {
-            setSkills(skills.filter((s) => s.skillName !== skill.skillName));
+        if (skills.some((s) => s === skill)) {
+            setSkills(skills.filter((s) => s !== skill));
         } else {
             setSkills([...skills, skill]);
         }
@@ -67,7 +72,7 @@ export default function Skills() {
                         key={index}
                         onClick={() => handleSkillToggle(skill)}
                     >
-                        {skill.skillName}
+                        {skill}
                     </div>
                 ))}
             </div>
@@ -88,7 +93,7 @@ export default function Skills() {
                                 key={index}
                                 onClick={() => handleSkillToggle(skill)}
                             >
-                                {skill.skillName}
+                                {skill}
                             </div>
                         ))}
                     </div>
@@ -96,7 +101,10 @@ export default function Skills() {
                         <div className="cancel-button" onClick={() => setIsEditable(false)}>
                             Cancel
                         </div>
-                        <div className="save-button" onClick={() => setIsEditable(false)}>
+                        <div className="save-button" onClick={() => {
+                            setIsEditable(false)
+                            editUserSkills(username, skills)
+                            }}>
                             Save
                         </div>
                     </div>

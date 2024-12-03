@@ -121,10 +121,29 @@ async function fetchSkills(){
         console.error("Error fetching skills:", error);
     }
 }
+async function editUserSkills(userName, skills){
+    const url = `${backendURL}/users/${userName}/profile/skills`;
+    try {
+        const response = await fetch(url, {
+            method: 'PUT', // Specify the method here
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(skills)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 export{
     getUserProfile,
     editUserProfile,
     handleCustomSectionOperation,
     getUserSkills,
-    fetchSkills
+    fetchSkills,
+    editUserSkills
 }
