@@ -13,5 +13,4 @@ import java.util.Optional;
 public interface EducationRepository extends JpaRepository<Education, Integer> {
     List<Education> findByApplicant(Applicant applicant);
     Optional<Education> findById(Integer id);
-
 }

@@ -19,7 +19,6 @@ public class Applicant{
     @JoinColumn(name = "applicant_id", nullable = false, referencedColumnName = "id")
     @MapsId
     private User user;
-
     @Column( nullable = false )
     private String firstName;
 

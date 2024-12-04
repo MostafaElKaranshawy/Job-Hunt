@@ -25,7 +25,6 @@ public class User {
     @JsonIgnore
     private Company company;
 
-
     @Column(
         unique = true,
         nullable = false
@@ -67,3 +66,4 @@ public class User {
     @Column(name = "is_banned")
     private Boolean isBanned;
 }
+

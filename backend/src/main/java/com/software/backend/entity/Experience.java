@@ -2,6 +2,7 @@ package com.software.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDate;
 
 @Entity
@@ -27,7 +28,7 @@ public class Experience {
 
     @Column(nullable = false)
     private LocalDate endDate;
-
+  
     private String description;
 
     @ManyToOne
