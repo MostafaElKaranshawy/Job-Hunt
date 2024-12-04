@@ -19,19 +19,24 @@ public class EducationController {
     EducationServices service;
     @PostMapping("/{id}/profile/education")
     public ResponseEntity<String> addEducation(@PathVariable Integer id, @RequestBody EducationDTO dto){
-        if(service.addEducation(id, dto))
-            return ResponseEntity.ok("Education added successfully");
-        else
-            return new ResponseEntity<>("Applicant not found", HttpStatus.NOT_FOUND);
+        try {
+            if (service.addEducation(id, dto))
+                return ResponseEntity.ok("Education added successfully");
+            else
+                return new ResponseEntity<>("Applicant not found", HttpStatus.NOT_FOUND);
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+        }
     }
     @GetMapping("/{id}/profile/education")
-    public ResponseEntity<List<EducationDTO>> getEducation(@PathVariable Integer id){
+    public ResponseEntity<?> getEducation(@PathVariable Integer id){
         try {
             List<EducationDTO> educationList = service.getEducation(id);
             return ResponseEntity.ok(educationList);
         }
         catch (EntityNotFoundException e){
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Applicant Not Found", HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/profile/education/{educationId}")

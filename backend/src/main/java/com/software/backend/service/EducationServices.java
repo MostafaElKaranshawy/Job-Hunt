@@ -8,6 +8,7 @@ import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.EducationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +27,13 @@ public class EducationServices {
         if(applicant == null) return false;
         Education education = mapper.toEntity(dto);
         education.setApplicant(applicant);
+        try{
         repo.save(education);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("Invalid input data:( .... Missing attributes !");
+        }
+
         return true;
     }
     public List<EducationDTO> getEducation(Integer applicantId) {

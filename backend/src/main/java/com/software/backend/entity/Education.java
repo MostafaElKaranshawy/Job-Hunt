@@ -39,9 +39,7 @@ public class Education {
 
 
     @Column(
-            nullable = false,
-            name = "end_date",
-            columnDefinition = "YEAR"
+            name = "end_date"
     )
     private Integer endDate;
 

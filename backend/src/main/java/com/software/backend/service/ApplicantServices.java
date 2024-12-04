@@ -6,6 +6,7 @@ import com.software.backend.entity.User;
 import com.software.backend.mapper.ApplicantMapper;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,10 +44,10 @@ public class ApplicantServices {
     }
 
     public List<String> getSkills(String username) {
-        User user = userRepo.findByUsername(username).orElse(null);
+        User user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
         if(user != null){
             Applicant applicant = repo.findById(user.getId()).orElse(null);
-            System.out.println(applicant);
             if(applicant != null) {
                 List<String> skills = applicant.getSkills();
                 if (skills != null) return skills;

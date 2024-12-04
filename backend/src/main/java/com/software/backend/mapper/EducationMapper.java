@@ -6,7 +6,10 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface EducationMapper {
+
     EducationDTO toDTO(Education education);
+
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "applicant", ignore = true)
     Education toEntity(EducationDTO educationDTO);

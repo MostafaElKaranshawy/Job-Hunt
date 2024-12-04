@@ -1,6 +1,7 @@
 package com.software.backend.controller;
 
 import com.software.backend.dto.ApplicantDTO;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +34,17 @@ public class ApplicantController {
     }
     @GetMapping("/{username}/profile/skills")
     public ResponseEntity<List<String>> getSkills(@PathVariable String username){
-        List<String> skills = service.getSkills(username);
-        if(skills != null)
-            return new ResponseEntity<>(skills, HttpStatus.OK);
-        else
+        try {
+            List<String> skills = service.getSkills(username);
+            if(skills != null)
+                return new ResponseEntity<>(skills, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch (EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
     @PutMapping("/{username}/profile/skills")
     public ResponseEntity<String> setSkills(@PathVariable String username, @RequestBody List<String> skills){
