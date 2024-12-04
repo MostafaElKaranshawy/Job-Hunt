@@ -83,6 +83,14 @@
     font-size: 12px;
     color: red;
 }
-.error-field{
+.field-value.editable{
+    border: 1px solid rgb(0, 85, 0) !important;
+}
+.field-value.editable.error-field{
     border: red 1px solid !important;
+}
+.input-contianer{
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
 }

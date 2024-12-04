@@ -21,7 +21,6 @@ export default function ProfileInfoSection() {
     const [userSections, setUserSections] = useState([]);
     const [customSections, setCustomSections] = useState([]);
     const [sections, setSections] = useState(userSections);
-    const [userSkills, setUserSkills] = useState([]);
     const[userData, setUserData] = useState({})
     useEffect(() => {
         if(userName){
@@ -36,14 +35,15 @@ export default function ProfileInfoSection() {
             {
                 sectionName: "Personal Info",
                 sectionFields: [
-                    { fieldName: "First Name", fieldValue: userData.firstName, fieldType: "text"},
-                    { fieldName: "Last Name", fieldValue: userData.lastName, fieldType: "text"},
-                    { fieldName: "Phone Number", fieldValue: userData.phoneNumber, fieldType: "text"},
-                    { fieldName: "Country", fieldValue: userData.country, fieldType: "text"},
-                    { fieldName: "State", fieldValue: userData.state, fieldType: "text"},
-                    { fieldName: "City", fieldValue: userData.city, fieldType: "text"},
-                    { fieldName: "Address", fieldValue: userData.address, fieldType: "text"},
+                    { fieldName: "First Name", fieldValue: userData.firstName, fieldType: "text", minLength: 5, maxLength: 20 },
+                    { fieldName: "Last Name", fieldValue: userData.lastName, fieldType: "text", minLength: 5, maxLength: 20 },
+                    { fieldName: "Phone Number", fieldValue: userData.phoneNumber, fieldType: "text", minLength: 11, maxLength: 11 },
+                    { fieldName: "Country", fieldValue: userData.country, fieldType: "text", minLength: 5, maxLength: 20 },
+                    { fieldName: "State", fieldValue: userData.state, fieldType: "text", minLength: 5, maxLength: 20 },
+                    { fieldName: "City", fieldValue: userData.city, fieldType: "text", minLength: 5, maxLength: 20 },
+                    { fieldName: "Address", fieldValue: userData.address, fieldType: "text", minLength: 5, maxLength: 50 },
                 ],
+                errors: {},
             },
         ]);
     }
@@ -60,7 +60,6 @@ export default function ProfileInfoSection() {
     },[userSections])
 
     const handleSectionChange = (sectionName, fieldName, fieldValue) => {
-        console.log(sectionName, fieldName, fieldValue)
         setSections(
             sections.map((section) => {
                 if (section.sectionName === sectionName) {
@@ -117,38 +116,23 @@ export default function ProfileInfoSection() {
         }
         await refreshCustomSections(); // Refresh data after modification
     };
-    
-    // Editing a section
-    // const handleEditSection = async (parentSectionName, id, editedSection) => {
-    //     console.log(parentSectionName, id, editedSection)
-    //     const sectionData = editedSection.reduce((acc, field) => {
-    //         return {
-    //             ...acc,
-    //             [toCamelCase(field.fieldName)]: field.fieldValue || "", // Use empty string if fieldValue is undefined
-    //         };
-    //     }, {});
-    //     if (parentSectionName === "Education" || parentSectionName === "Experience") {
-    //         await handleCustomSectionOperation(
-    //             'PUT',
-    //             parentSectionName,
-    //             sectionData,
-    //             id
-    //         );
-    //     }
-    //     await refreshCustomSections(); // Refresh data after modification
-    // };
+
     const handleEditSection = async (parentSectionName, id, editedSection) => {
-        console.log(parentSectionName, id, editedSection);
-    
+
         const errors = {};
         const sectionData = {};
     
         // Loop through the editedSection to validate fields
         editedSection.forEach((field) => {
             // Check if the field is empty
-            if (!field.fieldValue) {
-                errors[field.fieldName] = "This field is required.";
-            } else {
+            if (!field.fieldValue || field.fieldValue == '') {
+                if(field.fieldName != 'End Date')
+                    errors[field.fieldName] = "This field is required.";
+            } 
+            else if(field.fieldValue.length < field.minLength || field.fieldValue.length > field.maxLength){
+                errors[field.fieldName] = `${field.fieldName} should be between ${field.minLength} and ${field.maxLength} characters.`;
+            }
+            else {
                 sectionData[toCamelCase(field.fieldName)] = field.fieldValue || "";
             }
         });
@@ -157,9 +141,17 @@ export default function ProfileInfoSection() {
         const startDate = editedSection.find(field => field.fieldName === "Start Date")?.fieldValue;
         const endDate = editedSection.find(field => field.fieldName === "End Date")?.fieldValue;
     
+        if(startDate < 2000){
+            errors["Start Date"] = "Year must be above 2000";
+        }
+        if(endDate != '' && endDate < 2000){
+            errors["End Date"] = "Year must be above 2000";
+        }
+        if (startDate> new Date().getFullYear()){
+            errors["Start Date"] = "Start Date should be before current date.";
+        }
         if (startDate && endDate) {
-            // Ensure End Date is after Start Date
-            if (new Date(endDate) <= new Date(startDate)) {
+            if (endDate < startDate) {
                 errors["End Date"] = "End Date should be after Start Date.";
             }
         }
@@ -185,7 +177,6 @@ export default function ProfileInfoSection() {
         ])
         if (Object.keys(errors).length > 0) {
             // If there are errors, return and don't proceed with the update
-            console.log("Validation errors: ", errors);
             return;
         }
     
@@ -262,20 +253,57 @@ export default function ProfileInfoSection() {
         ]);
     };
     
-    async function saveChanges(){
-        // Personal Information
-        const personalInfo = parseSection(
-            sections.find(section => section.sectionName === "Personal Info")
+    async function saveChanges() {
+        // Find the Personal Info section
+        const personalInfo = sections.find((section) => section.sectionName === "Personal Info");
+        if (!personalInfo) {
+            return;
+        }
+    
+        const errors = {};
+    
+        // Validate each field in Personal Info
+        personalInfo.sectionFields.forEach((field) => {
+            if(field.value.length > 0 && field.value.length < field.minLength || field.value.length > field.maxLength){
+                errors[field.fieldName] = `${field.fieldName} should be between ${field.minLength} and ${field.maxLength} characters.`;
+            }
+            if(field.fieldName == 'First Name'){
+                if (!field.fieldValue || field.fieldValue.trim() === "") {
+                    errors[field.fieldName] = `${field.fieldName} is required.`;
+                }
+            }
+        });
+    
+        // Update sections with errors
+        setSections(
+            sections.map((section) => {
+                if (section.sectionName === "Personal Info") {
+                    return {
+                        ...section,
+                        errors,
+                    };
+                }
+                return section;
+            })
         );
-        const updatedData = {
-            ...personalInfo
-        };
+    
+        // If there are errors, stop and log them
+        if (Object.keys(errors).length > 0) {
+            return;
+        }
+    
+        // Construct updated data only if there are no errors
+        const updatedData = personalInfo.sectionFields.reduce((acc, field) => {
+            acc[toCamelCase(field.fieldName)] = field.fieldValue.trim();
+            return acc;
+        }, {});
     
         console.log("Updated User Data: ", updatedData);
-        
+    
         await editUserProfile(userName, updatedData);
-        await getUserData(userName)
-    } 
+        await getUserData(userName);
+    }
+    
     return (
         <div className="profile-info-section">
             <div className="profile-picture">
@@ -289,6 +317,7 @@ export default function ProfileInfoSection() {
                                 sectionData={section}
                                 sectionChange={handleSectionChange}
                                 key={index}
+                                errors={section.errors}
                                 save={saveChanges}
                                 cancel={getUserData}
                             />

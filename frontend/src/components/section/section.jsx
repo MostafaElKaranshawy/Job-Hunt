@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./section.css";
 
 export default function Section({ sectionData, sectionChange, errors, save, cancel }) {
@@ -16,10 +16,18 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
         sectionChange(sectionData.sectionName, editedFields[fieldIndex].fieldName, updatedFieldValue);
     };
 
+    useEffect(() => {
+        if (Object.keys(errors).length > 0) {
+            setIsEditing(true);  // Exit edit mode after saving
+        }
+    }, [errors])
     const handleSave = () => {
-        setIsEditing(false);  // Exit edit mode after saving
         save(editedFields);
-        if(errors.length > 0){
+        console.log(errors)
+        if (Object.keys(errors).length == 0) {
+            setIsEditing(false);  // Exit edit mode after saving
+        }
+        else{
             setIsEditing(true);
         }
     };
@@ -45,14 +53,16 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
                 {editedFields.map((field, index) => (
                     <div className="section-field" key={index}>
                         <div className="field-name">{field.fieldName}</div>
-                        <div>
+                        <div className="input-contianer">
                             <input
                                 type={field.fieldType}
                                 name={field.fieldName}  // Add the name attribute here
-                                className={`field-value ${errors && errors[field.fieldName] && "error-field"}`}
+                                className={`field-value ${errors && errors[field.fieldName]?"error-field":""} ${isEditing ? "editable" : ""}`}
                                 value={field.fieldValue}
                                 onChange={(e) => handleFieldChange(e, index)}
                                 disabled={!isEditing} // Disable input when not in edit mode
+                                minLength={field.minLength}
+                                maxLength={field.maxLength}
                             />
                             {errors && errors[field.fieldName] && <div className="error">{errors[field.fieldName]}</div>}
                         </div>

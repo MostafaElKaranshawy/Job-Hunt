@@ -45,12 +45,32 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
     const handleSaveNewSection = () => {
         const errors = {};
         newSection.sectionFields.forEach((field) => {
-            if (!field.fieldValue) {
-                errors[field.fieldName] = "This field is required.";
+            if (!field.fieldValue || field.fieldValue == '') {
+                if(field.fieldName != 'End Date')
+                    errors[field.fieldName] = "This field is required.";
+            }
+            else if(field.fieldValue.length < field.minLength || field.fieldValue.length > field.maxLength){
+                errors[field.fieldName] = `${field.fieldName} should be between ${field.minLength} and ${field.maxLength} characters.`;
             }
         });
-        if(newSection.sectionFields[3].fieldValue > newSection.sectionFields[4].fieldValue){
-            errors["End Date"] = "End Date should be greater than Start Date";
+        const startDate = newSection.sectionFields.find(field => field.fieldName === "Start Date")?.fieldValue;
+        const endDate = newSection.sectionFields.find(field => field.fieldName === "End Date")?.fieldValue;
+        
+        if(startDate < 2000){
+            errors["Start Date"] = "Year must be above 2000";
+        }
+        if(endDate != '' && endDate < 2000){
+            errors["End Date"] = "Year must be above 2000";
+        }
+        if (startDate> new Date().getFullYear()){
+            errors["Start Date"] = "Start Date should be before current date.";
+        }
+        if (startDate && endDate) {
+
+            if (endDate <= startDate) {
+                errors["End Date"] = "End Date should be after Start Date.";
+            }
+            console.log(new Date().getFullYear())
         }
         
         if (Object.keys(errors).length > 0) {

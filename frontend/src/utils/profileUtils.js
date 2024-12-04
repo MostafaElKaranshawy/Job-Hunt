@@ -2,21 +2,21 @@ import { parse } from "dotenv";
 
 function parseEducation(education){
     return ([
-        { fieldName: "Institution", fieldValue: education.institution, fieldType: "text" },
-        { fieldName: "Degree", fieldValue: education.degree, fieldType: "text" },
-        { fieldName: "Field Of Study", fieldValue: education.fieldOfStudy, fieldType: "text" },
-        { fieldName: "Start Date", fieldValue: education.startDate, fieldType: "number" },
-        { fieldName: "End Date", fieldValue: education.endDate, fieldType: "number" },
+        { fieldName: "Institution", fieldValue: education.institution, fieldType: "text", minLength: 3, maxLength: 20 },
+        { fieldName: "Degree", fieldValue: education.degree, fieldType: "text", minLength: 2, maxLength: 20 },
+        { fieldName: "Field Of Study", fieldValue: education.fieldOfStudy, fieldType: "text", minLength: 3, maxLength: 20 },
+        { fieldName: "Start Date", fieldValue: education.startDate, fieldType: "number", minLength: 4, maxLength: 4 },
+        { fieldName: "End Date", fieldValue: education.endDate, fieldType: "number", minLength: 4, maxLength: 4 },
     ]);
 }
 function parseExperience(experience){
     return ([
-        { fieldName: "Title", fieldValue: experience.title, fieldType: "text" },
-        { fieldName: "Company", fieldValue: experience.company, fieldType: "text" },
-        { fieldName: "Location", fieldValue: experience.location, fieldType: "text" },
-        { fieldName: "Start Date", fieldValue: experience.startDate, fieldType: "date" },
-        { fieldName: "End Date", fieldValue: experience.endDate, fieldType: "date" },
-        { fieldName: "Description", fieldValue: experience.description, fieldType: "textArea" },
+        { fieldName: "Title", fieldValue: experience.title, fieldType: "text", minLength: 3, maxLength: 20 },
+        { fieldName: "Company", fieldValue: experience.company, fieldType: "text", minLength: 3, maxLength: 20 },
+        { fieldName: "Location", fieldValue: experience.location, fieldType: "text", minLength: 3, maxLength: 20 },
+        { fieldName: "Start Date", fieldValue: experience.startDate, fieldType: "date", minLength: 0, maxLength: 10 },
+        { fieldName: "End Date", fieldValue: experience.endDate, fieldType: "date", minLength: 0, maxLength: 10 },
+        { fieldName: "Description", fieldValue: experience.description, fieldType: "textArea", minLength: 3, maxLength: 50 },
 
     ]);
 }
