@@ -38,7 +38,7 @@ export const googleSignUp = async (credentialResponse) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(credentialResponse.credential),
+    body: JSON.stringify({googleToken:credentialResponse.credential, clientId: credentialResponse.clientId}),
   });
   if (response.ok) {
     const data = await response.json();
@@ -49,12 +49,13 @@ export const googleSignUp = async (credentialResponse) => {
 };
 export const googleLogIn = async (credentialResponse) => {
   console.log("Google Credential:", credentialResponse);
-  const response = await fetch(`${apiUrl}/auth/google/logIn`, {
+  const response = await fetch(`${apiUrl}/auth/login/applicant/google`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(credentialResponse.credential),
+    // body: JSON.stringify(credentialResponse.credential),
+    body: JSON.stringify({googleToken:credentialResponse.credential, clientId: credentialResponse.clientId}),
   });
   if (response.ok) {
     const data = await response.json();

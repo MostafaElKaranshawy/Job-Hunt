@@ -26,12 +26,20 @@ public class AuthController {
     private CompanyAuthService companyAuthService;
 
     @Autowired
-    private UserAuthService service;
+    private UserAuthService useService;
 
     // Google Sign-Up Endpoint
     @PostMapping("/signup/applicant/google")
     public ResponseEntity<AuthenticationResponse> googleSignUp(@RequestBody SignUpRequest request) {
+        System.out.println("Google Sign-Up Endpoint");
         return ResponseEntity.ok(applicantAuthService.applicantGoogleSignUp(request));
+    }
+
+    @PostMapping("/login/applicant/google")
+    public ResponseEntity<AuthenticationResponse> googleLogin(
+            @RequestBody SignUpRequest request
+    ) {
+        return ResponseEntity.ok(applicantAuthService.loginWithGoogle(request));
     }
 
     // normal sign up
@@ -41,10 +49,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    public ResponseEntity<AuthenticationResponse> login(
             @RequestBody SignUpRequest request
     ) {
-        return ResponseEntity.ok(service.login(request));
+        return ResponseEntity.ok(useService.login(request));
     }
 
 
@@ -53,9 +61,8 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
-        service.refreshToken(request, response);
+        useService.refreshToken(request, response);
     }
-
 
 
     @PostMapping("/signup/company")

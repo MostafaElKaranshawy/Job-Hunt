@@ -82,42 +82,4 @@ public class CompanyAuthService {
                 .build();
         tokenRepository.save(token);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public void signUp(SignUpRequest signUpRequest) {
-//
-//        // Create the User entity
-//        User user = new User();
-//        user.setEmail(signUpRequest.getEmail());
-//        user.setUsername(signUpRequest.getEmail().split("@")[0]); // Generate username
-//        user.setPassword(signUpRequest.getPassword());
-//        user.setUserType(UserType.COMPANY);
-//        user.setIsBanned(false);
-//
-//        // Create the Company entity
-//        Company company = new Company();
-//        company.setUser(user);
-//        company.setName(signUpRequest.getCompanyName());
-//
-//        // Save both User and Company entities
-//        userRepository.save(user);
-//        companyRepository.save(company);
-//    }
 }

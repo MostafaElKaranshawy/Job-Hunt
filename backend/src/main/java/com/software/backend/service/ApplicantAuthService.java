@@ -13,6 +13,8 @@ import com.software.backend.enums.TokenType;
 import com.software.backend.enums.UserType;
 import com.software.backend.enums.ValidationType;
 import com.software.backend.exception.BusinessException;
+import com.software.backend.exception.InvalidCredentialsException;
+import com.software.backend.exception.UserNotFoundException;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.TokenRepository;
 import com.software.backend.repository.UserRepository;
@@ -155,6 +157,47 @@ public class ApplicantAuthService {
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public AuthenticationResponse loginWithGoogle(SignUpRequest request) {
+        JsonWebSignature verifiedToken = verifyGoogleToken(request.getGoogleToken());
+        if(verifiedToken == null) {
+            throw new BusinessException("Invalid Google Token");
+        }
+        JsonWebToken.Payload payload = verifiedToken.getPayload();
+
+        String email = payload.get("email").toString();
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if ( user.getPassword() != null ) {
+            throw new InvalidCredentialsException("User already exists");
+        }
+
+        if ( user.getGoogleClientId() == null ||
+             !user.getGoogleClientId().equals(request.getClientId())) {
+            throw new InvalidCredentialsException("Invalid Google Client ID");
+        }
+
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
     }
 
 }

@@ -49,7 +49,7 @@ public class User implements UserDetails {
     private String email;
 
 
-    @Column( nullable = false )
+//    @Column( nullable = false ) must be addressed later next milestone
     private String password;
 
     @Column(
