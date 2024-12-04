@@ -31,6 +31,7 @@ export default function Skills({username}) {
     }
     // Handle toggling skills in the list
     const addSkill = (skill) =>{
+        if(!isEditable)return
         if (skills.some((s) => s === skill)) {
         } else {
             if(skills.length >= 20){
@@ -42,6 +43,7 @@ export default function Skills({username}) {
         }
     }
     const removeSkill = (skill)=>{
+        if(!isEditable)return
         if (skills.some((s) => s === skill)) {
             setSkills(skills.filter((s) => s !== skill));
         }
