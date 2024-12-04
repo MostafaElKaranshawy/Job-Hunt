@@ -122,6 +122,7 @@ async function fetchSkills(){
     }
 }
 async function editUserSkills(userName, skills){
+    console.log(userName, skills)
     const url = `${backendURL}/users/${userName}/profile/skills`;
     try {
         const response = await fetch(url, {

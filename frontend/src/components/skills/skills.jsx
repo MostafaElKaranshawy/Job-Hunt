@@ -3,8 +3,7 @@ import "./skills.css";
 import { useParams } from "react-router-dom";
 import { fetchSkills, getUserSkills, editUserSkills } from "../../services/userProfileService";
 
-export default function Skills() {
-    const { username } = useParams();
+export default function Skills({username}) {
     const [allSkills, setAllSkills] = useState([]);
     const [filteredSkills, setFilteredSkills] = useState([]);
     const [skills, setSkills] = useState([]);
@@ -14,7 +13,12 @@ export default function Skills() {
     // Fetch skills when the username changes
     const fetchAndSetSkills = async () => {
         try {
-            const skills = await fetchSkills();
+            // const skills = await fetchSkills();
+            const skills = [
+                "JavaScript","React","Node.js","Express.js","Spring Boot","HTML","CSS","SQL","NoSQL","MongoDB","MySQL","PostgreSQL","Docker","Kubernetes","AWS","Git","GitHub","Python","Java","C++","C#","TypeScript","Angular","Vue.js","Bootstrap","Tailwind CSS","REST API","GraphQL","Jenkins","CI/CD","Webpack","Babel",
+                "Redux","Machine Learning","Data Structures","Algorithms","OOP","Design Patterns","Unit Testing","Integration Testing","Jest","Mocha","Chai","Cypress","Selenium","Figma","Adobe XD","Agile Methodologies","Scrum","Linux","Command Line"
+            ];
+            
             setAllSkills(skills);
         } catch (error) {
             console.error("Error fetching skills:", error);
@@ -38,8 +42,8 @@ export default function Skills() {
             setFilteredSkills(
                 allSkills.filter(
                     (skill) =>
-                        skill.skillName.toLowerCase().includes(lowercaseSearch) &&
-                        !skills.some((s) => s.skillName === skill.skillName)
+                        skill.toLowerCase().includes(lowercaseSearch) &&
+                        !skills.some((s) => s === skill)
                 )
             );
         }
@@ -58,7 +62,11 @@ export default function Skills() {
     const handleEditClick = () => {
         setIsEditable(!isEditable);
     };
+    const handleSaveSkills = ()=>{
+        setIsEditable(false)
 
+        editUserSkills(username, skills)
+    }
     return (
         <div className="skills">
             <div className="section-edit" onClick={handleEditClick}>
@@ -101,10 +109,7 @@ export default function Skills() {
                         <div className="cancel-button" onClick={() => setIsEditable(false)}>
                             Cancel
                         </div>
-                        <div className="save-button" onClick={() => {
-                            setIsEditable(false)
-                            editUserSkills(username, skills)
-                            }}>
+                        <div className="save-button" onClick={handleSaveSkills}>
                             Save
                         </div>
                     </div>

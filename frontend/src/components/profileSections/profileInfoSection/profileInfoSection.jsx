@@ -340,7 +340,7 @@ export default function ProfileInfoSection() {
                 }
             </div>
             <div className="skills-section">
-                <Skills />
+                <Skills username={userName}/>
             </div>
         </div>
     );
