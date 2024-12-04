@@ -33,7 +33,7 @@ export const employeeSignUp = async (formData) => {
 };
 export const googleSignUp = async (credentialResponse) => {
   console.log("Google Credential:", credentialResponse);
-  const response = await fetch(`${apiUrl}/auth/google/signUp`, {
+  const response = await fetch(`${apiUrl}/signup/applicant/google`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

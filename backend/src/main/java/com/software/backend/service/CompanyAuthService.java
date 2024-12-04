@@ -21,14 +21,14 @@ public class CompanyAuthService {
     public void signUp(SignUpRequest signUpRequest) {
         // Check if the email is already registered
         System.out.println(signUpRequest.toString());
-        User user = userRepository.findByEmail(signUpRequest.getEmail());
-        if (user != null)
-            throw new BusinessException("Email already registered.");
+//        User user = userRepository.findByEmail(signUpRequest.getEmail());
+//        if (user != null)
+//            throw new BusinessException("Email already registered.");
 
 
 
         // Create the User entity
-        user = new User();
+        User user = new User();
         user.setEmail(signUpRequest.getEmail());
         user.setUsername(signUpRequest.getEmail().split("@")[0]); // Generate username
         user.setPassword(signUpRequest.getPassword());

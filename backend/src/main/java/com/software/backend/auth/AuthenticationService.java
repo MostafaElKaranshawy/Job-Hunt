@@ -2,6 +2,7 @@ package com.software.backend.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.software.backend.config.JwtService;
+import com.software.backend.dto.SignUpRequest;
 import com.software.backend.entity.Token;
 import com.software.backend.entity.User;
 import com.software.backend.enums.TokenType;
@@ -20,8 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +37,7 @@ public class AuthenticationService {
         if (repository.findByEmail(request.getEmail()).isPresent()) {
             throw new EmailAlreadyRegisteredException("Email already registered");
         }
+
         String username = request.getEmail().split("@")[0];
         var user = User.builder()
                 .email(request.getEmail())
@@ -78,7 +79,7 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(SignUpRequest request) {
 
 
         var user = repository.findByEmail(request.getEmail())
@@ -96,8 +97,6 @@ public class AuthenticationService {
                 .accessToken(jwtToken)
                     .refreshToken(refreshToken)
                 .build();
-
-
     }
 
     public void refreshToken(
