@@ -17,7 +17,7 @@ export const employerSignUp = async (formData) => {
 };
 export const employeeSignUp = async (formData) => {
   console.log("Form Data:", formData);
-  const response = await fetch(`${apiUrl}/auth/employee/signUp`, {
+  const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

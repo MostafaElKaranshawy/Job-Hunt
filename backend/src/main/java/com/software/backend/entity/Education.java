@@ -53,5 +53,3 @@ public class Education {
     )
     private Applicant applicant; // Many-to-one relationship with Applicant
 }
-
-

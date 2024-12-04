@@ -58,11 +58,13 @@ public class AuthService {
         return false;
     }
 
-    public Applicant createApplicantFromDto(ApplicantDto applicantDto){
-        Applicant applicant = new Applicant();
-        return applicant;
-    }
-
+//    public Applicant createApplicantFromDto(ApplicantDto applicantDto){
+//        Applicant applicant = new Applicant();
+//
+//
+//        return applicant;
+//    }
+//
     private User createUser(String email){
         User user = new User();
         user.setEmail(email);

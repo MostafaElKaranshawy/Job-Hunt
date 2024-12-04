@@ -36,14 +36,3 @@ public class Experience {
     @JoinColumn(name = "applicant_id", nullable = false)
     private Applicant applicant;
 }
-
-
-
-
-
-
-
-
-
-
-
