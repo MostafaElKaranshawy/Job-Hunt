@@ -7,6 +7,7 @@ function LogInPage() {
     return (
         <>
         <div className="login-page">
+            <div className="user-login">
             <UserLogIn />
             <div className="orLineContainer">
                 <hr />
@@ -14,6 +15,7 @@ function LogInPage() {
                 <hr />
             </div>
             <GoogleOAuth mode="login"/>
+            </div>
         </div>
         </>
     );

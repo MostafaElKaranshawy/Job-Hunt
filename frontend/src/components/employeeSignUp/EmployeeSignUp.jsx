@@ -27,8 +27,8 @@ function EmployeeSignUp() {
   // Validation function
   const validate = () => {
     const newErrors = {};
-    if (!formData.firstName) newErrors.firstName = "First name is required.";
-    if (!formData.lastName) newErrors.lastName = "Last name is required.";
+    if (!formData.firstName || formData.lastName.length > 30) newErrors.firstName = "First name is required.";
+    if (!formData.lastName|| formData.lastName.length > 30) newErrors.lastName = "Last name is required.";
     if (!formData.email) {
       newErrors.email = "Email is required.";
     } else if(!/^\S+@gmail\.com$/.test(formData.email))
@@ -37,9 +37,18 @@ function EmployeeSignUp() {
     }
     if (!formData.password) {
       newErrors.password = "Password is required.";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-    }
+  } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long.";
+  } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one uppercase letter.";
+  } else if (!/[a-z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one lowercase letter.";
+  } else if (!/[0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number.";
+  } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one special character.";
+  }
+  
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match.";
     }
@@ -61,8 +70,9 @@ function EmployeeSignUp() {
   return (
     <div className="signup-container">
       <h1>Sign up</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form>
+        <div className="name-container">
+          <div>
           <label htmlFor="firstName">First Name</label>
           <input
             type="text"
@@ -73,8 +83,8 @@ function EmployeeSignUp() {
             className={errors.firstName ? "error-input" : ""}
           />
           {errors.firstName && <p className="error">{errors.firstName}</p>}
-        </div>
-        <div>
+          </div>
+          <div>
           <label htmlFor="lastName">Last Name</label>
           <input
             type="text"
@@ -85,6 +95,7 @@ function EmployeeSignUp() {
             className={errors.lastName ? "error-input" : ""}
           />
           {errors.lastName && <p className="error">{errors.lastName}</p>}
+          </div>
         </div>
         <div>
           <label htmlFor="email">Email</label>
@@ -124,13 +135,11 @@ function EmployeeSignUp() {
             <p className="error">{errors.confirmPassword}</p>
           )}
         </div>
-        <button type="submit">Sign Up</button>
       </form>
+      <button type="submit" className="send-button" onClick={handleSubmit}>Sign Up</button>
       <p className="login">
-        Already have an account?
+        Already have an account? <Link to="/login" className="link">Log in</Link>
       </p>
-      <Link to="/login">Log in</Link>
-
     </div>
   );
 }

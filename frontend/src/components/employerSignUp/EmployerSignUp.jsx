@@ -5,8 +5,6 @@ import "./EmployerSignUp.css";
 function EmployerSignUp() {
   // Form states
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     companyName: "",
     email: "",
     password: "",
@@ -26,8 +24,6 @@ function EmployerSignUp() {
   const validate = () => {
     const newErrors = {};
     if (!formData.companyName) newErrors.companyName = "Company name is required.";
-    if (!formData.firstName) newErrors.firstName = "First name is required.";
-    if (!formData.lastName) newErrors.lastName = "Last name is required.";
     if (!formData.email) {
       newErrors.email = "Email is required.";
     } else if (!/^\S+@gmail\.com$/.test(formData.email)) {
@@ -70,36 +66,6 @@ function EmployerSignUp() {
             <p className="error">{errors.companyName}</p>
           )}
         </div>
-
-        <div>
-          <label htmlFor="firstName">First Name</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleInputChange}
-            className={errors.firstName ? "error-input" : ""}
-          />
-          {errors.firstName && (
-            <p className="error">{errors.firstName}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleInputChange}
-            className={errors.lastName ? "error-input" : ""}
-          />
-          {errors.lastName && (
-            <p className="error">{errors.lastName}</p>
-          )}
-        </div>
         <div>
           <label htmlFor="email">Business Email</label>
           <input
@@ -128,13 +94,12 @@ function EmployerSignUp() {
             <p className="error">{errors.password}</p>
           )}
         </div>
-
-        <button type="submit" onClick={handleSubmit}>
+      </form>
+      <button type="submit" onClick={handleSubmit} className="send-button">
           Sign Up
         </button>
-      </form>
-      <p className="logIn"> Already have an account? </p>
-      <Link to="/login">log in</Link>
+      <p className="logIn"> Already have an account? <Link to="/login" className="link">log in</Link></p>
+      
     </div>
   );
 }

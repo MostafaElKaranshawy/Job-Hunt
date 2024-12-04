@@ -15,8 +15,8 @@ function SignUpPage() {
                 className="employer-button"
                 onClick={() => setIsEmployer(!isEmployer)}
             >
-            {isEmployer ? "Switch to Employee" : "Switch to Employer"}
-            </button>
+                 {isEmployer ? "Switch to Employee \u279C" : "Switch to Employer \u279C"}
+           </button>
             {isEmployer ? (
                 <div className="employer-signup">
                     <EmployerSignUp />
@@ -26,7 +26,7 @@ function SignUpPage() {
                     <EmployeeSignUp />
                     <div className="orLineContainer">
                        <hr />
-                       <span> OR </span>
+                       <span> or </span>
                        <hr />
                     </div>
                     <GoogleOAuth mode="signup"/>
