@@ -4,29 +4,12 @@ import { useParams } from "react-router-dom";
 import { fetchSkills, getUserSkills, editUserSkills } from "../../services/userProfileService";
 
 export default function Skills({username}) {
-    const [allSkills, setAllSkills] = useState([]);
     const [filteredSkills, setFilteredSkills] = useState([]);
     const [skills, setSkills] = useState([]);
     const [search, setSearch] = useState("");
     const [isEditable, setIsEditable] = useState(false); // State to manage edit mode
 
-    // Fetch skills when the username changes
-    const fetchAndSetSkills = async () => {
-        try {
-            // const skills = await fetchSkills();
-            const skills = [
-                "JavaScript","React","Node.js","Express.js","Spring Boot","HTML","CSS","SQL","NoSQL","MongoDB","MySQL","PostgreSQL","Docker","Kubernetes","AWS","Git","GitHub","Python","Java","C++","C#","TypeScript","Angular","Vue.js","Bootstrap","Tailwind CSS","REST API","GraphQL","Jenkins","CI/CD","Webpack","Babel",
-                "Redux","Machine Learning","Data Structures","Algorithms","OOP","Design Patterns","Unit Testing","Integration Testing","Jest","Mocha","Chai","Cypress","Selenium","Figma","Adobe XD","Agile Methodologies","Scrum","Linux","Command Line"
-            ];
-            
-            setAllSkills(skills);
-        } catch (error) {
-            console.error("Error fetching skills:", error);
-        }
-    };
-
     useEffect(() => {
-        fetchAndSetSkills();
         if(username){
             getUserSkills(username).then((skills) => {
                 setSkills(skills);
@@ -38,17 +21,14 @@ export default function Skills({username}) {
         if (search.trim() === "") {
             setFilteredSkills([]);
         } else {
-            const lowercaseSearch = search.toLowerCase();
-            setFilteredSkills(
-                allSkills.filter(
-                    (skill) =>
-                        skill.toLowerCase().includes(lowercaseSearch) &&
-                        !skills.some((s) => s === skill)
-                )
-            );
+            handleSearch();
         }
-    }, [search, skills, allSkills]);
-
+    }, [search]);
+    const handleSearch = async () => {
+        const searchedSkills = await fetchSkills(search.toLowerCase())
+        console.log(searchedSkills)
+        setFilteredSkills(searchedSkills);
+    }
     // Handle toggling skills in the list
     const handleSkillToggle = (skill) => {
         if (skills.some((s) => s === skill)) {
@@ -57,6 +37,18 @@ export default function Skills({username}) {
             setSkills([...skills, skill]);
         }
     };
+    const addSkill = (skill) =>{
+        if (skills.some((s) => s === skill)) {
+        } else {
+            setSkills([...skills, skill]);
+            setFilteredSkills(filteredSkills.filter((s)=> s != skill))
+        }
+    }
+    const removeSkill = (skill)=>{
+        if (skills.some((s) => s === skill)) {
+            setSkills(skills.filter((s) => s !== skill));
+        }
+    }
 
     // Handle the edit button click to toggle edit mode
     const handleEditClick = () => {
@@ -78,7 +70,7 @@ export default function Skills({username}) {
                     <div
                         className="skill user-skill"
                         key={index}
-                        onClick={() => handleSkillToggle(skill)}
+                        onClick={() => removeSkill(skill)}
                     >
                         {skill}
                     </div>
@@ -99,7 +91,7 @@ export default function Skills({username}) {
                             <div
                                 className="skill add-skill"
                                 key={index}
-                                onClick={() => handleSkillToggle(skill)}
+                                onClick={() => addSkill(skill)}
                             >
                                 {skill}
                             </div>

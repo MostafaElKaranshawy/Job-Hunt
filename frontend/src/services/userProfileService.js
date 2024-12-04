@@ -101,24 +101,25 @@ async function getUserSkills(userName) {
   }
 }
 
-async function fetchSkills(){
-    console.log("Fetching skills...");
-    const url = 'https://linkedin-data-api.p.rapidapi.com/get-article-comments?url=https%3A%2F%2Fwww.linkedin.com%2Fpulse%2F2024-corporate-climate-pivot-bill-gates-u89mc%2F%3FtrackingId%3DV85mkekwT9KruOXln2gzIg%253D%253D&page=1&sort=REVERSE_CHRONOLOGICAL';
-    const options = {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': '84b64d8238msh373aa746ad6716cp1691d9jsn73cd9aabc50e',
-            'x-rapidapi-host': 'linkedin-data-api.p.rapidapi.com'
-        }
-    };
+async function fetchSkills(query){
+    let myHeaders = new Headers();
+    myHeaders.append("apikey", "AfAbEfRxDYiRaNIzQHh54FUF2wSn2unP");
 
+    let requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+    headers: myHeaders
+    };
     try {
-        const response = await fetch(url, options);
-        const result = await response.json();  // Parse as JSON
-        console.log(result);
-        return result; // Assuming the result is an array of skills
+        const response = await fetch(`https://api.apilayer.com/skills?q=${query}`, requestOptions);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        const result = await response.json(); // Parse the JSON response
+        return result; // Ensure the result is returned
     } catch (error) {
-        console.error("Error fetching skills:", error);
+        console.error('Error fetching skills:', error);
+        return []; // Return an empty array or appropriate default on error
     }
 }
 async function editUserSkills(userName, skills){
