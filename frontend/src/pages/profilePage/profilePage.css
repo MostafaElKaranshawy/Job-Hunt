@@ -1,0 +1,61 @@
+.profile-page{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.main-profile{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100%;
+}
+.main-profile .profile-nav{
+    width: 250px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-right: 1px solid rgb(0, 85, 0);
+    color: rgb(0, 85, 0);
+}
+.main-profile .profile-nav .profile-section{
+    width: calc(100% - 44px);
+    cursor: pointer;
+    font-size: 20px;
+    padding: 20px;
+    border-bottom: 1px solid rgb(0, 85, 0);
+    border-right: 4px solid transparent;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.main-profile .profile-nav .profile-section:hover{
+    border-right: 4px solid rgb(0, 85, 0);
+}
+
+.main-profile .profile-nav .profile-section.active{
+    border-right: 4px solid rgb(0, 85, 0);
+}
+.main-profile .profile-nav .profile-section p{
+    width: 100%;
+}
+.main-profile .profile-nav .profile-section i{
+    margin-right: 10px;
+    font-size: inherit;
+}
+.main-profile .nav-section{
+    width: calc(100% - 250px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100%;
+    background: #f6fff6;
+}
