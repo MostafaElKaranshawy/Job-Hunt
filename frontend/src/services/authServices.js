@@ -1,7 +1,7 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const employerSignUp = async (formData) => {
-  const response = await fetch(`${apiUrl}/auth/employeer/signUp`, {
+  const response = await fetch(`${apiUrl}/auth/signup/company`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export const employeeSignUp = async (formData) => {
 };
 export const googleSignUp = async (credentialResponse) => {
   console.log("Google Credential:", credentialResponse);
-  const response = await fetch(`${apiUrl}/signup/applicant/google`, {
+  const response = await fetch(`${apiUrl}/auth/signup/applicant/google`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -64,7 +64,7 @@ export const googleLogIn = async (credentialResponse) => {
   }
 };
 export const logIn = async (formData) => {
-  const response = await fetch(`${apiUrl}/auth/logIn`, {
+  const response = await fetch(`${apiUrl}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

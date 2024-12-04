@@ -1,12 +1,12 @@
-package com.software.backend.auth;
+package com.software.backend.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.software.backend.auth.AuthenticationResponse;
 import com.software.backend.config.JwtService;
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.entity.Token;
 import com.software.backend.entity.User;
 import com.software.backend.enums.TokenType;
-import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.exception.UserNotFoundException;
 import com.software.backend.repository.TokenRepository;
@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class UserAuthService {
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
@@ -33,54 +32,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public AuthenticationResponse register(RegisterRequest request) {
-        if (repository.findByEmail(request.getEmail()).isPresent()) {
-            throw new EmailAlreadyRegisteredException("Email already registered");
-        }
 
-        String username = request.getEmail().split("@")[0];
-        var user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .userType(request.getUserType())
-                .username(username)
-                .build();
-
-        var savedUser = repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
-
-    private void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
-                .build();
-        tokenRepository.save(token);
-    }
-
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
-    }
-
-    public AuthenticationResponse authenticate(SignUpRequest request) {
-
+    public AuthenticationResponse login(SignUpRequest request) {
 
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -95,9 +48,32 @@ public class AuthenticationService {
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
-                    .refreshToken(refreshToken)
+                .refreshToken(refreshToken)
                 .build();
     }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
 
     public void refreshToken(
             HttpServletRequest request,
@@ -126,4 +102,5 @@ public class AuthenticationService {
             }
         }
     }
+
 }

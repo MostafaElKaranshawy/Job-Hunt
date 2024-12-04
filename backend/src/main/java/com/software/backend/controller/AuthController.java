@@ -1,8 +1,7 @@
 package com.software.backend.controller;
 
-import com.software.backend.auth.AuthenticationRequest;
 import com.software.backend.auth.AuthenticationResponse;
-import com.software.backend.auth.AuthenticationService;
+import com.software.backend.service.UserAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.exception.BusinessException;
 import com.software.backend.service.ApplicantAuthService;
 import com.software.backend.service.CompanyAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,12 +26,11 @@ public class AuthController {
     private CompanyAuthService companyAuthService;
 
     @Autowired
-    private AuthenticationService service;
+    private UserAuthService service;
 
     // Google Sign-Up Endpoint
     @PostMapping("/signup/applicant/google")
     public ResponseEntity<AuthenticationResponse> googleSignUp(@RequestBody SignUpRequest request) {
-        System.out.println("Google sign up");
         return ResponseEntity.ok(applicantAuthService.applicantGoogleSignUp(request));
     }
 
@@ -44,12 +40,13 @@ public class AuthController {
         return ResponseEntity.ok(applicantAuthService.signUp(signUpRequest));
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody SignUpRequest request
     ) {
-        return ResponseEntity.ok(service.authenticate(request));
+        return ResponseEntity.ok(service.login(request));
     }
+
 
     @PostMapping("/refresh-token")
     public void refreshToken(
@@ -62,12 +59,7 @@ public class AuthController {
 
 
     @PostMapping("/signup/company")
-    public ResponseEntity<?> signUpCompany(@RequestBody SignUpRequest signUpRequest) {
-        try {
-            companyAuthService.signUp(signUpRequest);
-            return ResponseEntity.ok("Company signup successful.");
-        } catch (BusinessException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-        }
+    public ResponseEntity<AuthenticationResponse> signUpCompany(@RequestBody SignUpRequest signUpRequest) {
+            return ResponseEntity.ok(companyAuthService.signUp(signUpRequest));
     }
 }

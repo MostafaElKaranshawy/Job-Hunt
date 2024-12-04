@@ -17,11 +17,26 @@ public class ValidatorFactory {
         if (type == ValidationType.APPLICANT_SIGNUP) {
             return createApplicantSignUpValidatorChain();
         }
-        return createApplicantSignUpValidatorChain();
+        else if (type == ValidationType.COMPANY_SIGNUP) {
+            return createCompanySignUpValidatorChain();
+        }
+        else {
+            return null;
+        }
+    }
+
+    private static Validator createCompanySignUpValidatorChain() {
+        Validator companyNameValidator = new CompanyNameValidator();
+        Validator emailValidator = new EmailValidator();
+        Validator passwordValidator = new PasswordValidator();
+
+        companyNameValidator.setNext(emailValidator);
+        emailValidator.setNext(passwordValidator);
+
+        return companyNameValidator;
     }
 
     private static Validator createApplicantSignUpValidatorChain() {
-        System.out.println("Creating ApplicantSignUpValidator chain");
         Validator firstNameValidator = new FirstNameValidator();
         Validator lastNameValidator = new LastNameValidator();
         Validator emailValidator = new EmailValidator();
@@ -31,7 +46,6 @@ public class ValidatorFactory {
         lastNameValidator.setNext(emailValidator);
         emailValidator.setNext(passwordValidator);
 
-        System.out.println("ApplicantSignUpValidator chain created");
         return firstNameValidator;
     }
 }
