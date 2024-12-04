@@ -9,7 +9,6 @@ import profileHolder from "../../../assets/profile.png";
 import { parseEducation,
     parseExperience,
     toCamelCase,
-    parseSection
 } from "../../../utils/profileUtils";
 
 import { getUserProfile, 
@@ -17,6 +16,7 @@ import { getUserProfile,
     handleCustomSectionOperation,
 } from "../../../services/userProfileService";
 export default function ProfileInfoSection() {
+    const [render, setRender] = useState(false);
     const { userName } = useParams();
     const [userSections, setUserSections] = useState([]);
     const [customSections, setCustomSections] = useState([]);
@@ -46,10 +46,10 @@ export default function ProfileInfoSection() {
                 errors: {},
             },
         ]);
+        setRender(!render);
     }
     useEffect(() => {
         if (userData.id) {
-            // handleGetUserSkills();
             refreshCustomSections();
         }
     }, [userData]);
@@ -74,6 +74,7 @@ export default function ProfileInfoSection() {
                             }
                             return field;
                         }),
+                        errors: {},
                     };
                 }
                 console.log(section)
@@ -212,6 +213,7 @@ export default function ProfileInfoSection() {
                                         }
                                         return field;
                                     }),
+                                    errors: {}
                                 };
                             }
                             return customSection;
@@ -238,6 +240,7 @@ export default function ProfileInfoSection() {
                         sectionErrors:[]
                     }
                 }) : [],
+                errors: {},
             },
             {
                 sectionName: "Experience",
@@ -249,8 +252,10 @@ export default function ProfileInfoSection() {
                         sectionErrors:[]
                     }
                 }): [],
+                errors: {},
             },
         ]);
+        setRender(!render);
     };
     
     async function saveChanges() {

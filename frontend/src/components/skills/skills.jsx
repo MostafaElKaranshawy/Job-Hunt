@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./skills.css";
-import { useParams } from "react-router-dom";
 import { fetchSkills, getUserSkills, editUserSkills } from "../../services/userProfileService";
 
 export default function Skills({username}) {
@@ -8,7 +7,7 @@ export default function Skills({username}) {
     const [skills, setSkills] = useState([]);
     const [search, setSearch] = useState("");
     const [isEditable, setIsEditable] = useState(false); // State to manage edit mode
-
+    const [skillsLimit, setSkillsLimit] = useState(false)
     useEffect(() => {
         if(username){
             getUserSkills(username).then((skills) => {
@@ -27,19 +26,17 @@ export default function Skills({username}) {
     const handleSearch = async () => {
         const searchedSkills = await fetchSkills(search.toLowerCase())
         console.log(searchedSkills)
-        setFilteredSkills(searchedSkills);
+        if(search)
+            setFilteredSkills(searchedSkills.filter(skill => !skills.includes(skill)));
     }
     // Handle toggling skills in the list
-    const handleSkillToggle = (skill) => {
-        if (skills.some((s) => s === skill)) {
-            setSkills(skills.filter((s) => s !== skill));
-        } else {
-            setSkills([...skills, skill]);
-        }
-    };
     const addSkill = (skill) =>{
         if (skills.some((s) => s === skill)) {
         } else {
+            if(skills.length >= 20){
+                setSkillsLimit(true)
+                return
+            }
             setSkills([...skills, skill]);
             setFilteredSkills(filteredSkills.filter((s)=> s != skill))
         }
@@ -48,16 +45,25 @@ export default function Skills({username}) {
         if (skills.some((s) => s === skill)) {
             setSkills(skills.filter((s) => s !== skill));
         }
+        if(skills.length <= 10)
+            setSkillsLimit(false)
     }
 
     // Handle the edit button click to toggle edit mode
     const handleEditClick = () => {
         setIsEditable(!isEditable);
     };
-    const handleSaveSkills = ()=>{
+    const handleSaveSkills = async ()=>{
+        handleCancel();
+        await editUserSkills(username, skills)
+    }
+    const handleCancel = async ()=>{
         setIsEditable(false)
-
-        editUserSkills(username, skills)
+        setSkillsLimit(false)
+        setFilteredSkills([])
+        setSearch("")
+        const skillsData = await getUserSkills(username)
+        setSkills(skillsData)
     }
     return (
         <div className="skills">
@@ -81,11 +87,17 @@ export default function Skills({username}) {
             {isEditable && (
                 <div className="skills-fields">
                     <input
-                        className="skills-search"
+                        className={`skills-search ${skillsLimit?"error" :""}`}
                         placeholder="Search for skills..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
+                    {
+                        skillsLimit &&
+                        <div className="search-limit-error error">
+                            You can only add up to 20 skills
+                        </div>
+                    }
                     <div className="skills-filter">
                         {filteredSkills.map((skill, index) => (
                             <div
@@ -98,10 +110,10 @@ export default function Skills({username}) {
                         ))}
                     </div>
                     <div className="section-options">
-                        <div className="cancel-button" onClick={() => setIsEditable(false)}>
+                        <div className="cancel-button" onClick={handleCancel}>
                             Cancel
                         </div>
-                        <div className="save-button" onClick={handleSaveSkills}>
+                        <div className="save-button" onClick={handleSaveSkills} >
                             Save
                         </div>
                     </div>

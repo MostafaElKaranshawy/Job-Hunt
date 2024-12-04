@@ -3,6 +3,7 @@ import Section from "../section/section";
 import "./customSection.css";
 
 export default function CustomSection({ sectionData, sectionChange, addSection, editSection, removeSection, refreshCustomSections }) {
+    const [render, setRender] = useState(false);
     const [addSectionVisible, setAddSectionVisible] = useState(false);
     const [newSection, setNewSection] = useState({
         sectionName: `${sectionData.sectionName} ${sectionData.sectionSections.length + 1}`,
@@ -35,6 +36,7 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                             ? { ...field, fieldValue }
                             : field
                     ),
+                    errors: {}
                 };
             }
             return subSection;
@@ -103,7 +105,10 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                             sectionData={section}
                             sectionChange={handleFieldChange}
                             save={(editedFields) => editSection(sectionData.sectionName, section.id, editedFields)} // Pass editedFields to editSection
-                            cancel={()=>{refreshCustomSections}}
+                            cancel={()=>{
+                                refreshCustomSections();
+                                setRender(!render);
+                            }}
                             errors={section.sectionErrors}
                         />
                         {/* {console.log(sectionData.sectionErrors)} */}
