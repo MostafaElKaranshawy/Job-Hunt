@@ -21,10 +21,16 @@ public class ExperienceController {
 
     @PostMapping("/{id}/profile/experience")
     public ResponseEntity<String> addExperience(@PathVariable Integer id, @RequestBody ExperienceDTO dto){
-        if(service.addExperience(id, dto))
-            return ResponseEntity.ok("Experience added successfully");
-        else
-            return new ResponseEntity<>("Applicant not found", HttpStatus.NOT_FOUND);
+        try {
+            if(service.addExperience(id, dto))
+                return ResponseEntity.ok("Experience added successfully");
+            else
+                return new ResponseEntity<>("Applicant not found", HttpStatus.NOT_FOUND);
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+
     }
     @GetMapping("/{id}/profile/experience")
     public ResponseEntity<List<ExperienceDTO>> getExperience(@PathVariable Integer id){

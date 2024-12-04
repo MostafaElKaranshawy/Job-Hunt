@@ -8,6 +8,7 @@ import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.ExperienceRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +28,12 @@ public class ExperienceServices {
         if(applicant == null) return false;
         Experience experience = mapper.toEntity(dto);
         experience.setApplicant(applicant);
-        repo.save(experience);
+        try {
+            repo.save(experience);
+        }
+        catch (DataIntegrityViolationException e){
+            throw new IllegalArgumentException("Invalid input data:( .... Missing attributes !");
+        }
         return true;
     }
 
