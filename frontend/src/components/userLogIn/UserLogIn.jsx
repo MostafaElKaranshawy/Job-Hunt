@@ -45,11 +45,12 @@ function UserLogIn() {
     }
   };
 
+
   return (
     <div className="login-container">
-      <h1>User Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
+      <h1>Log in</h1>
+      <form>
+        <div>
           <label htmlFor="email">Email</label>
           <input
             type="text"
@@ -62,7 +63,7 @@ function UserLogIn() {
           />
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
-        <div className="form-group">
+        <div>
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -74,12 +75,12 @@ function UserLogIn() {
           />
           {errors.password && <p className="error">{errors.password}</p>}
         </div>
-        <button type="submit" className="login-button">
+      </form>
+      <button type="submit" className="send-button" onClick={handleSubmit}>
           Log In
         </button>
-      </form>
-      <p>Don't have an account?</p>
-      <Link to="/">Sign up</Link>
+      <p>Don't have an account? <Link to="/" className="link">Sign up</Link></p>
+      
     </div>
   );
 }
