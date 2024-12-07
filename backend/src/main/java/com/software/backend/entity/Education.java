@@ -1,5 +1,6 @@
 package com.software.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -38,9 +39,7 @@ public class Education {
 
 
     @Column(
-            nullable = false,
-            name = "end_date",
-            columnDefinition = "YEAR"
+            name = "end_date"
     )
     private Integer endDate;
 
@@ -52,4 +51,18 @@ public class Education {
             nullable = false
     )
     private Applicant applicant; // Many-to-one relationship with Applicant
+
+    @Override
+    public String toString() {
+        return "Education{" +
+                "degree='" + degree + '\'' +
+                ", institution='" + institution + '\'' +
+                ", fieldOfStudy='" + fieldOfStudy + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", " + applicant.toString() +
+                '}';
+    }
 }
+
+

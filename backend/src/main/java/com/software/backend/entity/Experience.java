@@ -28,11 +28,21 @@ public class Experience {
 
     @Column(nullable = false)
     private LocalDate endDate;
-
-    @Column(nullable = false)
+  
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "applicant_id", nullable = false)
     private Applicant applicant;
 }
+
+
+
+
+
+
+
+
+
+
+
