@@ -1,0 +1,60 @@
+.header{
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(246, 255, 246);
+    padding: 0 50px;
+    width: calc(100% - 100px);
+    border-bottom: 1px solid rgb(0, 85, 0);
+}
+.header .logo img{
+    height: 50px;
+    filter: grayscale(100%);
+}
+.header .nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.header .nav ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+}
+
+.header .nav .nav-menu .menu-item{
+    margin: 0 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: rgb(0, 85, 0);
+    background-color: white;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+.header .nav .nav-menu .menu-item:hover{
+    background-color: rgb(0, 85, 0);
+    color: white;
+    color: inherit;
+}
+.header .nav .nav-menu .menu-item.active{
+    background-color: rgb(0, 85, 0);
+    color: white;
+}
+.header .nav .nav-menu .menu-item i{
+    font-size: 15px;
+    margin-right: 5px;
+}
+.header .nav .nav-menu .menu-item p{
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+}
