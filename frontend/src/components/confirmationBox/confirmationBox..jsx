@@ -7,7 +7,7 @@ export default function ConfirmationBox(probs){
     const handleCancel = probs.cancel;
     const handleConfirm = probs.confirm;
     return(
-        <div className="container">
+        <div className="box-container">
             <div className={`confirmation-box`}>
                 <p className="content">
                     {content}

@@ -1,42 +1,32 @@
 import React, { useEffect, useState } from "react";
-import "./section.css";
 
-import Universities from "../../json/universities.json";
-export default function Section({ sectionData, sectionChange, errors, save, cancel }) {
+import Countries from "../../json/countries.json";
+
+export default function ProfileSection({ sectionData, sectionChange, errors, save, cancel }) {
     const [render, setRender] = useState(false);
     const [editedFields, setEditedFields] = useState(sectionData.sectionFields);
     const [isEditing, setIsEditing] = useState(false);
-    const [degrees, setDegrees] = useState([
-        "Associate Degree",
-        "Bachelor's Degree",
-        "Master's Degree",
-        "Doctoral Degree (PhD)",
-        "Professional Degrees",
-        "Certificate & Diploma Programs"
-    ]);
-    const [universities, setUniversities] = useState([]);
+    const [countries, setCountries] = useState([]);
+
 
     useEffect(() => {
-    
+        // Synchronize editedFields with sectionData when sectionData changes
         setEditedFields(sectionData.sectionFields);
     }, [sectionData]);
 
     useEffect(() => {
-
         if (Object.keys(errors).length > 0) {
             setIsEditing(true); // Keep editing mode active if there are errors
         }
     }, [errors]);
 
-    useEffect(() => {
-
-        setUniversities(Universities);
-    }, [Universities])
+    useEffect(()=>{
+        setCountries(Countries.map((country)=>{return country.name}))
+    },[Countries])
 
     const handleFieldChange = (e, fieldIndex) => {
-
         const updatedFieldValue = e.target.value;
-
+        console.log(e.target.value)
         setEditedFields((prevFields) => {
             const updatedFields = [...prevFields];
             updatedFields[fieldIndex] = { ...updatedFields[fieldIndex], fieldValue: updatedFieldValue };
@@ -49,22 +39,16 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
 
 
     const handleSave = async () => {
-
         await save(editedFields);
-
         if (Object.keys(errors).length === 0) {
-            
             setIsEditing(false); // Exit edit mode if no errors
-        }
-        else {
-
+        } else {
             setIsEditing(true); // Stay in edit mode if there are errors
         }
         setRender(!render);
     };
 
     const handleCancel = () => {
-
         setIsEditing(false); // Exit edit mode if canceled
         cancel();
         setEditedFields(sectionData.sectionFields); // Reset fields to original data
@@ -89,53 +73,23 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
                     <div className="section-field" key={index}>
                         <div className="field-name">{field.fieldName}</div>
                         <div className="input-container">
-                            {field.fieldName === "Degree"?
-                            <select
-                                name={field.fieldName}
-                                className={`field-value ${
-                                errors && errors[field.fieldName] ? "error-field" : ""
-                                } ${isEditing ? "editable" : ""}`}
-                                value={field.fieldValue}
-                                onChange={(e) => handleFieldChange(e, index)}
-                                disabled={!isEditing}
-                            >
-                                {degrees.map((degree, idx) => (
-                                <option value={degree} key={idx}>
-                                    {degree}
-                                </option>
-                                ))}
-                            </select>
-                            :field.fieldName === "Institution"?
-                            <select
-                                name={field.fieldName}
-                                className={`field-value ${
-                                errors && errors[field.fieldName] ? "error-field" : ""
-                                } ${isEditing ? "editable" : ""}`}
-                                value={field.fieldValue}
-                                onChange={(e) => handleFieldChange(e, index)}
-                                disabled={!isEditing}
-                            >
-                                {universities.map((university, idx) => (
-                                <option value={university.name} key={idx}>
-                                    {university}
-                                </option>
-                                ))}
-                            </select>
-                            :field.fieldName === "Description"?
-                            <textarea 
-                                name={field.fieldName} // Add the name attribute here
-                                className={`field-value ${
+                            {field.fieldName == "Country"?
+                                <select
+                                    name={field.fieldName}
+                                    className={`field-value ${
                                     errors && errors[field.fieldName] ? "error-field" : ""
-                                } ${isEditing ? "editable" : ""}`}
-                                value={field.fieldValue}
-                                onChange={(e) => handleFieldChange(e, index)}
-                                disabled={!isEditing} // Disable input when not in edit mode
-                                minLength={field.minLength}
-                                maxLength={field.maxLength}
-                            >
-                                {field.fieldValue}
-                            </textarea>
-                            :<input
+                                    } ${isEditing ? "editable" : ""}`}
+                                    value={field.fieldValue}
+                                    onChange={(e) => handleFieldChange(e, index)}
+                                    disabled={!isEditing}
+                                >
+                                    {countries.map((country, idx) => (
+                                    <option value={country} key={idx}>
+                                        {country}
+                                    </option>
+                                    ))}
+                                </select>                              
+                                :<input
                                     type={field.fieldType}
                                     name={field.fieldName} // Add the name attribute here
                                     className={`field-value ${

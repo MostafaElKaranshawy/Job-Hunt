@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./skills.css";
-import { fetchSkills, getUserSkills, editUserSkills } from "../../services/userProfileService";
-
+import { getUserSkills, editUserSkills } from "../../services/userProfileService";
+import { fetchSkills } from "../../services/APIsService";
 export default function Skills({username}) {
     const [filteredSkills, setFilteredSkills] = useState([]);
     const [skills, setSkills] = useState([]);
