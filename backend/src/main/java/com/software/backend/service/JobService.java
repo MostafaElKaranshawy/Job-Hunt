@@ -9,8 +9,10 @@ import com.software.backend.mapper.JobMapper;
 import com.software.backend.repository.JobRepository;
 import com.software.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -25,18 +27,21 @@ public class JobService {
     @Autowired
     private JobMapper jobMapper;
 
-    public List<JobDto> getHomeActiveJobs(){
+    public List<JobDto> getHomeActiveJobs(int page, int offset){
+
+        Pageable pageable = PageRequest.of(page, offset);
 
         JobStatus status = JobStatus.OPEN;
-        List<Job> jobs = jobRepository.findAllByStatusIs(status).orElse(null);
+        List<Job> jobs = jobRepository.findAllByStatusIs(status, pageable).orElse(null);
 
         if (jobs == null) return Collections.emptyList();
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
-    public List<JobDto> searchJobs(String query){
+    public List<JobDto> searchJobs(String query, int page, int offset){
 
-        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(query, query).orElse(null);
+        Pageable pageable = PageRequest.of(page, offset);
+        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(query, query, pageable).orElse(null);
 
         if (jobs == null) return Collections.emptyList();
 

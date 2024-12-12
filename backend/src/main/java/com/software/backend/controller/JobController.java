@@ -43,11 +43,11 @@ public class JobController {
     }
 
     @GetMapping("/home/jobs")
-    public ResponseEntity<List<JobDto>> getJobs() {
-
+    public ResponseEntity<List<JobDto>> getJobs(@RequestParam(name = "page") Integer page,
+                                                @RequestParam(name = "offset") Integer offset) {
         try {
 
-            List<JobDto> jobs = jobService.getHomeActiveJobs();
+            List<JobDto> jobs = jobService.getHomeActiveJobs(page, offset);
             return ResponseEntity.ok(jobs);
         } catch (Exception e) {
 
@@ -56,11 +56,12 @@ public class JobController {
     }
 
     @GetMapping("/home/jobs/search")
-    public ResponseEntity<List<JobDto>> searchJobs(@RequestParam(name = "query") String query){
-
+    public ResponseEntity<List<JobDto>> searchJobs(@RequestParam(name = "query") String query,
+                                                   @RequestParam(name = "page") Integer page,
+                                                   @RequestParam(name = "offset") Integer offset){
         try {
 
-            List<JobDto> jobs = jobService.searchJobs(query);
+            List<JobDto> jobs = jobService.searchJobs(query, page, offset);
             return ResponseEntity.ok(jobs);
         } catch (Exception e) {
 
