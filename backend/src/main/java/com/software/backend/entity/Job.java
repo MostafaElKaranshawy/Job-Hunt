@@ -68,6 +68,5 @@ public class Job {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Section> sections;
-
 }
 
