@@ -5,6 +5,7 @@ import com.software.backend.entity.Company;
 import com.software.backend.entity.Job;
 import com.software.backend.entity.User;
 import com.software.backend.enums.JobStatus;
+import com.software.backend.filter.JobCriteriaRunner;
 import com.software.backend.mapper.JobMapper;
 import com.software.backend.repository.JobRepository;
 import com.software.backend.repository.UserRepository;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,26 +29,32 @@ public class JobService {
     private JobRepository jobRepository;
     @Autowired
     private JobMapper jobMapper;
+    @Autowired
+    private JobCriteriaRunner jobCriteriaRunner;
 
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
         Pageable pageable = PageRequest.of(page, offset);
 
         JobStatus status = JobStatus.OPEN;
-        List<Job> jobs = jobRepository.findAllByStatusIs(status, pageable).orElse(null);
-
-        if (jobs == null) return Collections.emptyList();
+        List<Job> jobs = jobRepository.findAllByStatusIs(status, pageable).orElse(new ArrayList<>());
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
     public List<JobDto> searchJobs(String query, int page, int offset){
 
         Pageable pageable = PageRequest.of(page, offset);
-        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(query, query, pageable).orElse(null);
-
-        if (jobs == null) return Collections.emptyList();
+        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(query, query, pageable).orElse(new ArrayList<>());
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
+    }
+
+    public List<JobDto> filterJobs(HashMap<String, String> filterCriteria){
+
+        List<JobDto> filteredJobs = jobCriteriaRunner.matchCriterias(filterCriteria);
+
+        if (filteredJobs == null) return new ArrayList<>();
+        return filteredJobs;
     }
 
     public List<JobDto> getExpiredJobsForCompany(String companyUsername) {

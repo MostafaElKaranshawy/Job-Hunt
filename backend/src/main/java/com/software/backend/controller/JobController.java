@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,7 @@ public class JobController {
             return ResponseEntity.ok(jobs);
         } catch (Exception e) {
 
+            e.printStackTrace();
             return ResponseEntity.status(500).body(new ArrayList<>());
         }
     }
@@ -65,6 +67,22 @@ public class JobController {
             return ResponseEntity.ok(jobs);
         } catch (Exception e) {
 
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/home/jobs/filter")
+    public ResponseEntity<List<JobDto>> filterJobs(@RequestParam(name = "type") String type){
+        try {
+            System.out.println(type);
+            HashMap<String, String> criterias = new HashMap<>();
+            criterias.put("type", type);
+            List<JobDto> jobs = jobService.filterJobs(criterias);
+
+            return ResponseEntity.ok(jobs);
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(new ArrayList<>());
         }
     }

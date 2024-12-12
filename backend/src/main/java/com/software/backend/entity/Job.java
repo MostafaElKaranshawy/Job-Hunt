@@ -33,6 +33,15 @@ public class Job {
     @Column(nullable = false)
     private JobStatus status;
 
+    @Column
+    private Integer salary;     // to be put if needed in frontend
+
+    @Column
+    private String type;
+
+    @Column
+    private String level;
+
     @CreationTimestamp
     @Column(
         nullable = false,
@@ -40,7 +49,6 @@ public class Job {
     )
     private LocalDateTime postedAt;
 
-//    private String salary;     // to be put if needed in frontend
 
 
     @Column(name = "application_deadline")

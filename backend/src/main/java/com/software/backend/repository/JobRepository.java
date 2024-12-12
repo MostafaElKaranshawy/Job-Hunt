@@ -23,6 +23,11 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     // Search for title or description.
     Optional<List<Job>> findAllByTitleContainsOrDescriptionContains(String title, String description, Pageable pageable);
 
-
+    // Filter
+    Optional<List<Job>> findAllByTypeEqualsIgnoreCase(String type);
+    Optional<List<Job>> findAllByLocationEqualsIgnoreCase(String location);
+    Optional<List<Job>> findAllByCategoryEqualsIgnoreCase(String category);
+    Optional<List<Job>> findAllBySalaryGreaterThanEqual(Integer salary);
+    Optional<List<Job>> findAllByLevelEqualsIgnoreCase(String level);
 
 }

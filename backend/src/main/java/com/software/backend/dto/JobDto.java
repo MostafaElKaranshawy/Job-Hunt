@@ -14,6 +14,34 @@ public class JobDto {
     private CompanyDto company;
     private LocalDateTime postedAt;
     private LocalDateTime applicationDeadline;
+    private Integer salary;     // to be put if needed in frontend
+    private String type;
+    private String level;
+
+    public Integer getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Integer salary) {
+        this.salary = salary;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
 
     public Integer getId() {
         return id;
@@ -82,12 +110,17 @@ public class JobDto {
     @Override
     public String toString() {
         return "JobDto{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", category='" + category + '\'' +
                 ", location='" + location + '\'' +
+                ", company=" + company +
                 ", postedAt=" + postedAt +
                 ", applicationDeadline=" + applicationDeadline +
+                ", salary=" + salary +
+                ", type='" + type + '\'' +
+                ", level='" + level + '\'' +
                 '}';
     }
 }
