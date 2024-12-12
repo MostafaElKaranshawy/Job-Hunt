@@ -1,6 +1,9 @@
 package com.software.backend.entity;
 
+import com.software.backend.enums.JobLevel;
 import com.software.backend.enums.JobStatus;
+import com.software.backend.enums.JobType;
+import com.software.backend.enums.PositionType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,11 +43,22 @@ public class Job {
     )
     private LocalDateTime postedAt;
 
-//    private String salary;     // to be put if needed in frontend
-
+    private String salary;
 
     @Column(name = "application_deadline")
     private LocalDateTime applicationDeadline;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "job_type", nullable = false)
+    private JobType jobType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "job_level", nullable = false)
+    private JobLevel jobLevel;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "position_type", nullable = false)
+    private PositionType positionType;
 
 
     @ManyToOne
