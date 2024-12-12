@@ -23,7 +23,7 @@ public class Company {
     @Column(nullable = false)
     private String name;
 
-    private String location;  // no address?
+    private String location;
 
     private String website;
 
@@ -36,7 +36,3 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Job> jobs;
 }
-
-/*
-*  phoneNumber if we changed our minds (as per last discussion with TA)
-*/
