@@ -4,6 +4,7 @@ import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Company;
 import com.software.backend.entity.Job;
 import com.software.backend.entity.User;
+import com.software.backend.enums.JobStatus;
 import com.software.backend.mapper.JobMapper;
 import com.software.backend.repository.JobRepository;
 import com.software.backend.repository.UserRepository;
@@ -24,29 +25,54 @@ public class JobService {
     @Autowired
     private JobMapper jobMapper;
 
+    public List<JobDto> getHomeActiveJobs(){
+
+        JobStatus status = JobStatus.OPEN;
+        List<Job> jobs = jobRepository.findAllByStatusIs(status).orElse(null);
+
+        if (jobs == null) return Collections.emptyList();
+
+        return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
+    }
+    public List<JobDto> searchJobs(String query){
+
+        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(query, query).orElse(null);
+
+        if (jobs == null) return Collections.emptyList();
+
+        return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
+    }
+
     public List<JobDto> getExpiredJobsForCompany(String companyUsername) {
         User user = userRepository.findByUsername(companyUsername).orElse(null);
+
         if (user == null) return Collections.emptyList();
 
         Company company = user.getCompany();
+
         if (company == null) return Collections.emptyList();
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         List<Job> jobs = jobRepository.findByCompanyAndApplicationDeadlineBefore(company, currentDateTime).orElse(null);
+
         if (jobs == null) return Collections.emptyList();
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
 
     public List<JobDto> getActiveJobsForCompany(String companyUsername) {
+
         User user = userRepository.findByUsername(companyUsername).orElse(null);
+
         if (user == null) return Collections.emptyList();
 
         Company company = user.getCompany();
+
         if (company == null) return Collections.emptyList();
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         List<Job> jobs = jobRepository.findByCompanyAndApplicationDeadlineAfter(company, currentDateTime).orElse(null);
+
         if (jobs == null) return Collections.emptyList();
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());

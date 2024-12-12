@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/company")
+@RequestMapping("")
 @CrossOrigin
 public class JobController {
 
     @Autowired
     private JobService jobService;
 
-    @GetMapping("/{companyUsername}/jobs")
+    @GetMapping("/company/{companyUsername}/jobs")
     public ResponseEntity<?> getJobs(@PathVariable String companyUsername) {
         System.out.println("@@@@@@@@@@@@@@Company Username: " + companyUsername);
         try {
@@ -37,9 +37,34 @@ public class JobController {
                     "expired", expiredJobDtos.isEmpty() ? new ArrayList<>() : expiredJobDtos
             ));
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("@@@@@@@@@@@@@@@Error: " + e.getMessage());
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/home/jobs")
+    public ResponseEntity<List<JobDto>> getJobs() {
+
+        try {
+
+            List<JobDto> jobs = jobService.getHomeActiveJobs();
+            return ResponseEntity.ok(jobs);
+        } catch (Exception e) {
+
+            return ResponseEntity.status(500).body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/home/jobs/search")
+    public ResponseEntity<List<JobDto>> searchJobs(@RequestParam(name = "query") String query){
+
+        try {
+
+            List<JobDto> jobs = jobService.searchJobs(query);
+            return ResponseEntity.ok(jobs);
+        } catch (Exception e) {
+
+            return ResponseEntity.status(500).body(new ArrayList<>());
         }
     }
 }

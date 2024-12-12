@@ -11,7 +11,7 @@ public class JobDto {
     private String description;
     private String category;
     private String location;
-    private Company company;
+    private CompanyDto company;
     private LocalDateTime postedAt;
     private LocalDateTime applicationDeadline;
 
@@ -71,11 +71,11 @@ public class JobDto {
         this.applicationDeadline = applicationDeadline;
     }
 
-    public Company getCompany() {
+    public CompanyDto getCompany() {
         return company;
     }
 
-    public void setCompany(Company company) {
+    public void setCompany(CompanyDto company) {
         this.company = company;
     }
 
