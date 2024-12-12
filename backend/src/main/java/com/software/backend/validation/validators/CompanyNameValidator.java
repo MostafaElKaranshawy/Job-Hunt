@@ -10,8 +10,10 @@ public class CompanyNameValidator extends Validator {
         String name = signUpRequest.getCompanyName();
 
         if (name == null || name.isEmpty())
-            throw new BusinessException("Company name is required.");
+            throw new BusinessException("Company name is required");
 
+
+        // should we check for a maximum length?
     }
 
 }

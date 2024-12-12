@@ -16,10 +16,10 @@ public class EmailValidator extends Validator {
         String email = signUpRequest.getEmail();
 
         if (email == null || email.isEmpty())
-            throw new BusinessException("Email is required.");
+            throw new BusinessException("Email is required");
 
         if (!EMAIL_PATTERN.matcher(email).matches())
-            throw new BusinessException("Email must be a valid email address.");
+            throw new BusinessException("Email must be a valid email address");
 
     }
 }

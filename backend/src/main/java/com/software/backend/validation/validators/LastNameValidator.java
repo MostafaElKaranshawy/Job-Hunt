@@ -11,10 +11,10 @@ public class LastNameValidator extends Validator {
         String lastName = signUpRequest.getLastName();
 
         if (lastName == null || lastName.isEmpty())
-            throw new BusinessException("Last name is required.");
+            throw new BusinessException("Last name is required");
 
         if (lastName.length() >= 30)
-            throw new BusinessException("Last name must not exceed 30 characters.");
+            throw new BusinessException("Last name must not exceed 30 characters");
 
     }
 }

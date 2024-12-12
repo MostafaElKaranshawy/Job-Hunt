@@ -10,22 +10,22 @@ public class PasswordValidator extends Validator {
         String password = signUpRequest.getPassword();
 
         if (password == null || password.isEmpty())
-            throw new BusinessException("Password is required.");
+            throw new BusinessException("Password is required");
 
         if (password.length() <= 8)
-            throw new BusinessException("Password must be at least 8 characters long.");
+            throw new BusinessException("Password must be at least 8 characters long");
 
         if (!password.matches(".*[A-Z].*"))
-            throw new BusinessException("Password must contain at least one uppercase letter.");
+            throw new BusinessException("Password must contain at least one uppercase letter");
 
         if (!password.matches(".*[a-z].*"))
-            throw new BusinessException("Password must contain at least one lowercase letter.");
+            throw new BusinessException("Password must contain at least one lowercase letter");
 
         if (!password.matches(".*[0-9].*"))
-            throw new BusinessException("Password must contain at least one number.");
+            throw new BusinessException("Password must contain at least one number");
 
         if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*"))
-            throw new BusinessException("Password must contain at least one special character.");
+            throw new BusinessException("Password must contain at least one special character");
 
     }
 }

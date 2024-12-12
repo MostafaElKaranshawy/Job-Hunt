@@ -10,10 +10,10 @@ public class FirstNameValidator extends Validator {
         String firstName = signUpRequest.getFirstName();
 
         if (firstName == null || firstName.isEmpty())
-            throw new BusinessException("First name is required.");
+            throw new BusinessException("First name is required");
 
         if (firstName.length() >= 30)
-            throw new BusinessException("First name must not exceed 30 characters.");
+            throw new BusinessException("First name must not exceed 30 characters");
 
     }
 }

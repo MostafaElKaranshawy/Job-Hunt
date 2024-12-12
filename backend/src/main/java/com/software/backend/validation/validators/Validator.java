@@ -10,6 +10,7 @@ public abstract class Validator {
         this.nextValidator = nextValidator;
     }
 
+    public Validator getNext() { return nextValidator; }
 
     // Abstract validation method
     protected abstract void doValidation(SignUpRequest signUpRequest); //throws ValidationException;
