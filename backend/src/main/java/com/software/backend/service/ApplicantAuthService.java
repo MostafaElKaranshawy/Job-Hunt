@@ -18,12 +18,14 @@ import com.software.backend.exception.UserNotFoundException;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.TokenRepository;
 import com.software.backend.repository.UserRepository;
-import com.software.backend.validator.Validator;
-import com.software.backend.validator.ValidatorFactory;
+import com.software.backend.validation.validators.Validator;
+import com.software.backend.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -44,22 +46,11 @@ public class ApplicantAuthService {
     private final String GOOGLE_CLIENT_ID = "992406545501-gsf4drs652b27m7886oq1ttlfrq3o14t.apps.googleusercontent.com";
 
     public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
-        Validator validator = ValidatorFactory.createValidator(ValidationType.APPLICANT_SIGNUP);
-        validator.validate(signUpRequest);
-
-
-        if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
-            throw new BusinessException("Email already exists.");
+        validateInput(signUpRequest);
 
         System.out.println("Creating user");
         String username = signUpRequest.getEmail().split("@")[0];
-        var user = User.builder()
-                .email(signUpRequest.getEmail())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .userType(UserType.APPLICANT)
-                .username(username)
-                .isBanned(false)
-                .build();
+        var user = createUser(signUpRequest, username);
 
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -73,16 +64,33 @@ public class ApplicantAuthService {
         applicant.setFirstName(signUpRequest.getFirstName());
         applicant.setLastName(signUpRequest.getLastName());
 
-
         // Save both User and Applicant entities
         userRepository.save(user);
         applicantRepository.save(applicant);
-
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    private void validateInput(SignUpRequest signUpRequest) {
+        Validator validator = ValidationFactory.createValidator(ValidationType.APPLICANT_SIGNUP);
+        Objects.requireNonNull(validator).validate(signUpRequest);
+
+        if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
+            throw new BusinessException("Email already exists.");
+    }
+
+    private User createUser(SignUpRequest signUpRequest, String username) {
+        var user = User.builder()
+                .email(signUpRequest.getEmail())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .userType(UserType.APPLICANT)
+                .username(username)
+                .isBanned(false)
+                .build();
+        return user;
     }
 
     private void saveUserToken(User user, String jwtToken) {
@@ -100,18 +108,21 @@ public class ApplicantAuthService {
 
     private JsonWebSignature verifyGoogleToken(String idToken) {
         idToken = idToken.replace("\"", "");
-        if (idToken == null || idToken.isEmpty()) {
+        if (idToken.isEmpty()) {
             throw new IllegalArgumentException("idToken is required");
         }
+
         try {
             TokenVerifier tokenVerifier = TokenVerifier.newBuilder()
                     .setAudience(GOOGLE_CLIENT_ID)
                     .build();
             JsonWebSignature verifiedToken = tokenVerifier.verify(idToken);
             return verifiedToken;
+
         } catch (Exception e) {
             System.out.println(e);
         }
+
         return null;
     }
 
@@ -120,9 +131,7 @@ public class ApplicantAuthService {
         System.out.println("Google Sign-Up");
 
         JsonWebSignature verifiedToken = verifyGoogleToken(signUpRequest.getGoogleToken());
-        if(verifiedToken == null) {
-            throw new BusinessException("Invalid Google Token");
-        }
+        if(verifiedToken == null) throw new BusinessException("Invalid Google Token");
         JsonWebToken.Payload payload = verifiedToken.getPayload();
 
         String email = payload.get("email").toString();

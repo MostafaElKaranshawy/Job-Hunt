@@ -1,22 +1,20 @@
-package com.software.backend.validator;
+package com.software.backend.validation.validators;
 
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.exception.BusinessException;
 
+
 public class LastNameValidator extends Validator {
 
     @Override
-    public void validate(SignUpRequest signUpRequest){ // throws ValidationException {
+    public void doValidation(SignUpRequest signUpRequest){
         String lastName = signUpRequest.getLastName();
 
-        if (lastName == null || lastName.isEmpty()) {
+        if (lastName == null || lastName.isEmpty())
             throw new BusinessException("Last name is required.");
-        } else if (lastName.length() >= 30) {
-            throw new BusinessException("Last name must not exceed 30 characters.");
-        }
 
-        if (nextValidator != null) {
-            nextValidator.validate(signUpRequest);
-        }
+        if (lastName.length() >= 30)
+            throw new BusinessException("Last name must not exceed 30 characters.");
+
     }
 }

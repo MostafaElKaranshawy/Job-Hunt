@@ -3,7 +3,6 @@ package com.software.backend.service;
 import com.software.backend.auth.AuthenticationResponse;
 import com.software.backend.config.JwtService;
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.entity.Applicant;
 import com.software.backend.entity.Company;
 import com.software.backend.entity.Token;
 import com.software.backend.entity.User;
@@ -14,10 +13,9 @@ import com.software.backend.exception.BusinessException;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.TokenRepository;
 import com.software.backend.repository.UserRepository;
-import com.software.backend.validator.Validator;
-import com.software.backend.validator.ValidatorFactory;
+import com.software.backend.validation.validators.Validator;
+import com.software.backend.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +34,7 @@ public class CompanyAuthService {
     private final JwtService jwtService;
 
     public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
-        Validator validator = ValidatorFactory.createValidator(ValidationType.COMPANY_SIGNUP);
+        Validator validator = ValidationFactory.createValidator(ValidationType.COMPANY_SIGNUP);
         validator.validate(signUpRequest);  // to be checked later to prevent it from being null(refactor)
 
 
