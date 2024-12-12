@@ -50,11 +50,11 @@ public class Job {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "job_type", nullable = false)
-    private JobType jobType;
+    private JobType type;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "job_level", nullable = false)
-    private JobLevel jobLevel;
+    private JobLevel level;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "position_type", nullable = false)
