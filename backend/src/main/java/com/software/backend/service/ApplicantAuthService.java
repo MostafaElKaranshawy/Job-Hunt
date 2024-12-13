@@ -27,6 +27,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.software.backend.repository.RefreshTokenRepository;
+import com.software.backend.util.JwtUtil;
 @Service
 @RequiredArgsConstructor
 public class ApplicantAuthService {
@@ -37,7 +38,7 @@ public class ApplicantAuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtUtil jwtUtil;
 
     private final Environment env;
 
@@ -49,9 +50,6 @@ public class ApplicantAuthService {
 
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new BusinessException("Email already exists.");
-
-
-
 
         System.out.println("Creating user");
         String username = signUpRequest.getEmail().split("@")[0];
@@ -109,13 +107,9 @@ public class ApplicantAuthService {
                 .email(email)
                 .userType(UserType.APPLICANT)
                 .username(username)
-                .googleClientId(signUpRequest.getClientId())
                 .isBanned(false)
                 .build();
-
         var savedUser = userRepository.save(user);
-
-
         String name = payload.get("name").toString();
         // Create the Applicant entity
         Applicant applicant = new Applicant();
@@ -142,19 +136,19 @@ public class ApplicantAuthService {
         String email = payload.get("email").toString();
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-
+        System.out.println("User found");
         if ( user.getPassword() != null ) {
-            throw new InvalidCredentialsException("User already exists");
+            throw new InvalidCredentialsException("User is not registered with Google");
         }
 
-        if ( user.getGoogleClientId() == null ||
-             !user.getGoogleClientId().equals(request.getClientId())) {
-            throw new InvalidCredentialsException("Invalid Google Client ID");
-        }
-
+        String username = user.getUsername();
+        String accessToken = jwtUtil.generateAccessToken(username);
+        String refreshToken = jwtUtil.generateRefreshToken(username);
+        System.out.println("login successful");
         return AuthenticationResponse.builder()
-                .accessToken("accessToken")
-                .refreshToken("refreshToken")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .username(username)
                 .build();
     }
 

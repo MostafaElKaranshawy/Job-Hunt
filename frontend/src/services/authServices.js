@@ -58,6 +58,7 @@ export const googleLogIn = async (credentialResponse) => {
   console.log("Google Credential:", credentialResponse);
   const response = await fetch(`${apiUrl}/auth/login/applicant/google`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -72,7 +73,7 @@ export const googleLogIn = async (credentialResponse) => {
   }
 };
 export const logIn = async (formData) => {
-  // formData.password = hashPassword(formData.password);
+  formData.password = hashPassword(formData.password);
   // const response = await fetch(`${apiUrl}/auth/login`, {
   //   method: "POST",
   //   credentials: "include",

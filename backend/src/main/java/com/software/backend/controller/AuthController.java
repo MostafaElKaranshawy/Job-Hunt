@@ -26,7 +26,7 @@ public class AuthController {
     private CompanyAuthService companyAuthService;
 
     @Autowired
-    private UserAuthService useService;
+    private UserAuthService userService;
 
     // Google Sign-Up Endpoint
     @PostMapping("/signup/applicant/google")
@@ -36,10 +36,17 @@ public class AuthController {
     }
 
     @PostMapping("/login/applicant/google")
-    public ResponseEntity<AuthenticationResponse> googleLogin(
-            @RequestBody SignUpRequest request
+    public ResponseEntity<?> googleLogin(
+            @RequestBody SignUpRequest request,
+            HttpServletResponse response
     ) {
-        return ResponseEntity.ok(applicantAuthService.loginWithGoogle(request));
+        System.out.println("Google Login Endpoint");
+        AuthenticationResponse authenticationResponse = applicantAuthService.loginWithGoogle(request);
+        userService.storeTokens(authenticationResponse, response);
+        System.out.println("Google Login Endpoint " + authenticationResponse.getUsername());
+        AuthenticationResponse usernameObject = new AuthenticationResponse();
+        usernameObject.setUsername(authenticationResponse.getUsername());
+        return ResponseEntity.ok(usernameObject);
     }
 
     // normal sign up
@@ -55,8 +62,8 @@ public class AuthController {
             @RequestBody SignUpRequest request,
             HttpServletResponse response
     ) {
-        AuthenticationResponse authenticationResponse = useService.login(request);
-        useService.storeTokens(authenticationResponse, response);
+        AuthenticationResponse authenticationResponse = userService.login(request);
+        userService.storeTokens(authenticationResponse, response);
         return ResponseEntity.ok(authenticationResponse.getUsername());
     }
 
