@@ -23,7 +23,7 @@ public class JobLocationCriteria implements JobsFilterCriteria{
     @Override
     public List<JobDto> meetCriteria(String data){
 
-        List<Job> jobs = jobRepository.findAllByLocationEqualsIgnoreCase(data).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByLocationContainsIgnoreCase(data).orElse(new ArrayList<>());
 
         return jobs.stream().map(mapper::jobToJobDto).collect(Collectors.toList());
     }

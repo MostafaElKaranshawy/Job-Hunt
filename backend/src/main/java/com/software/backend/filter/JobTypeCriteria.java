@@ -23,7 +23,7 @@ public class JobTypeCriteria implements JobsFilterCriteria{
     @Override
     public List<JobDto> meetCriteria(String data){
 
-        List<Job> jobs = jobRepository.findAllByTypeEqualsIgnoreCase(data).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByTypeContainsIgnoreCase(data).orElse(new ArrayList<>());
 
         return jobs.stream().map(mapper::jobToJobDto).collect(Collectors.toList());
     }

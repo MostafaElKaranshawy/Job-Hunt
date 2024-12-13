@@ -53,23 +53,23 @@ public class JobService {
 
         HashMap<String, String> filterCriteria = new HashMap<>();
 
-        if(type != null && !type.isEmpty())filterCriteria.put("type", type);
+        if (type != null) filterCriteria.put("type", type);
 
-        if(location != null && !location.isEmpty())filterCriteria.put("location", location);
+        if (location != null) filterCriteria.put("location", location);
 
-        if(category != null && !category.isEmpty())filterCriteria.put("category", category);
+        if (category != null) filterCriteria.put("category", category);
 
-        if(salary != null && !salary.isEmpty())filterCriteria.put("salary", salary);
+        if (salary != null) filterCriteria.put("salary", salary);
 
-        if(level != null && !level.isEmpty())filterCriteria.put("level", level);
+        if (level != null) filterCriteria.put("level", level);
 
-        if(query != null && !query.isEmpty())filterCriteria.put("search", query);
+        if (query != null) filterCriteria.put("search", query);
 
-        //        if (filteredJobs == null) return new ArrayList<>();
-        return jobCriteriaRunner.matchCriterias(filterCriteria);
+        return jobCriteriaRunner.matchCriteria(filterCriteria);
     }
 
     public List<JobDto> getExpiredJobsForCompany(String companyUsername) {
+
         User user = userRepository.findByUsername(companyUsername).orElse(null);
 
         if (user == null) return Collections.emptyList();

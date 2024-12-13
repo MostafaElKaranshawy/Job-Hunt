@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,7 +58,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByCategoryEqualsIgnoreCase(data)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByCategoryContainsIgnoreCase(data)).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -67,7 +66,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Software", result.get(0).getCategory());
+        assertEquals("Software", result.getFirst().getCategory());
     }
 
     @Test
@@ -84,7 +83,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByLocationEqualsIgnoreCase(location)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByLocationContainsIgnoreCase(location)).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -92,7 +91,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Remote", result.get(0).getLocation());
+        assertEquals("Remote", result.getFirst().getLocation());
     }
 
     @Test
@@ -109,7 +108,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByTypeEqualsIgnoreCase(type)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByTypeContainsIgnoreCase(type)).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -117,7 +116,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Full-Time", result.get(0).getType());
+        assertEquals("Full-Time", result.getFirst().getType());
     }
 
     @Test
@@ -142,7 +141,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(55000, result.get(0).getSalary());
+        assertEquals(55000, result.getFirst().getSalary());
     }
 
     @Test
@@ -159,7 +158,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByLevelEqualsIgnoreCase(level)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByLevelContainsIgnoreCase(level)).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -167,7 +166,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Entry-Level", result.get(0).getLevel());
+        assertEquals("Entry-Level", result.getFirst().getLevel());
     }
 
     @Test
@@ -192,7 +191,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Developer", result.get(0).getTitle());
+        assertEquals("Developer", result.getFirst().getTitle());
     }
 
 }

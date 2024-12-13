@@ -73,7 +73,7 @@ class JobCriteriaRunnerTest {
         when(jobCategoryCriteria.meetCriteria("IT")).thenReturn(filteredJobsCategory);
 
 
-        List<JobDto> result = jobCriteriaRunner.matchCriterias(criteria);
+        List<JobDto> result = jobCriteriaRunner.matchCriteria(criteria);
 
         // Validate the result
         assertEquals(1, result.size());
@@ -105,7 +105,7 @@ class JobCriteriaRunnerTest {
         when(jobCategoryCriteria.meetCriteria("Technology")).thenReturn(filteredJobsCategory);
 
         // Call the method
-        List<JobDto> result = jobCriteriaRunner.matchCriterias(criteria);
+        List<JobDto> result = jobCriteriaRunner.matchCriteria(criteria);
 
         // Validate that there are no results
         assertTrue(result.isEmpty());
@@ -125,7 +125,7 @@ class JobCriteriaRunnerTest {
 
         when(jobLocationCriteria.meetCriteria("Remote")).thenReturn(filteredJobsLocation);
 
-        List<JobDto> result = jobCriteriaRunner.matchCriterias(criteria);
+        List<JobDto> result = jobCriteriaRunner.matchCriteria(criteria);
 
         assertEquals(1, result.size());
         assertEquals(job1, result.getFirst());
@@ -150,7 +150,7 @@ class JobCriteriaRunnerTest {
 
         when(jobSalaryCriteria.meetCriteria("50000")).thenReturn(filteredJobsSalary);
 
-        List<JobDto> result = jobCriteriaRunner.matchCriterias(criteria);
+        List<JobDto> result = jobCriteriaRunner.matchCriteria(criteria);
 
         assertEquals(1, result.size());
         assertEquals(job1, result.getFirst());
@@ -171,7 +171,7 @@ class JobCriteriaRunnerTest {
 
         when(jobLevelCriteria.meetCriteria("Entry")).thenReturn(filteredJobsLevel);
 
-        List<JobDto> result = jobCriteriaRunner.matchCriterias(criteria);
+        List<JobDto> result = jobCriteriaRunner.matchCriteria(criteria);
 
         assertEquals(1, result.size());
         assertEquals(job1, result.getFirst());
@@ -191,7 +191,7 @@ class JobCriteriaRunnerTest {
         filteredJobsSearch.add(job1);
 
         when(jobSearchCriteria.meetCriteria("Developer")).thenReturn(filteredJobsSearch);
-        List<JobDto> result = jobCriteriaRunner.matchCriterias(criteria);
+        List<JobDto> result = jobCriteriaRunner.matchCriteria(criteria);
 
         assertEquals(1, result.size());
         assertEquals(job1, result.getFirst());
@@ -202,7 +202,7 @@ class JobCriteriaRunnerTest {
         jobCriteriaRunner = new JobCriteriaRunner(jobTypeCriteria, jobCategoryCriteria, jobLocationCriteria, jobSalaryCriteria, jobLevelCriteria, jobSearchCriteria);
         HashMap<String, String> criteria = new HashMap<>();
         criteria.put("no criteria", "no data");
-        List<JobDto> result = jobCriteriaRunner.matchCriterias(criteria);
+        List<JobDto> result = jobCriteriaRunner.matchCriteria(criteria);
 
         assertEquals(0, result.size());
     }

@@ -76,7 +76,7 @@ public class JobController {
             @RequestParam(name = "type", defaultValue = "") String type,
             @RequestParam(name = "location", defaultValue = "") String location,
             @RequestParam(name = "category", defaultValue = "") String category,
-            @RequestParam(name = "salary", defaultValue = "") String salary,
+            @RequestParam(name = "salary", defaultValue = "0") String salary,
             @RequestParam(name = "level", defaultValue = "") String level,
             @RequestParam(name = "query", defaultValue = "") String query) {
         try {

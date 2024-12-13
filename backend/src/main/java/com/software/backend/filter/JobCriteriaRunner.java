@@ -30,7 +30,7 @@ public class JobCriteriaRunner {
         this.jobSearchCriteria = jobSearchCriteria;
     }
 
-    public List<JobDto> matchCriterias(HashMap<String, String> criterias){
+    public List<JobDto> matchCriteria(HashMap<String, String> criterias){
 
         Set<JobDto> jobs = null;
 

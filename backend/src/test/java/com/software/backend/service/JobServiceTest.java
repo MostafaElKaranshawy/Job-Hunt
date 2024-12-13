@@ -101,14 +101,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -136,22 +136,29 @@ class JobServiceTest {
         String type = "";
         String location = "";
         String category = "";
-        String salary = "";
+        String salary = "0";
         String level = "";
         String query = "";
 
         HashMap<String, String> filterCriteria = new HashMap<>();
+        filterCriteria.put("salary", salary);
+        filterCriteria.put("search", query);
+        filterCriteria.put("type", type);
+        filterCriteria.put("location", location);
+        filterCriteria.put("category", category);
+        filterCriteria.put("level", level);
+
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -168,14 +175,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -193,14 +200,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -218,14 +225,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -243,14 +250,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -268,14 +275,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -293,14 +300,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -318,14 +325,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
     @Test
@@ -348,14 +355,14 @@ class JobServiceTest {
 
         List<JobDto> jobDtos = List.of();
 
-        Mockito.when(jobCriteriaRunner.matchCriterias(filterCriteria)).thenReturn(jobDtos);
+        Mockito.when(jobCriteriaRunner.matchCriteria(filterCriteria)).thenReturn(jobDtos);
 
         // Act
         List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query);
 
         // Assert
         Assertions.assertTrue(result.isEmpty());
-        Mockito.verify(jobCriteriaRunner).matchCriterias(filterCriteria);
+        Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
     }
 
 
