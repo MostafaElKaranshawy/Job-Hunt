@@ -1,6 +1,8 @@
 package com.software.backend.controller;
 
 import com.software.backend.auth.AuthenticationResponse;
+import com.software.backend.entity.RefreshToken;
+import com.software.backend.service.RefreshTokenService;
 import com.software.backend.service.UserAuthService;
 import com.software.backend.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,12 +56,7 @@ public class AuthController {
             HttpServletResponse response
     ) {
         AuthenticationResponse authenticationResponse = useService.login(request);
-        authenticationResponse.getAccessToken();
-        authenticationResponse.getRefreshToken();
-        CookieUtil cookieUtil = new CookieUtil();
-        cookieUtil.addCookie(response, "accessToken", authenticationResponse.getAccessToken());
-        cookieUtil.addCookie(response, "refreshToken", authenticationResponse.getRefreshToken());
-
+        useService.storeTokens(authenticationResponse, response);
         return ResponseEntity.ok(authenticationResponse.getUsername());
     }
 

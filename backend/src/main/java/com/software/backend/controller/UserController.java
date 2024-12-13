@@ -10,17 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "user")
+@RequestMapping(path = "/user")
 
 public class UserController {
     @Autowired
     UserServices service;
-    @CrossOrigin(origins = "*")
+    @CrossOrigin
     @GetMapping("/{username}")
     public ResponseEntity<User> getApplicant(
-            @PathVariable String username,
-            HttpServletRequest request,
-            HttpServletResponse response
+            @PathVariable String username
     ){
         System.out.println("Username: " + username);
         User user = service.getUser(username);

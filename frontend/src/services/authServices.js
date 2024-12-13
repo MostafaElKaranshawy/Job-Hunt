@@ -72,18 +72,18 @@ export const googleLogIn = async (credentialResponse) => {
   }
 };
 export const logIn = async (formData) => {
-  formData.password = hashPassword(formData.password);
-  const response = await fetch(`${apiUrl}/auth/login`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-  if (response.ok) {
-    const data = await response.text();
-    console.log("User Logged in successfully:", data);
+  // formData.password = hashPassword(formData.password);
+  // const response = await fetch(`${apiUrl}/auth/login`, {
+  //   method: "POST",
+  //   credentials: "include",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(formData),
+  // });
+  // if (response.ok) {
+  //   const data = await response.text();
+  //   console.log("User Logged in successfully:", data);
     const username = 'testuser';
     const res2 = await fetch(`${apiUrl}/user/${username}`, {
       method: "GET",
@@ -92,7 +92,8 @@ export const logIn = async (formData) => {
         "Content-Type": "application/json",
       },
     });
-  } else {
-    console.error("User could not log in:", response.status);
-  }
+    
+  // } else {
+  //   console.error("User could not log in:", response.status);
+  // }
 };

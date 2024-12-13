@@ -9,7 +9,6 @@ import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,7 @@ public class UserAuthService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthenticationResponse login(SignUpRequest request) {
 
@@ -41,4 +41,17 @@ public class UserAuthService {
                 .build();
     }
 
+    public void storeTokens(
+        AuthenticationResponse authenticationResponse,
+        HttpServletResponse response
+) {
+        authenticationResponse.getAccessToken();
+        authenticationResponse.getRefreshToken();
+        CookieUtil cookieUtil = new CookieUtil();
+        cookieUtil.addCookie(response, "accessToken", authenticationResponse.getAccessToken());
+        cookieUtil.addCookie(response, "refreshToken", authenticationResponse.getRefreshToken());
+
+        refreshTokenService.saveNewRefreshTokenInDb(authenticationResponse.getRefreshToken(), authenticationResponse.getUsername());
+
+    }
 }

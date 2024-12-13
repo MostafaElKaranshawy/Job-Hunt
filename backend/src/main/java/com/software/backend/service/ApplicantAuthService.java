@@ -43,13 +43,15 @@ public class ApplicantAuthService {
 
     public ResponseEntity signUp(SignUpRequest signUpRequest) {
         System.out.println("Sign-Up from service");
-        System.out.println("googleClientId:" + env.getProperty("GOOGLE_CLIENT_ID"));
         Validator validator = ValidatorFactory.createValidator(ValidationType.APPLICANT_SIGNUP);
         validator.validate(signUpRequest);
         System.out.println("Validated");
 
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new BusinessException("Email already exists.");
+
+
+
 
         System.out.println("Creating user");
         String username = signUpRequest.getEmail().split("@")[0];
@@ -155,5 +157,6 @@ public class ApplicantAuthService {
                 .refreshToken("refreshToken")
                 .build();
     }
+
 
 }
