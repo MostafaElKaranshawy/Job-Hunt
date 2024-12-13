@@ -65,10 +65,8 @@ public class JobService {
 
         if(query != null && !query.isEmpty())filterCriteria.put("search", query);
 
-        List<JobDto> filteredJobs = jobCriteriaRunner.matchCriterias(filterCriteria);
-
-        if (filteredJobs == null) return new ArrayList<>();
-        return filteredJobs;
+        //        if (filteredJobs == null) return new ArrayList<>();
+        return jobCriteriaRunner.matchCriterias(filterCriteria);
     }
 
     public List<JobDto> getExpiredJobsForCompany(String companyUsername) {
