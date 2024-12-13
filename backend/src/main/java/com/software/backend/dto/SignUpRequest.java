@@ -18,8 +18,6 @@ public class SignUpRequest {
 
     private String googleToken; // For Google OAuth
 
-    private String clientId; // For Google OAuth
-
     private UserType userType; // Enum: APPLICANT, COMPANY
     // Getters and setters From Lombok
 }

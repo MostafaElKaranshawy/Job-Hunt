@@ -10,27 +10,14 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(String to, String subject, String body) {
+    private String subject = "JOB_HUNT Email Confirmation";
+    public void sendEmail(String to, String signUpToken) {
         SimpleMailMessage message = new SimpleMailMessage();
+        String body = "Please click the link below to confirm your email address:\n"
+                + "http://localhost:8080/auth/confirm-email?token=" + signUpToken;
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-
         mailSender.send(message);
-    }
-    public void verifyEmail(String token) {
-        // Decode and validate the token
-        SignUpRequest request = jwtUtil.validateSignupToken(token);
-
-        // Save the user to the database
-        if (repository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("User already exists");
-        }
-
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setUsername(request.getUsername());
-        repository.save(user);
     }
 }

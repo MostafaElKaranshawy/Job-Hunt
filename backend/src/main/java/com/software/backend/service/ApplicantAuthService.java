@@ -2,7 +2,6 @@ package com.software.backend.service;
 
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.json.webtoken.JsonWebToken;
-import com.google.api.client.util.Value;
 import com.google.auth.oauth2.TokenVerifier;
 import com.software.backend.auth.AuthenticationResponse;
 import com.software.backend.dto.SignUpRequest;
@@ -15,19 +14,13 @@ import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.exception.UserNotFoundException;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.UserRepository;
-import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
 import com.software.backend.validator.Validator;
 import com.software.backend.validator.ValidatorFactory;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.software.backend.repository.RefreshTokenRepository;
-import com.software.backend.util.JwtUtil;
 @Service
 @RequiredArgsConstructor
 public class ApplicantAuthService {
@@ -36,13 +29,13 @@ public class ApplicantAuthService {
 
     private final ApplicantRepository applicantRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     private final JwtUtil jwtUtil;
 
     private final Environment env;
 
-    public ResponseEntity signUp(SignUpRequest signUpRequest) {
+    public void signUp(SignUpRequest signUpRequest) {
         System.out.println("Sign-Up from service");
         Validator validator = ValidatorFactory.createValidator(ValidationType.APPLICANT_SIGNUP);
         validator.validate(signUpRequest);
@@ -50,33 +43,10 @@ public class ApplicantAuthService {
 
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new BusinessException("Email already exists.");
-
-
-
-        System.out.println("Creating user");
-        String username = signUpRequest.getEmail().split("@")[0];
-        var user = User.builder()
-                .email(signUpRequest.getEmail())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .userType(UserType.APPLICANT)
-                .username(username)
-                .isBanned(false)
-                .build();
-
-
-        var savedUser = userRepository.save(user);
-
-        // Create the Applicant entity
-        Applicant applicant = new Applicant();
-        applicant.setUser(user);
-        applicant.setFirstName(signUpRequest.getFirstName());
-        applicant.setLastName(signUpRequest.getLastName());
-
-        // Save both User and Applicant entities
-        userRepository.save(user);
-        applicantRepository.save(applicant);
-        return ResponseEntity.ok().build();
-
+        signUpRequest.setUserType(UserType.APPLICANT);
+        String signUpToken = jwtUtil.generateSignupToken(signUpRequest);
+        emailService.sendEmail(signUpRequest.getEmail(), signUpToken);
+        System.out.println("Email sent");
     }
 
     private JsonWebSignature verifyGoogleToken(String idToken) {
@@ -154,6 +124,5 @@ public class ApplicantAuthService {
                 .username(username)
                 .build();
     }
-
 
 }

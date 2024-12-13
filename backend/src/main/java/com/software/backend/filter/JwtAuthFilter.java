@@ -1,4 +1,5 @@
 package com.software.backend.filter;
+
 import com.software.backend.service.RefreshTokenService;
 import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
@@ -29,55 +30,58 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String path = request.getRequestURI();
+        System.out.println("Path: " + path);
 
         // Skip validation for /auth/** paths
         if (path.startsWith("/auth")) {
+            System.out.println("Skipping filter for /auth paths");
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (path.equals("/favicon.ico")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         System.out.println("In filter");
 
-        // Extract and validate access token
-        Optional<Cookie> accessTokenCookie = Optional.ofNullable(cookieUtil.getCookie(request, "accessToken"));
-        if (accessTokenCookie.isPresent()) {
-            String accessToken = accessTokenCookie.get().getValue();
-            System.out.println("Access token cookie: " + accessToken);
-
-            if (jwtUtil.validateToken(accessToken)) {
-                // If access token is valid, proceed with the request
-                System.out.println("Valid access token");
-                try {
-                    filterChain.doFilter(request, response);
-                    System.out.println("Filter chain processed");
-                } catch (Exception e) {
-                    System.err.println("Exception occurred while processing filter chain: " + e.getMessage());
-                    e.printStackTrace();
-                }
-
-                return;
-            }
-        }
-
-        // If access token is invalid or missing, check refresh token
-        Optional<Cookie> refreshTokenCookie = Optional.ofNullable(cookieUtil.getCookie(request, "refreshToken"));
-        if (refreshTokenCookie.isPresent()) {
-            String refreshToken = refreshTokenCookie.get().getValue();
-            System.out.println("Refresh token cookie: " + refreshToken);
-
-            if (refreshTokenService.validateRefreshToken(refreshToken)) {
-                // Generate new tokens and set them in the response
-                refreshTokenService.createNewTokens(refreshToken, response);
-                System.out.println("New tokens generated");
+        try {
+            // Ensure the filter is only processed once per request
+            if (request.getAttribute("filterProcessed") != null) {
+                System.out.println("Filter already processed. Skipping.");
                 filterChain.doFilter(request, response);
                 return;
             }
+
+            // Mark the request as processed
+            request.setAttribute("filterProcessed", true);
+
+            // Extract and validate access token
+            Optional<Cookie> accessTokenCookie = Optional.ofNullable(cookieUtil.getCookie(request, "accessToken"));
+            if (accessTokenCookie.isPresent() && jwtUtil.validateToken(accessTokenCookie.get().getValue())) {
+                System.out.println("Valid access token");
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // Check refresh token if access token is invalid or missing
+            Optional<Cookie> refreshTokenCookie = Optional.ofNullable(cookieUtil.getCookie(request, "refreshToken"));
+            if (refreshTokenCookie.isPresent() && refreshTokenService.validateRefreshToken(refreshTokenCookie.get().getValue())) {
+                System.out.println("Valid refresh token. Generating new tokens.");
+                refreshTokenService.createNewTokens(refreshTokenCookie.get().getValue(), response);
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // If both tokens are invalid, reject the request
+            System.out.println("Invalid or expired tokens");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid or expired tokens");
+        } catch (Exception e) {
+            System.err.println("Exception occurred in filter: " + e.getMessage());
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("An error occurred while processing your request.");
         }
-
-        // If both tokens are invalid, reject the request
-        System.out.println("Invalid or expired tokens");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Invalid or expired tokens");
     }
-
 }

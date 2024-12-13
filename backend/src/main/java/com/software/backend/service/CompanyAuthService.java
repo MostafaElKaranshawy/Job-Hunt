@@ -9,6 +9,7 @@ import com.software.backend.enums.ValidationType;
 import com.software.backend.exception.BusinessException;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
+import com.software.backend.util.JwtUtil;
 import com.software.backend.validator.Validator;
 import com.software.backend.validator.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,40 +21,22 @@ public class CompanyAuthService {
 
     private final UserRepository userRepository;
 
-    private final CompanyRepository companyRepository;
+    private final EmailService emailService;
+
+    private final JwtUtil jwtUtil;
 
 
-    public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
+    public void signUp(SignUpRequest signUpRequest) {
         Validator validator = ValidatorFactory.createValidator(ValidationType.COMPANY_SIGNUP);
         validator.validate(signUpRequest);  // to be checked later to prevent it from being null(refactor)
-
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new BusinessException("Email already exists.");
-
-        String username = signUpRequest.getEmail().split("@")[0];
-        var user = User.builder()
-                .email(signUpRequest.getEmail())
-                .password(signUpRequest.getPassword())
-                .userType(UserType.COMPANY)
-                .username(username)
-                .isBanned(false)
-                .build();
-
-        var savedUser = userRepository.save(user);
-
-        Company company = new Company();
-        company.setUser(user);
-        company.setName(signUpRequest.getCompanyName());
+        signUpRequest.setUserType(UserType.COMPANY);
+        String signUpToken = jwtUtil.generateSignupToken(signUpRequest);
+        emailService.sendEmail(signUpRequest.getEmail(), signUpToken);
+        System.out.println("Email sent");
 
 
-        // Save both User and Company entities
-        userRepository.save(user);
-        companyRepository.save(company);
-
-        return AuthenticationResponse.builder()
-                .accessToken("accessToken")
-                .refreshToken("refreshToken")
-                .build();
     }
 
 }

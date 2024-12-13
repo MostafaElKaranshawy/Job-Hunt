@@ -5,6 +5,7 @@ import com.software.backend.entity.RefreshToken;
 import com.software.backend.service.RefreshTokenService;
 import com.software.backend.service.UserAuthService;
 import com.software.backend.util.CookieUtil;
+import com.software.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,10 @@ public class AuthController {
     private CompanyAuthService companyAuthService;
 
     @Autowired
-    private UserAuthService userService;
+    private UserAuthService userAuthService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // Google Sign-Up Endpoint
     @PostMapping("/signup/applicant/google")
@@ -42,7 +46,7 @@ public class AuthController {
     ) {
         System.out.println("Google Login Endpoint");
         AuthenticationResponse authenticationResponse = applicantAuthService.loginWithGoogle(request);
-        userService.storeTokens(authenticationResponse, response);
+        userAuthService.storeTokens(authenticationResponse, response);
         System.out.println("Google Login Endpoint " + authenticationResponse.getUsername());
         AuthenticationResponse usernameObject = new AuthenticationResponse();
         usernameObject.setUsername(authenticationResponse.getUsername());
@@ -55,8 +59,8 @@ public class AuthController {
             @RequestBody SignUpRequest request,
             HttpServletResponse response
     ) {
-        AuthenticationResponse authenticationResponse = userService.login(request);
-        userService.storeTokens(authenticationResponse, response);
+        AuthenticationResponse authenticationResponse = userAuthService.login(request);
+        userAuthService.storeTokens(authenticationResponse, response);
         return ResponseEntity.ok(authenticationResponse.getUsername());
     }
 
@@ -65,19 +69,33 @@ public class AuthController {
     @PostMapping("/signup/applicant")
     public ResponseEntity<?> signUpApplicant(@RequestBody SignUpRequest signUpRequest ) {
         System.out.println("welcome from applicant signup");
-        return ResponseEntity.ok(applicantAuthService.signUp(signUpRequest));
+        applicantAuthService.signUp(signUpRequest);
+        return ResponseEntity.ok("Email confirmation sent. Please verify your email.");
     }
 
     @PostMapping("/signup/company")
-    public ResponseEntity<AuthenticationResponse> signUpCompany(@RequestBody SignUpRequest signUpRequest) {
-            return ResponseEntity.ok(companyAuthService.signUp(signUpRequest));
+    public ResponseEntity<?> signUpCompany(@RequestBody SignUpRequest signUpRequest) {
+        companyAuthService.signUp(signUpRequest);
+        return ResponseEntity.ok("Email confirmation sent. Please verify your email.");
     }
 
-
-    @GetMapping("/verify-email")
+    @GetMapping("/confirm-email")
     public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
-        userAuthService.verifyEmail(token);
-        return ResponseEntity.ok("Email verified successfully. You can now log in.");
+        try {
+            System.out.println("Verifying email");
+            SignUpRequest signUpRequest = jwtUtil.validateSignupToken(token);
+            if (signUpRequest == null) {
+                System.out.println("Invalid token");
+                return ResponseEntity.badRequest().body("Invalid token");
+
+            }
+            System.out.println("Email verified successfully");
+            userAuthService.createNewUser(signUpRequest);
+            return ResponseEntity.ok("Email verified successfully. You can now log in.");
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid token");
+        }
+
     }
 }
 

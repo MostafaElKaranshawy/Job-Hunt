@@ -1,6 +1,7 @@
 package com.software.backend.util;
 
 import com.software.backend.dto.SignUpRequest;
+import com.software.backend.enums.UserType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -10,9 +11,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     private static final long ACCESS_TOKEN_EXPIRATION = 60 * 1000; // 1 minute
-    private static final long REFRESH_TOKEN_EXPIRATION = 5* 60 * 1000; // 1 days
+    private static final long REFRESH_TOKEN_EXPIRATION = 5 * 60 * 1000; // 1 days
 
     public static String generateAccessToken(String username) {
         return Jwts.builder()
@@ -66,30 +67,39 @@ public class JwtUtil {
     }
 
     public String generateSignupToken(SignUpRequest request) {
+        System.out.println("userType: " + request.getUserType());
         return Jwts.builder()
+
+                .claim("userType", request.getUserType())
                 .claim("email", request.getEmail())
                 .claim("password", request.getPassword())
+                .claim("firstName", request.getFirstName())
+                .claim("lastName", request.getLastName())
+                .claim("companyName", request.getCompanyName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600_000)) // 1-hour expiration
+                .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))// 15 m expiration
                 .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
-}
 
-//    public SignUpRequest validateSignupToken(String token) {
-//        try {
-//            Claims claims = Jwts.parser()
-//                    .setSigningKey(key)
-//                    .parseClaimsJws(token)
-//                    .getBody();
-//
-//            // Extract user data from the token
-//            String email = claims.get("email", String.class);
-//            String password = claims.get("password", String.class);
-//            String username = claims.get("username", String.class);
-//
-//            return new SignUpRequest(email, password);
-//        } catch (JwtException | IllegalArgumentException e) {
-//            throw new IllegalArgumentException("Invalid or expired token");
-//        }
-//}
+    public SignUpRequest validateSignupToken(String token) {
+        System.out.println("inside validateSignupToken");
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token)
+                    .getBody();
+            SignUpRequest request = new SignUpRequest();
+            request.setUserType(UserType.valueOf(claims.get("userType", String.class)));
+            request.setEmail(claims.get("email", String.class));
+            request.setPassword(claims.get("password", String.class));
+            request.setFirstName(claims.get("firstName", String.class));
+            request.setLastName(claims.get("lastName", String.class));
+            request.setCompanyName(claims.get("companyName", String.class));
+            System.out.println("token validated");
+            return request;
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid or expired token");
+        }
+    }
+}
