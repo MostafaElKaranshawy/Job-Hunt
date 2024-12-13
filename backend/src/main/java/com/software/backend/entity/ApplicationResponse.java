@@ -17,7 +17,7 @@ public class ApplicationResponse {
     private String responseData;
 
     @ManyToOne
-    @JoinColumn(name = "section_id", nullable = false)
+    @JoinColumn(name = "section_id")
     private Section section;
 
     @ManyToOne
