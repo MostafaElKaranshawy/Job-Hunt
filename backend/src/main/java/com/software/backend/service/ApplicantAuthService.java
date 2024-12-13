@@ -51,6 +51,8 @@ public class ApplicantAuthService {
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new BusinessException("Email already exists.");
 
+
+
         System.out.println("Creating user");
         String username = signUpRequest.getEmail().split("@")[0];
         var user = User.builder()
@@ -60,6 +62,7 @@ public class ApplicantAuthService {
                 .username(username)
                 .isBanned(false)
                 .build();
+
 
         var savedUser = userRepository.save(user);
 

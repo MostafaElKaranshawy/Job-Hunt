@@ -49,13 +49,6 @@ public class AuthController {
         return ResponseEntity.ok(usernameObject);
     }
 
-    // normal sign up
-    @CrossOrigin(origins = "*")
-    @PostMapping("/signup/applicant")
-    public ResponseEntity<?> signUpApplicant(@RequestBody SignUpRequest signUpRequest ) {
-        System.out.println("welcome from applicant signup");
-        return ResponseEntity.ok(applicantAuthService.signUp(signUpRequest));
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
@@ -67,9 +60,24 @@ public class AuthController {
         return ResponseEntity.ok(authenticationResponse.getUsername());
     }
 
+    // normal sign up
+    @CrossOrigin(origins = "*")
+    @PostMapping("/signup/applicant")
+    public ResponseEntity<?> signUpApplicant(@RequestBody SignUpRequest signUpRequest ) {
+        System.out.println("welcome from applicant signup");
+        return ResponseEntity.ok(applicantAuthService.signUp(signUpRequest));
+    }
+
     @PostMapping("/signup/company")
     public ResponseEntity<AuthenticationResponse> signUpCompany(@RequestBody SignUpRequest signUpRequest) {
             return ResponseEntity.ok(companyAuthService.signUp(signUpRequest));
+    }
+
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
+        userAuthService.verifyEmail(token);
+        return ResponseEntity.ok("Email verified successfully. You can now log in.");
     }
 }
 
