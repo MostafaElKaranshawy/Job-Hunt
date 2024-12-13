@@ -17,11 +17,11 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     Optional<List<Job>> findByCompanyAndApplicationDeadlineBefore(Company company, LocalDateTime currentDateTime);// expired jobs
     Optional<List<Job>> findByCompanyAndApplicationDeadlineAfter(Company company, LocalDateTime currentDateTime); // active jobs
-    Optional<List<Job>> findAllByApplicationDeadlineBefore(LocalDateTime currentDateTime);  // find All Active Jobs for Home page
     Optional<List<Job>> findAllByStatusIs(JobStatus status, Pageable pageable);  // find All Active Jobs for Home page
 
     // Search for title or description.
     Optional<List<Job>> findAllByTitleContainsOrDescriptionContains(String title, String description, Pageable pageable);
+    Optional<List<Job>> findAllByTitleContainsOrDescriptionContains(String title, String description);
 
     // Filter
     Optional<List<Job>> findAllByTypeEqualsIgnoreCase(String type);

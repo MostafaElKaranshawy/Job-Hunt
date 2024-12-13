@@ -3,6 +3,7 @@ package com.software.backend.dto;
 import com.software.backend.entity.Company;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 public class JobDto {
@@ -122,5 +123,17 @@ public class JobDto {
                 ", type='" + type + '\'' +
                 ", level='" + level + '\'' +
                 '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JobDto jobDto = (JobDto) o;
+        return Objects.equals(id, jobDto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

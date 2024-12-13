@@ -44,8 +44,8 @@ public class JobController {
     }
 
     @GetMapping("/home/jobs")
-    public ResponseEntity<List<JobDto>> getJobs(@RequestParam(name = "page") Integer page,
-                                                @RequestParam(name = "offset") Integer offset) {
+    public ResponseEntity<List<JobDto>> getJobs(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                @RequestParam(name = "offset", defaultValue = "5") Integer offset) {
         try {
 
             List<JobDto> jobs = jobService.getHomeActiveJobs(page, offset);
@@ -58,9 +58,9 @@ public class JobController {
     }
 
     @GetMapping("/home/jobs/search")
-    public ResponseEntity<List<JobDto>> searchJobs(@RequestParam(name = "query") String query,
-                                                   @RequestParam(name = "page") Integer page,
-                                                   @RequestParam(name = "offset") Integer offset){
+    public ResponseEntity<List<JobDto>> searchJobs(@RequestParam(name = "query", defaultValue = "") String query,
+                                                   @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                   @RequestParam(name = "offset", defaultValue = "5") Integer offset){
         try {
 
             List<JobDto> jobs = jobService.searchJobs(query, page, offset);
@@ -73,12 +73,16 @@ public class JobController {
     }
 
     @GetMapping("/home/jobs/filter")
-    public ResponseEntity<List<JobDto>> filterJobs(@RequestParam(name = "type") String type){
+    public ResponseEntity<List<JobDto>> filterJobs(
+            @RequestParam(name = "type", defaultValue = "") String type,
+            @RequestParam(name = "location", defaultValue = "") String location,
+            @RequestParam(name = "category", defaultValue = "") String category,
+            @RequestParam(name = "salary", defaultValue = "") String salary,
+            @RequestParam(name = "level", defaultValue = "") String level,
+            @RequestParam(name = "query", defaultValue = "") String query) {
         try {
-            System.out.println(type);
-            HashMap<String, String> criterias = new HashMap<>();
-            criterias.put("type", type);
-            List<JobDto> jobs = jobService.filterJobs(criterias);
+
+            List<JobDto> jobs = jobService.filterJobs(type, location, category, salary, level, query);
 
             return ResponseEntity.ok(jobs);
         } catch (Exception e) {

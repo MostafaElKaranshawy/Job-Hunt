@@ -49,7 +49,21 @@ public class JobService {
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
 
-    public List<JobDto> filterJobs(HashMap<String, String> filterCriteria){
+    public List<JobDto> filterJobs(String type, String location, String category, String salary, String level, String query){
+
+        HashMap<String, String> filterCriteria = new HashMap<>();
+
+        if(type != null && !type.isEmpty())filterCriteria.put("type", type);
+
+        if(location != null && !location.isEmpty())filterCriteria.put("location", location);
+
+        if(category != null && !category.isEmpty())filterCriteria.put("category", category);
+
+        if(salary != null && !salary.isEmpty())filterCriteria.put("salary", salary);
+
+        if(level != null && !level.isEmpty())filterCriteria.put("level", level);
+
+        if(query != null && !query.isEmpty())filterCriteria.put("search", query);
 
         List<JobDto> filteredJobs = jobCriteriaRunner.matchCriterias(filterCriteria);
 
