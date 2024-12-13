@@ -27,8 +27,22 @@ function EmployeeSignUp() {
   // Validation function
   const validate = () => {
     const newErrors = {};
-    if (!formData.firstName || formData.lastName.length > 30) newErrors.firstName = "First name is required.";
-    if (!formData.lastName|| formData.lastName.length > 30) newErrors.lastName = "Last name is required.";
+    if (!formData.firstName || formData.firstName.trim() === "") {
+      newErrors.firstName = "First name is required.";
+  } else if (formData.firstName.length > 30) {
+      newErrors.firstName = "First name must not exceed 30 characters.";
+  } else if (/\d/.test(formData.firstName)) {
+      newErrors.firstName = "First name must not contain numbers.";
+  }
+  
+  if (!formData.lastName || formData.lastName.trim() === "") {
+      newErrors.lastName = "Last name is required.";
+  } else if (formData.lastName.length > 30) {
+      newErrors.lastName = "Last name must not exceed 30 characters.";
+  } else if (/\d/.test(formData.lastName)) {
+      newErrors.lastName = "Last name must not contain numbers.";
+  }
+  
     if (!formData.email) {
       newErrors.email = "Email is required.";
     } else if(!/^\S+@gmail\.com$/.test(formData.email))
@@ -47,6 +61,8 @@ function EmployeeSignUp() {
       newErrors.password = "Password must contain at least one number.";
   } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
       newErrors.password = "Password must contain at least one special character.";
+  }  else if (formData.password.length > 30) {
+      newErrors.password = "Password must be at most 30 characters";
   }
   
     if (formData.password !== formData.confirmPassword) {
@@ -68,7 +84,7 @@ function EmployeeSignUp() {
   };
 
   return (
-    <div className="signup-container">
+    <div className="signup-component-container">
       <h1>Sign up</h1>
       <form>
         <div className="name-container">

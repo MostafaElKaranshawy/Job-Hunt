@@ -1,24 +1,17 @@
 package com.software.backend.service;
 
 import com.software.backend.auth.AuthenticationResponse;
-import com.software.backend.config.JwtService;
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.entity.Applicant;
 import com.software.backend.entity.Company;
-import com.software.backend.entity.Token;
 import com.software.backend.entity.User;
-import com.software.backend.enums.TokenType;
 import com.software.backend.enums.UserType;
 import com.software.backend.enums.ValidationType;
 import com.software.backend.exception.BusinessException;
 import com.software.backend.repository.CompanyRepository;
-import com.software.backend.repository.TokenRepository;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.validator.Validator;
 import com.software.backend.validator.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,16 +22,10 @@ public class CompanyAuthService {
 
     private final CompanyRepository companyRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
-    private final TokenRepository tokenRepository;
-
-    private final JwtService jwtService;
 
     public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
         Validator validator = ValidatorFactory.createValidator(ValidationType.COMPANY_SIGNUP);
         validator.validate(signUpRequest);  // to be checked later to prevent it from being null(refactor)
-
 
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new BusinessException("Email already exists.");
@@ -46,16 +33,13 @@ public class CompanyAuthService {
         String username = signUpRequest.getEmail().split("@")[0];
         var user = User.builder()
                 .email(signUpRequest.getEmail())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .password(signUpRequest.getPassword())
                 .userType(UserType.COMPANY)
                 .username(username)
                 .isBanned(false)
                 .build();
 
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
 
         Company company = new Company();
         company.setUser(user);
@@ -67,19 +51,9 @@ public class CompanyAuthService {
         companyRepository.save(company);
 
         return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
+                .accessToken("accessToken")
+                .refreshToken("refreshToken")
                 .build();
     }
 
-    private void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
-                .build();
-        tokenRepository.save(token);
-    }
 }

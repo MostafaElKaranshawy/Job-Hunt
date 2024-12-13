@@ -1,6 +1,12 @@
+const hashPassword = (password) => {
+  // return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex); // Generate SHA-256 hash
+  return password;
+};
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const employerSignUp = async (formData) => {
+  formData.password = hashPassword(formData.password);
   const response = await fetch(`${apiUrl}/auth/signup/company`, {
     method: "POST",
     headers: {
@@ -16,6 +22,7 @@ export const employerSignUp = async (formData) => {
   }
 };
 export const employeeSignUp = async (formData) => {
+  formData.password = hashPassword(formData.password);
   console.log("Form Data:", formData);
   const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
     method: "POST",
@@ -65,16 +72,26 @@ export const googleLogIn = async (credentialResponse) => {
   }
 };
 export const logIn = async (formData) => {
+  formData.password = hashPassword(formData.password);
   const response = await fetch(`${apiUrl}/auth/login`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(formData),
   });
   if (response.ok) {
-    const data = await response.json();
+    const data = await response.text();
     console.log("User Logged in successfully:", data);
+    const username = 'testuser';
+    const res2 = await fetch(`${apiUrl}/user/${username}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } else {
     console.error("User could not log in:", response.status);
   }

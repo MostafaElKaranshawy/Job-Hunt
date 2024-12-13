@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { employerSignUp } from "../../services/authServices";
 import { Link } from "react-router-dom";
-import "./EmployerSignUp.css";
+import "./../employeeSignUp/EmployeeSignUp.css";
 function EmployerSignUp() {
   // Form states
   const [formData, setFormData] = useState({
@@ -49,7 +49,7 @@ function EmployerSignUp() {
     }
   };
   return (
-    <div className="signup-container">
+    <div className="signup-component-container">
       <h1>Company Sign Up</h1>
       <form>
         <div>

@@ -2,22 +2,20 @@ package com.software.backend.controller;
 
 import com.software.backend.auth.AuthenticationResponse;
 import com.software.backend.service.UserAuthService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.software.backend.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.service.ApplicantAuthService;
 import com.software.backend.service.CompanyAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/auth")
-@CrossOrigin
 public class AuthController {
-
 
     @Autowired
     private ApplicantAuthService applicantAuthService;
@@ -43,30 +41,31 @@ public class AuthController {
     }
 
     // normal sign up
+    @CrossOrigin(origins = "*")
     @PostMapping("/signup/applicant")
-    public ResponseEntity<AuthenticationResponse> signUpApplicant(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<?> signUpApplicant(@RequestBody SignUpRequest signUpRequest ) {
+        System.out.println("welcome from applicant signup");
         return ResponseEntity.ok(applicantAuthService.signUp(signUpRequest));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(
-            @RequestBody SignUpRequest request
-    ) {
-        return ResponseEntity.ok(useService.login(request));
-    }
-
-
-    @PostMapping("/refresh-token")
-    public void refreshToken(
-            HttpServletRequest request,
+    public ResponseEntity<?> login(
+            @RequestBody SignUpRequest request,
             HttpServletResponse response
-    ) throws IOException {
-        useService.refreshToken(request, response);
-    }
+    ) {
+        AuthenticationResponse authenticationResponse = useService.login(request);
+        authenticationResponse.getAccessToken();
+        authenticationResponse.getRefreshToken();
+        CookieUtil cookieUtil = new CookieUtil();
+        cookieUtil.addCookie(response, "accessToken", authenticationResponse.getAccessToken());
+        cookieUtil.addCookie(response, "refreshToken", authenticationResponse.getRefreshToken());
 
+        return ResponseEntity.ok(authenticationResponse.getUsername());
+    }
 
     @PostMapping("/signup/company")
     public ResponseEntity<AuthenticationResponse> signUpCompany(@RequestBody SignUpRequest signUpRequest) {
             return ResponseEntity.ok(companyAuthService.signUp(signUpRequest));
     }
 }
+

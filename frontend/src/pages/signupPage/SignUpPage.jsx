@@ -9,8 +9,8 @@ function SignUpPage() {
     const [isEmployer, setIsEmployer] = useState(false);
 
     return (
-        <>
-        <div className="signup-page">
+        <div className="t">
+        <div className="signup-page-container">
             <button
                 className="employer-button"
                 onClick={() => setIsEmployer(!isEmployer)}
@@ -34,7 +34,7 @@ function SignUpPage() {
           
             )}
          </div>
-        </>
+         </div>
     );
 }
 
