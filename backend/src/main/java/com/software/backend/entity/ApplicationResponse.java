@@ -25,6 +25,6 @@ public class ApplicationResponse {
     private Field field;
 
     @ManyToOne
-    @JoinColumn(name = "application_id", nullable = false)
+    @JoinColumn(name = "application_id", referencedColumnName = "application_id", nullable = false)
     private JobApplication jobApplication;
 }

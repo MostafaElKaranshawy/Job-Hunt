@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -32,8 +33,11 @@ public class JobApplication {
     )
     private LocalDateTime applicationDate;
 
+    @OneToMany(mappedBy = "jobApplication", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ApplicationResponse> applicationResponsesList;
+
     @ManyToOne
-    @JoinColumn(name = "applicant_id", nullable = false)
+    @JoinColumn(name = "applicant_id", referencedColumnName = "applicant_id", nullable = false)
     private Applicant applicant;
 
     @ManyToOne
