@@ -74,17 +74,17 @@ export const googleLogIn = async (credentialResponse) => {
 };
 export const logIn = async (formData) => {
   formData.password = hashPassword(formData.password);
-  // const response = await fetch(`${apiUrl}/auth/login`, {
-  //   method: "POST",
-  //   credentials: "include",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(formData),
-  // });
-  // if (response.ok) {
-  //   const data = await response.text();
-  //   console.log("User Logged in successfully:", data);
+  const response = await fetch(`${apiUrl}/auth/login`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
+  if (response.ok) {
+    const data = await response.text();
+    console.log("User Logged in successfully:", data);
     const username = 'testuser';
     const res2 = await fetch(`${apiUrl}/user/${username}`, {
       method: "GET",
@@ -94,7 +94,26 @@ export const logIn = async (formData) => {
       },
     });
     
-  // } else {
-  //   console.error("User could not log in:", response.status);
-  // }
+  } else {
+    console.error("User could not log in:", response.status);
+  }
+};
+export const resetPassword = async (resetToken, newPassword) => {
+  // Append the resetToken as a query parameter
+  const response = await fetch(`${apiUrl}/auth/reset-password?resetToken=${resetToken}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password: newPassword }), // Send only newPassword in the request body
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log("Password reset successful:", data);
+    return data; // Return response data if needed
+  } else {
+    console.error("Backend responded with an error:", response.status);
+    throw new Error("Failed to reset password"); // Optionally throw an error to handle in UI
+  }
 };

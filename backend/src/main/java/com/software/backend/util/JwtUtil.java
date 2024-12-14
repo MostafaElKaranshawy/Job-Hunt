@@ -56,7 +56,6 @@ public class JwtUtil {
         }
     }
 
-
     public static String getUsernameFromRefreshToken(String refreshToken) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -98,6 +97,28 @@ public class JwtUtil {
             request.setCompanyName(claims.get("companyName", String.class));
             System.out.println("token validated");
             return request;
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid or expired token");
+        }
+    }
+
+    public  String generateResetPasswordToken(String email) {
+        System.out.println("inside generateResetPasswordToken");
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 minutes
+                .signWith(key)
+                .compact();
+    }
+
+    public String validateResetPasswordToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
         } catch (JwtException | IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid or expired token");
         }

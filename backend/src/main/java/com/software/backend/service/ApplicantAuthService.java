@@ -45,7 +45,7 @@ public class ApplicantAuthService {
             throw new BusinessException("Email already exists.");
         signUpRequest.setUserType(UserType.APPLICANT);
         String signUpToken = jwtUtil.generateSignupToken(signUpRequest);
-        emailService.sendEmail(signUpRequest.getEmail(), signUpToken);
+        emailService.sendConfirmationEmail(signUpRequest.getEmail(), signUpToken);
         System.out.println("Email sent");
     }
 

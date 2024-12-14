@@ -13,6 +13,7 @@ import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
+import com.software.backend.validator.Validator;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,7 @@ public class UserAuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final EmailService emailService;
 
     public AuthenticationResponse login(SignUpRequest request) {
 
@@ -91,5 +93,28 @@ public class UserAuthService {
             System.out.println("Company saved");
         }
 
+    }
+
+    public void resetPasswordRequest(String email){
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        System.out.println("User found");
+        if(user.getPassword() == null){
+            throw new InvalidCredentialsException("User is google authenticated");
+        }
+        System.out.println("User is not google authenticated");
+        String resetPasswordToken = jwtUtil.generateResetPasswordToken(email);
+        System.out.println("Reset password token generated");
+        emailService.sendResetEmail(email, resetPasswordToken);
+    }
+
+    public void resetPassword(String resetToken, String password){
+        String email = jwtUtil.validateResetPasswordToken(resetToken);
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        //need to validate with validator
+        user.setPassword(password);
+        userRepository.save(user);
     }
 }

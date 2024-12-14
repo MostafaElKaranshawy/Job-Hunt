@@ -33,7 +33,7 @@ public class CompanyAuthService {
             throw new BusinessException("Email already exists.");
         signUpRequest.setUserType(UserType.COMPANY);
         String signUpToken = jwtUtil.generateSignupToken(signUpRequest);
-        emailService.sendEmail(signUpRequest.getEmail(), signUpToken);
+        emailService.sendConfirmationEmail(signUpRequest.getEmail(), signUpToken);
         System.out.println("Email sent");
 
 

@@ -1,6 +1,7 @@
 package com.software.backend.controller;
 
 import com.software.backend.auth.AuthenticationResponse;
+import com.software.backend.dto.ResetPasswordRequest;
 import com.software.backend.entity.RefreshToken;
 import com.software.backend.service.RefreshTokenService;
 import com.software.backend.service.UserAuthService;
@@ -80,16 +81,14 @@ public class AuthController {
     }
 
     @GetMapping("/confirm-email")
-    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
+    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
         try {
             System.out.println("Verifying email");
             SignUpRequest signUpRequest = jwtUtil.validateSignupToken(token);
             if (signUpRequest == null) {
-                System.out.println("Invalid token");
                 return ResponseEntity.badRequest().body("Invalid token");
 
             }
-            System.out.println("Email verified successfully");
             userAuthService.createNewUser(signUpRequest);
             return ResponseEntity.ok("Email verified successfully. You can now log in.");
         }catch (Exception e) {
@@ -97,5 +96,21 @@ public class AuthController {
         }
 
     }
+
+    @PostMapping("/reset-password-request")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        System.out.println("Reset password Request endpoint");
+        userAuthService.resetPasswordRequest(resetPasswordRequest.getEmail());
+        return  ResponseEntity.ok("Password reset email sent. Please check your email.");
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam("resetToken") String resetToken, @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        System.out.println("Reset password endpoint");
+        System.out.println("Reset token: " + resetToken);
+        System.out.println("New password: " + resetPasswordRequest.getPassword());
+        userAuthService.resetPassword(resetToken, resetPasswordRequest.getPassword());
+        return  ResponseEntity.ok("Password reset successfully.");
+    }
+
 }
 
