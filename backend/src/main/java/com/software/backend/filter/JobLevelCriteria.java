@@ -23,7 +23,7 @@ public class JobLevelCriteria implements JobsFilterCriteria{
     @Override
     public List<JobDto> meetCriteria(String data){
 
-        List<Job> jobs = jobRepository.findAllByLevelEqualsIgnoreCase(data).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByLevelContainsIgnoreCase(data).orElse(new ArrayList<>());
 
         return jobs.stream().map(mapper::jobToJobDto).collect(Collectors.toList());
     }
