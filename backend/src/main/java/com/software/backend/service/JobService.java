@@ -1,5 +1,6 @@
 package com.software.backend.service;
 
+import com.software.backend.Sorting.SortingContext;
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Company;
 import com.software.backend.entity.Job;
@@ -44,12 +45,15 @@ public class JobService {
     public List<JobDto> searchJobs(String query, int page, int offset){
 
         Pageable pageable = PageRequest.of(page, offset);
-        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(query, query, pageable).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByTitleContains(query).orElse(new ArrayList<>());
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
 
-    public List<JobDto> filterJobs(String type, String location, String category, String salary, String level, String query){
+    public List<JobDto> filterJobs(String type, String location, String category, String salary,
+                                   String level, String query, String sort,
+                                   int page, int offset
+                                   ) throws Exception {
 
         HashMap<String, String> filterCriteria = new HashMap<>();
 
@@ -65,7 +69,21 @@ public class JobService {
 
         if (query != null) filterCriteria.put("search", query);
 
-        return jobCriteriaRunner.matchCriteria(filterCriteria);
+
+        List<JobDto> jobs =  jobCriteriaRunner.matchCriteria(filterCriteria);
+
+        if (sort != null) {
+            try {
+                SortingContext sortingContext = new SortingContext(sort);
+                jobs = sortingContext.sortJobs(jobs);
+
+                return jobs.stream().skip((long) page * offset).limit(offset).toList();
+            } catch (Exception e) {
+                throw new Exception("Invalid sorting technique");
+            }
+
+        }
+        return new ArrayList<>();
     }
 
     public List<JobDto> getExpiredJobsForCompany(String companyUsername) {

@@ -20,8 +20,7 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     Optional<List<Job>> findAllByStatusIs(JobStatus status, Pageable pageable);  // find All Active Jobs for Home page
 
     // Search for title or description.
-    Optional<List<Job>> findAllByTitleContainsOrDescriptionContains(String title, String description, Pageable pageable);
-    Optional<List<Job>> findAllByTitleContainsOrDescriptionContains(String title, String description);
+    Optional<List<Job>> findAllByTitleContains(String title);
 
     // Filter
     Optional<List<Job>> findAllByTypeContainsIgnoreCase(String type);

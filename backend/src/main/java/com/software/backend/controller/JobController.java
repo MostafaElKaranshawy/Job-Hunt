@@ -78,10 +78,13 @@ public class JobController {
             @RequestParam(name = "category", defaultValue = "") String category,
             @RequestParam(name = "salary", defaultValue = "0") String salary,
             @RequestParam(name = "level", defaultValue = "") String level,
-            @RequestParam(name = "query", defaultValue = "") String query) {
+            @RequestParam(name = "query", defaultValue = "") String query,
+            @RequestParam(name = "sort", defaultValue = "DateDesc") String sort,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "offset", defaultValue = "5") Integer offset){
         try {
 
-            List<JobDto> jobs = jobService.filterJobs(type, location, category, salary, level, query);
+            List<JobDto> jobs = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             return ResponseEntity.ok(jobs);
         } catch (Exception e) {
