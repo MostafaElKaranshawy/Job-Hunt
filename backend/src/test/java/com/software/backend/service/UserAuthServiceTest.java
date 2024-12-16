@@ -1,42 +1,43 @@
-//package com.software.backend.service;
-//
-//import com.software.backend.auth.AuthenticationResponse;
-//import com.software.backend.dto.SignUpRequest;
-//import com.software.backend.exception.InvalidCredentialsException;
-//import com.software.backend.exception.UserNotFoundException;
-//import com.software.backend.repository.UserRepository;
-//import com.software.backend.util.JwtUtil;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.MockitoAnnotations;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//
-//import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//class UserAuthServiceTest {
-//
-//    @Mock
-//    private UserRepository repository;
-//
-//    @Mock
-//    private PasswordEncoder passwordEncoder;
-//
-//    @Mock
-//    private JwtUtil jwtUtil;
-//
-//    @InjectMocks
-//    private UserAuthService userAuthService;
-//
-//    @BeforeEach
-//    void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//    }
-//
+package com.software.backend.service;
+
+import com.software.backend.dto.AuthenticationResponse;
+import com.software.backend.dto.SignUpRequest;
+import com.software.backend.entity.User;
+import com.software.backend.exception.InvalidCredentialsException;
+import com.software.backend.exception.UserNotFoundException;
+import com.software.backend.repository.UserRepository;
+import com.software.backend.util.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class UserAuthServiceTest {
+
+    @Mock
+    private UserRepository repository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @InjectMocks
+    private UserAuthService userAuthService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
 //    @Test
 //    void login_Success() {
 //        // Arrange
@@ -116,4 +117,4 @@
 //        verify(passwordEncoder, times(1)).matches(password, encodedPassword);
 //        verifyNoInteractions(jwtUtil);
 //    }
-//}
+}

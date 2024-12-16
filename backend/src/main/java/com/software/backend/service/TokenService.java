@@ -1,8 +1,11 @@
 package com.software.backend.service;
 
 
+import com.google.api.client.json.webtoken.JsonWebSignature;
+import com.google.auth.oauth2.TokenVerifier;
 import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.entity.RefreshToken;
+import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.repository.RefreshTokenRepository;
 import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
@@ -83,6 +86,20 @@ public class TokenService {
        saveNewRefreshTokenInDb(authenticationResponse.getRefreshToken(), authenticationResponse.getUsername());
         System.out.println("tokens stored");
     }
-
+    public JsonWebSignature verifyGoogleToken(String idToken) {
+        if (idToken == null || idToken.isEmpty()) {
+            throw new InvalidCredentialsException("Google Token is required");
+        }
+        idToken = idToken.replace("\"", "");
+        try {
+            TokenVerifier tokenVerifier = TokenVerifier.newBuilder()
+                    .setAudience(env.getProperty("GOOGLE_CLIENT_ID"))
+                    .build();
+            JsonWebSignature verifiedToken = tokenVerifier.verify(idToken);
+            return verifiedToken;
+        } catch (Exception e) {
+            throw new InvalidCredentialsException("Invalid Google Token");
+        }
+    }
 
 }

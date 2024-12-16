@@ -30,6 +30,8 @@ public class ApplicantAuthService {
 
     private final EmailService emailService;
 
+    private final TokenService tokenService;
+
     private final JwtUtil jwtUtil;
 
     private final Environment env;
@@ -47,24 +49,8 @@ public class ApplicantAuthService {
         System.out.println("Email sent");
     }
 
-    private JsonWebSignature verifyGoogleToken(String idToken) {
-        if (idToken == null || idToken.isEmpty()) {
-            throw new InvalidCredentialsException("Google Token is required");
-        }
-        idToken = idToken.replace("\"", "");
-        try {
-            TokenVerifier tokenVerifier = TokenVerifier.newBuilder()
-                    .setAudience(env.getProperty("GOOGLE_CLIENT_ID"))
-                    .build();
-            JsonWebSignature verifiedToken = tokenVerifier.verify(idToken);
-            return verifiedToken;
-        } catch (Exception e) {
-            throw new InvalidCredentialsException("Invalid Google Token");
-        }
-    }
-
     public AuthenticationResponse applicantGoogleSignUp(SignUpRequest signUpRequest) {
-        JsonWebSignature verifiedToken = verifyGoogleToken(signUpRequest.getGoogleToken());
+        JsonWebSignature verifiedToken = tokenService.verifyGoogleToken(signUpRequest.getGoogleToken());
 
         JsonWebToken.Payload payload = verifiedToken.getPayload();
 
@@ -98,7 +84,7 @@ public class ApplicantAuthService {
     }
 
     public AuthenticationResponse loginWithGoogle(SignUpRequest request) {
-        JsonWebSignature verifiedToken = verifyGoogleToken(request.getGoogleToken());
+        JsonWebSignature verifiedToken = tokenService.verifyGoogleToken(request.getGoogleToken());
 
         JsonWebToken.Payload payload = verifiedToken.getPayload();
 
