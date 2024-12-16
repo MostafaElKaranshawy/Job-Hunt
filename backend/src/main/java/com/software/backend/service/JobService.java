@@ -81,41 +81,5 @@ public class JobService {
         homeDto.setJobs(paginatedJobs);
         return homeDto;
     }
-//
-//    public List<JobDto> getExpiredJobsForCompany(String companyUsername) {
-//
-//        User user = userRepository.findByUsername(companyUsername).orElse(null);
-//
-//        if (user == null) return Collections.emptyList();
-//
-//        Company company = user.getCompany();
-//
-//        if (company == null) return Collections.emptyList();
-//
-//        LocalDateTime currentDateTime = LocalDateTime.now();
-//        List<Job> jobs = jobRepository.findByCompanyAndApplicationDeadlineBefore(company, currentDateTime).orElse(null);
-//
-//        if (jobs == null) return Collections.emptyList();
-//
-//        return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
-//    }
-//
-//    public List<JobDto> getActiveJobsForCompany(String companyUsername) {
-//
-//        User user = userRepository.findByUsername(companyUsername).orElse(null);
-//
-//        if (user == null) return Collections.emptyList();
-//
-//        Company company = user.getCompany();
-//
-//        if (company == null) return Collections.emptyList();
-//
-//        LocalDateTime currentDateTime = LocalDateTime.now();
-//        List<Job> jobs = jobRepository.findByCompanyAndApplicationDeadlineAfter(company, currentDateTime).orElse(null);
-//
-//        if (jobs == null) return Collections.emptyList();
-//
-//        return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
-//    }
 }
 
