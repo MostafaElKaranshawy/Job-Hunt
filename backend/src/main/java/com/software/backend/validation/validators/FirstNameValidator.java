@@ -11,7 +11,10 @@ public class FirstNameValidator extends Validator {
 
         if (firstName == null || firstName.isEmpty())
             throw new BusinessException("First name is required");
-
+        if(firstName.contains(" "))
+            throw new BusinessException("First name must not contain spaces");
+        if(firstName.matches(".*\\d.*"))
+            throw new BusinessException("First name must not contain numbers");
         if (firstName.length() >= 30)
             throw new BusinessException("First name must not exceed 30 characters");
 

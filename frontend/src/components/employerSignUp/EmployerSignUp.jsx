@@ -10,6 +10,8 @@ function EmployerSignUp() {
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const [successResponse, setSuccessResponse] = useState("");
+  const [failureResponse, setFailureResponse] = useState("");
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +25,17 @@ function EmployerSignUp() {
   // Validation function
   const validate = () => {
     const newErrors = {};
-    if (!formData.companyName) newErrors.companyName = "Company name is required.";
+    if (!formData.companyName|| formData.companyName.trim() === ""){
+      newErrors.companyName = "Company name is required.";
+    }else if (formData.companyName.length > 30) {
+      newErrors.companyName = "company name must not exceed 30 characters.";
+  } else if (/^\d/.test(formData.companyName)) {
+    newErrors.companyName = "Company name must not start with a number.";
+  }
+  else if(formData.companyName.startsWith(" ")){
+    newErrors.companyName = "Company name must not start with a space.";
+  }
+  
     if (!formData.email) {
       newErrors.email = "Email is required.";
     } else if (!/^\S+@gmail\.com$/.test(formData.email)) {
@@ -32,21 +44,39 @@ function EmployerSignUp() {
     }
     if (!formData.password) {
       newErrors.password = "Password is required.";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-    }
+  } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long.";
+  } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one uppercase letter.";
+  } else if (!/[a-z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one lowercase letter.";
+  } else if (!/[0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number.";
+  } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one special character.";
+  }  else if (formData.password.length > 30) {
+      newErrors.password = "Password must be at most 30 characters";
+  }
     return newErrors;
   };
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      setErrors({});
-      employerSignUp(formData);
-    }
+          setErrors({});
+         const response = await employerSignUp(formData);
+         if(response.success){
+            setSuccessResponse(response.message);
+            setFailureResponse("");
+         }
+          else{
+              setFailureResponse(response.message);
+              setSuccessResponse("");
+          }  
+      };
   };
   return (
     <div className="signup-component-container">
@@ -99,6 +129,12 @@ function EmployerSignUp() {
           Sign Up
         </button>
       <p className="logIn"> Already have an account? <Link to="/login" className="link">log in</Link></p>
+      {
+        successResponse && <p className="success-message">{successResponse}</p>
+      }
+      {
+        failureResponse && <p className="error-message">{failureResponse}</p>
+      }
       
     </div>
   );

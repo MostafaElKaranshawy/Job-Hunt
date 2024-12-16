@@ -12,6 +12,9 @@ function EmployeeSignUp() {
     confirmPassword: "",
   });
 
+  const [successResponse, setSuccessResponse] = useState("");
+  const [failureResponse, setFailureResponse] = useState("");
+
   const [errors, setErrors] = useState({}); // State for validation errors
 
   // Handle form input changes
@@ -33,6 +36,8 @@ function EmployeeSignUp() {
       newErrors.firstName = "First name must not exceed 30 characters.";
   } else if (/\d/.test(formData.firstName)) {
       newErrors.firstName = "First name must not contain numbers.";
+  } else if (/\s/.test(formData.firstName)) {
+    newErrors.firstName = "First name must not contain spaces.";
   }
   
   if (!formData.lastName || formData.lastName.trim() === "") {
@@ -41,6 +46,8 @@ function EmployeeSignUp() {
       newErrors.lastName = "Last name must not exceed 30 characters.";
   } else if (/\d/.test(formData.lastName)) {
       newErrors.lastName = "Last name must not contain numbers.";
+  } else if (/\s/.test(formData.lastName)) {
+    newErrors.lastName = "Last name must not contain spaces.";
   }
   
     if (!formData.email) {
@@ -71,17 +78,24 @@ function EmployeeSignUp() {
     return newErrors;
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      employeeSignUp(formData);
-    }
+     const response = await employeeSignUp(formData);
+     if(response.success){
+        setSuccessResponse(response.message);
+        setFailureResponse("");
+     }
+      else{
+          setFailureResponse(response.message);
+          setSuccessResponse("");
+      }  
   };
+};
 
   return (
     <div className="signup-component-container">
@@ -156,6 +170,12 @@ function EmployeeSignUp() {
       <p className="login">
         Already have an account? <Link to="/login" className="link">Log in</Link>
       </p>
+      {
+        successResponse && <p className="success-message">{successResponse}</p>
+      }
+      {
+        failureResponse && <p className="error-message">{failureResponse}</p>
+      }
     </div>
   );
 }
