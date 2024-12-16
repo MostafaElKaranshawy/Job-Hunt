@@ -1,0 +1,43 @@
+.skill-item {
+    display: inline-flex; /* Allows the text and button to appear inline */
+    align-items: center; /* Vertically centers the content */
+    justify-content: space-between; /* Keeps spacing between text and button */
+    background-color: #b3b2b2; /* Light gray background for the skill rectangle */
+    color: #000000; /* Darker text for readability */
+    padding: 8px 12px; /* Adds space inside the rectangle */
+    margin: 6px; /* Adds space between different skills */
+    border-radius: 8px; /* Smooth, rounded corners */
+    position: relative; /* Ensures the `x` button stays within the rectangle */
+    font-size: 14px; /* Adjusts font size for a clean look */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+  }
+  
+  .remove-skill {
+    position: absolute; /* Ensures the button stays at the corner */
+    top: -7px; /* Positions the button slightly outside the rectangle */
+    right: -7px; /* Aligns the button to the top-left corner */
+    background-color: #f40000; /* Bright red color for visibility */
+    color: white; /* White `x` for contrast */
+    border: none; /* Removes default border */
+    border-radius: 100%; /* Makes the button circular */
+    width: 100%; /* Defines button size */
+    height: 100%; /* Matches width for a perfect circle */
+    max-width: 14px;
+    max-height: 14px;
+    font-size: 12px; /* Keeps the `x` appropriately small */
+    font-weight: bold; /* Makes the `x` bold */
+    text-align: center; /* Centers the `x` horizontally */
+    cursor: pointer; /* Changes the cursor to a pointer on hover */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Adds a slight shadow */
+    display: flex; /* Uses flexbox for more precise centering */
+    align-items: center; /* Centers content vertically */
+    justify-content: center; /* Centers content horizontally */
+}
+
+.remove-skill:hover {
+    background-color: #ff4d4d; /* Darker red for hover effect */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Enhances shadow on hover */
+}
+
+
+

@@ -1,0 +1,78 @@
+.remove-section-button {
+    position: absolute;
+    top: 60px;
+    right: -20px; 
+    background-color: #f40000;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 20%;
+    width: 100%; 
+    height: 100%;
+    max-width: 30px;
+    max-height: 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+}
+
+    
+.remove-section-button:hover {
+    background-color: #af0000;
+}
+
+.remove-field-button {
+    position: absolute;
+    top: 10px;
+    right: -20px; 
+    background-color: #f40000;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 20%;
+    width: 100%; 
+    height: 100%;
+    max-width: 30px;
+    max-height: 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+}
+
+    
+.remove-field-button:hover {
+    background-color: #af0000;
+}
+
+.section-buttons-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.section-button {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-right: 3px;
+}
+
+.section-button:hover {
+    background-color: #e65c50;
+}
+
+.section-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}

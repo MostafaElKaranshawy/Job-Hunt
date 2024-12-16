@@ -1,0 +1,56 @@
+.special-form {
+  width: 100%;
+  max-width: 60em;
+  max-height:40em ;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #70ca8e;
+  border-radius: 8px;
+  overflow-y: scroll;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+}
+.special-form::-webkit-scrollbar {
+width: 14px;
+background-color: #f1f1f1;
+}
+
+.special-form::-webkit-scrollbar-thumb {
+background-color: #7a7a7a;
+border-radius: 15px;
+border: 3px solid #f1f1f1;
+}
+
+.special-form::-webkit-scrollbar-track {
+background-color: #e8e6e6;
+}
+
+.special-form::-webkit-scrollbar-corner {
+background-color: transparent;
+}
+
+form {
+display: flex;
+flex-direction: column;
+gap: 20px;
+align-items: center;
+}
+
+.form-button {
+font-size: 1.2em;
+width: 30%;
+padding: 10px 15px;
+background-color: #f40000;
+color: white;
+border: none;
+border-radius: 7px;
+margin-right: 5px;
+margin-bottom: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+align-self: flex-start;
+}
+
+.form-button:hover {
+background-color: #af0000;
+}
+  
