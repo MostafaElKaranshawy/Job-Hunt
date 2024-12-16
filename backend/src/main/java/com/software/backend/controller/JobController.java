@@ -2,6 +2,8 @@ package com.software.backend.controller;
 
 import com.software.backend.dto.JobDto;
 import com.software.backend.service.JobService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+
 @RequestMapping("/company")
 @CrossOrigin
 public class JobController {
@@ -19,7 +22,9 @@ public class JobController {
     private JobService jobService;
 
     @GetMapping("/{companyUsername}/jobs")
-    public ResponseEntity<?> getJobs(@PathVariable String companyUsername) {
+    public ResponseEntity<?> getJobs(@PathVariable String companyUsername,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) {
         System.out.println("@@@@@@@@@@@@@@Company Username: " + companyUsername);
         try {
             System.out.println("@@@@@@@@@@@@@@@Getting Jobs for Company: " + companyUsername);

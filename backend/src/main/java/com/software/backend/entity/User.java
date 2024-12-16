@@ -70,9 +70,9 @@ public class User implements UserDetails {
     )
     private LocalDateTime createdAt;
 
-
-    @Column(name = "google_client_id")
-    private String googleClientId;
+//
+//    @Column(name = "google_client_id")
+//    private String googleClientId;
 
 
     @Column(name = "is_banned")

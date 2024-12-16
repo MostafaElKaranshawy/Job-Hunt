@@ -3,7 +3,6 @@ import { googleSignUp, googleLogIn } from "../../services/authServices";
 
 function GoogleOAuth({ mode }) {
   const handleSuccess = (response) => {
-    console.log("Login Success:", response);
     if (mode === "signup") {
       googleSignUp(response); 
     } else if (mode === "login") {

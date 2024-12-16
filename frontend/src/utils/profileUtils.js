@@ -1,4 +1,3 @@
-import { parse } from "dotenv";
 
 function parseEducation(education){
     return ([
