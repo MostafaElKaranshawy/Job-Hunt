@@ -12,8 +12,8 @@ public class CompanyNameValidator extends Validator {
         if (name == null || name.isEmpty())
             throw new BusinessException("Company name is required");
 
+        if (name.length() >= 30)
+            throw new BusinessException("Company name is too long");
 
-        // should we check for a maximum length?
     }
-
 }
