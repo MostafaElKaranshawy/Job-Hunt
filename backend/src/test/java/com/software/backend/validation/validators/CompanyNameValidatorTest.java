@@ -42,4 +42,17 @@ class CompanyNameValidatorTest {
         assertEquals("Company name is required", exception.getMessage());
     }
 
+    @Test
+    public void shouldThrowExceptionWhenCompanyNameIsTooLong() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setCompanyName("This is a very long company name that is more than 30 characters");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> companyNameValidator.doValidation(signUpRequest));
+
+        assertEquals("Company name is too long", exception.getMessage());
+    }
+
 }
