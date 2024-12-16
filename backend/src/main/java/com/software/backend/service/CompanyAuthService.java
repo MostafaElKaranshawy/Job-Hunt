@@ -6,8 +6,9 @@ import com.software.backend.enums.ValidationType;
 import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.JwtUtil;
-import com.software.backend.validator.Validator;
-import com.software.backend.validator.ValidatorFactory;
+import com.software.backend.validation.ValidationFactory;
+
+import com.software.backend.validation.validators.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,15 @@ public class CompanyAuthService {
 
     private final JwtUtil jwtUtil;
 
+    private final PasswordService passwordService;
+
     public void signUp(SignUpRequest signUpRequest) {
-        Validator validator = ValidatorFactory.createValidator(ValidationType.COMPANY_SIGNUP);
+        Validator validator = ValidationFactory.createValidator(ValidationType.COMPANY_SIGNUP);
         validator.validate(signUpRequest);  // to be checked later to prevent it from being null(refactor)
         System.out.println("Validated sign-up request data");
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new EmailAlreadyRegisteredException("Email already exists.");
+        signUpRequest.setPassword(passwordService.hashPassword(signUpRequest.getPassword()));
         signUpRequest.setUserType(UserType.COMPANY);
         String signUpToken = jwtUtil.generateSignupToken(signUpRequest);
         emailService.sendConfirmationEmail(signUpRequest.getEmail(), signUpToken);

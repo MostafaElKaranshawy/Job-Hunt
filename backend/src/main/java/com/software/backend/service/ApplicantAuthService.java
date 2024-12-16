@@ -2,7 +2,6 @@ package com.software.backend.service;
 
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.json.webtoken.JsonWebToken;
-import com.google.auth.oauth2.TokenVerifier;
 import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.entity.Applicant;
@@ -15,8 +14,8 @@ import com.software.backend.exception.UserNotFoundException;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.JwtUtil;
-import com.software.backend.validator.Validator;
-import com.software.backend.validator.ValidatorFactory;
+import com.software.backend.validation.ValidationFactory;
+import com.software.backend.validation.validators.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -36,11 +35,14 @@ public class ApplicantAuthService {
 
     private final Environment env;
 
+    private final PasswordService passwordService;
+
     public void signUp(SignUpRequest signUpRequest) {
         System.out.println("Applicant Sign-Up from service");
-        Validator validator = ValidatorFactory.createValidator(ValidationType.APPLICANT_SIGNUP);
+        Validator validator = ValidationFactory.createValidator(ValidationType.APPLICANT_SIGNUP);
         validator.validate(signUpRequest);
         System.out.println("Validated sign-up request data");
+        signUpRequest.setPassword(passwordService.hashPassword(signUpRequest.getPassword()));
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
             throw new EmailAlreadyRegisteredException("Email already exists.");
         signUpRequest.setUserType(UserType.APPLICANT);
@@ -49,13 +51,11 @@ public class ApplicantAuthService {
         System.out.println("Email sent");
     }
 
-    public AuthenticationResponse applicantGoogleSignUp(SignUpRequest signUpRequest) {
+    public void applicantGoogleSignUp(SignUpRequest signUpRequest) {
+
         JsonWebSignature verifiedToken = tokenService.verifyGoogleToken(signUpRequest.getGoogleToken());
-
         JsonWebToken.Payload payload = verifiedToken.getPayload();
-
         String email = payload.get("email").toString();
-
         if (userRepository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyRegisteredException("Email already exists.");
         }
@@ -77,10 +77,6 @@ public class ApplicantAuthService {
         // Save both User and Applicant entities
         userRepository.save(user);
         applicantRepository.save(applicant);
-        return AuthenticationResponse.builder()
-                .accessToken("accessToken")
-                .refreshToken("refreshToken")
-                .build();
     }
 
     public AuthenticationResponse loginWithGoogle(SignUpRequest request) {

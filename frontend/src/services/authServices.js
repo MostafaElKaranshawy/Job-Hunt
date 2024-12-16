@@ -1,12 +1,3 @@
-const bcrypt = require('bcryptjs');
-
-const hashPassword = async (password) => {
-  // const salt = await bcrypt.genSalt(10); // Generates a salt with 10 rounds
-  // const hashedPassword = await bcrypt.hash(password, salt); // Hashes the password with the salt
-  return password;
-};
-
-
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const employerSignUp = async (formData) => {
@@ -81,7 +72,6 @@ export const googleLogIn = async (credentialResponse) => {
 };
 
 export const logIn = async (formData) => {
-  formData.password =await hashPassword(formData.password);
   try {
     const response = await fetch(`${apiUrl}/auth/login`, {
       method: "POST",
@@ -145,7 +135,6 @@ export const resetPassword = async (resetToken, newPassword) => {
   if (response.ok) {
     const data = await response.json();
     console.log(data.message);
-    // return data.message;
   } else {
     const errorData = await response.json();
     console.error( errorData.message);

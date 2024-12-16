@@ -14,7 +14,7 @@ import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.JwtUtil;
-import com.software.backend.validator.PasswordValidator;
+import com.software.backend.validation.validators.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,17 +27,15 @@ public class UserAuthService {
     private final UserRepository userRepository;
     private final ApplicantRepository applicantRepository;
     private final CompanyRepository companyRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
+    private final PasswordService passwordService;
 
     public AuthenticationResponse login(LogInRequest request) {
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new InvalidCredentialsException("emil or password is incorrect"));
-//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            throw new InvalidCredentialsException("Invalid credentials");
-//        }
-        if (!request.getPassword().equals(user.getPassword())) {
+                .orElseThrow(() -> new InvalidCredentialsException("email or password is incorrect"));
+
+        if (!passwordService.verifyPassword(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("email or password is incorrect");
         }
         String username = user.getUsername();
@@ -57,6 +55,7 @@ public class UserAuthService {
         if(userRepository.findByEmail(request.getEmail()).isPresent()){
             throw new EmailAlreadyRegisteredException("User already exists");
         }
+        request.setPassword(passwordService.hashPassword(request.getPassword()));
         var user = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
@@ -102,6 +101,7 @@ public class UserAuthService {
         SignUpRequest.setPassword(password);
         PasswordValidator passwordValidator = new PasswordValidator();
         passwordValidator.validate(SignUpRequest);
+        password = passwordService.hashPassword(password);
         user.setPassword(password);
         userRepository.save(user);
         System.out.println("Password reset");
