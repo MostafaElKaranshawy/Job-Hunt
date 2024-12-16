@@ -14,6 +14,8 @@ function UserHome() {
     const [expandedJob, setExpandedJob] = useState(null);
 
     const [page, setPage] = useState(0);
+    const [totalJobs, setTotalJobs] = useState(10); // New state for total jobs count
+
     const [loading, setLoading] = useState(false);
     const offset = 10;
 
@@ -32,7 +34,8 @@ function UserHome() {
             setLoading(true);
             try {
                 const jobs = await fetchJobs(filters, page, offset);
-                setJobs(jobs); // Adjust based on your backend's response structure
+                setJobs(jobs);
+                // setTotalJobs(total);
             } catch (err) {
                 console.error(err);
             } finally {
@@ -78,6 +81,9 @@ function UserHome() {
     };
 
 
+    const startIndex = page * offset + 1;
+    const endIndex = Math.min((page + 1) * offset, totalJobs);
+
 
     return (
         <div className="home">
@@ -98,16 +104,46 @@ function UserHome() {
                         />
                     </aside>
                     <div className="job-content">
-                        <Sorting
-                            sortBy={filters.sortBy}
-                            onSortChange={handleSortChange}
-                        />
+
+                        <div className="jobs-header">
+                            <div className="job-range">
+                                {totalJobs > 0 && !loading && (
+                                    <span>{startIndex}-{endIndex} of {totalJobs}</span>
+                                )}
+                            </div>
+
+                            <Sorting
+                                sortBy={filters.sortBy}
+                                onSortChange={handleSortChange}
+                            />
+                        </div>
+
                         {loading ?
                             <p>Loading jobs...</p> :
-                            jobs.length === 0 ? 
-                            <p className="no-jobs-message">No matching jobs found</p> :
-                            <JobList jobs={jobs} handleExpandJob={handleExpandJob} />
+                            jobs.length === 0 ?
+                                <p className="no-jobs-message">No matching jobs found</p> :
+                                <JobList jobs={jobs} handleExpandJob={handleExpandJob} />
                         }
+
+                        {/* // Pagination */}
+                        <div className="pagination">
+                            <button 
+                                className="custom-pagination-button" 
+                                onClick={() => setPage(page - 1)} 
+                                disabled={page === 0}
+                            >
+                                &lt; Previous
+                            </button>
+
+                            <button 
+                                className="custom-pagination-button" 
+                                onClick={() => setPage(page + 1)} 
+                                disabled={endIndex >= totalJobs}
+                            >
+                                Next &gt;
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             </main>
