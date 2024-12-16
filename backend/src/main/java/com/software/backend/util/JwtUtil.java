@@ -2,6 +2,7 @@ package com.software.backend.util;
 
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.enums.UserType;
+import com.software.backend.exception.InvalidCredentialsException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -82,7 +83,6 @@ public class JwtUtil {
     }
 
     public SignUpRequest validateSignupToken(String token) {
-        System.out.println("inside validateSignupToken");
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(key)
@@ -97,13 +97,12 @@ public class JwtUtil {
             request.setCompanyName(claims.get("companyName", String.class));
             System.out.println("token validated");
             return request;
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid or expired token");
+        } catch (JwtException | IllegalArgumentException e ) {
+            throw new InvalidCredentialsException("Invalid or expired token");
         }
     }
 
     public  String generateResetPasswordToken(String email) {
-        System.out.println("inside generateResetPasswordToken");
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())

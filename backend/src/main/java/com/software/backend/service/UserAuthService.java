@@ -1,20 +1,19 @@
 package com.software.backend.service;
 
-import com.software.backend.auth.AuthenticationResponse;
+import com.software.backend.dto.AuthenticationResponse;
+import com.software.backend.dto.LogInRequest;
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.entity.Applicant;
 import com.software.backend.entity.Company;
 import com.software.backend.entity.User;
 import com.software.backend.enums.UserType;
+import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.exception.UserNotFoundException;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
-import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
-import com.software.backend.validator.Validator;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,20 +28,20 @@ public class UserAuthService {
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final RefreshTokenService refreshTokenService;
     private final EmailService emailService;
 
-    public AuthenticationResponse login(SignUpRequest request) {
-
+    public AuthenticationResponse login(LogInRequest request) {
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid credentials");
+                .orElseThrow(() -> new InvalidCredentialsException("emil or password is incorrect"));
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            throw new InvalidCredentialsException("Invalid credentials");
+//        }
+        if (!request.getPassword().equals(user.getPassword())) {
+            throw new InvalidCredentialsException("email or password is incorrect");
         }
         String username = user.getUsername();
         String accessToken = jwtUtil.generateAccessToken(username);
         String refreshToken = jwtUtil.generateRefreshToken(username);
-        System.out.println("login successful");
 
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
@@ -51,24 +50,12 @@ public class UserAuthService {
                 .build();
     }
 
-    public void storeTokens(
-        AuthenticationResponse authenticationResponse,
-        HttpServletResponse response
-) {
-        authenticationResponse.getAccessToken();
-        authenticationResponse.getRefreshToken();
-        CookieUtil cookieUtil = new CookieUtil();
-        cookieUtil.addCookie(response, "accessToken", authenticationResponse.getAccessToken());
-        cookieUtil.addCookie(response, "refreshToken", authenticationResponse.getRefreshToken());
-
-        refreshTokenService.saveNewRefreshTokenInDb(authenticationResponse.getRefreshToken(), authenticationResponse.getUsername());
-
-    }
-
     public void createNewUser(SignUpRequest request) {
         String username = request.getEmail().split("@")[0];
-        System.out.println("Creating new user");
-        System.out.println("userType: " + request.getUserType());
+
+        if(userRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new EmailAlreadyRegisteredException("User already exists");
+        }
         var user = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
@@ -77,7 +64,6 @@ public class UserAuthService {
                 .isBanned(false)
                 .build();
         userRepository.save(user);
-        System.out.println("User saved");
         if (request.getUserType().equals(UserType.APPLICANT)) {
             Applicant applicant = new Applicant();
             applicant.setUser(user);
@@ -102,10 +88,10 @@ public class UserAuthService {
         if(user.getPassword() == null){
             throw new InvalidCredentialsException("User is google authenticated");
         }
-        System.out.println("User is not google authenticated");
         String resetPasswordToken = jwtUtil.generateResetPasswordToken(email);
         System.out.println("Reset password token generated");
         emailService.sendResetEmail(email, resetPasswordToken);
+        System.out.println("Email sent");
     }
 
     public void resetPassword(String resetToken, String password){

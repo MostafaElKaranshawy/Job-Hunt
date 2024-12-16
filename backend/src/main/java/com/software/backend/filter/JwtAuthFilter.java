@@ -1,6 +1,6 @@
 package com.software.backend.filter;
 
-import com.software.backend.service.RefreshTokenService;
+import com.software.backend.service.TokenService;
 import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -17,10 +17,10 @@ import java.util.Optional;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil; // Utility for token operations
-    private final RefreshTokenService refreshTokenService; // Service for validating refresh tokens
+    private final TokenService refreshTokenService; // Service for validating refresh tokens
     private final CookieUtil cookieUtil; // Utility for cookie operations
 
-    public JwtAuthFilter(JwtUtil jwtUtil, RefreshTokenService refreshTokenService, CookieUtil cookieUtil) {
+    public JwtAuthFilter(JwtUtil jwtUtil, TokenService refreshTokenService, CookieUtil cookieUtil) {
         this.jwtUtil = jwtUtil;
         this.refreshTokenService = refreshTokenService;
         this.cookieUtil = cookieUtil;
@@ -43,12 +43,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        System.out.println("In filter");
-
         try {
             // Ensure the filter is only processed once per request
             if (request.getAttribute("filterProcessed") != null) {
-                System.out.println("Filter already processed. Skipping.");
                 filterChain.doFilter(request, response);
                 return;
             }

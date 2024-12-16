@@ -1,12 +1,13 @@
 package com.software.backend.service;
 
-import com.software.backend.auth.AuthenticationResponse;
+import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.dto.SignUpRequest;
 import com.software.backend.entity.Company;
 import com.software.backend.entity.User;
 import com.software.backend.enums.UserType;
 import com.software.backend.enums.ValidationType;
 import com.software.backend.exception.BusinessException;
+import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.JwtUtil;
@@ -27,15 +28,16 @@ public class CompanyAuthService {
 
 
     public void signUp(SignUpRequest signUpRequest) {
+        System.out.println("Applicant Sign-Up from service");
         Validator validator = ValidatorFactory.createValidator(ValidationType.COMPANY_SIGNUP);
         validator.validate(signUpRequest);  // to be checked later to prevent it from being null(refactor)
+        System.out.println("Validated sign-up request data");
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
-            throw new BusinessException("Email already exists.");
+            throw new EmailAlreadyRegisteredException("Email already exists.");
         signUpRequest.setUserType(UserType.COMPANY);
         String signUpToken = jwtUtil.generateSignupToken(signUpRequest);
         emailService.sendConfirmationEmail(signUpRequest.getEmail(), signUpToken);
         System.out.println("Email sent");
-
 
     }
 

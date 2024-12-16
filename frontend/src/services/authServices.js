@@ -16,14 +16,15 @@ export const employerSignUp = async (formData) => {
   });
   if (response.ok) {
     const data = await response.json();
-    console.log("Backend Response:", data);
+    console.log(data.message);
   } else {
-    console.error("Backend responded with an error:", response.status);
+    const errorData = await response.json();
+    console.error(errorData.message);
   }
 };
+
 export const employeeSignUp = async (formData) => {
   formData.password = hashPassword(formData.password);
-  console.log("Form Data:", formData);
   const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
     method: "POST",
     headers: {
@@ -33,71 +34,84 @@ export const employeeSignUp = async (formData) => {
   });
   if (response.ok) {
     const data = await response.json();
-    console.log("Backend Response:", data);
+    console.log( data.message);
   } else {
-    console.error("Backend responded with an error:", response.status);
+    const errorData = await response.json();
+    console.error( errorData.message);
   }
 };
+
 export const googleSignUp = async (credentialResponse) => {
-  console.log("Google Credential:", credentialResponse);
   const response = await fetch(`${apiUrl}/auth/signup/applicant/google`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({googleToken:credentialResponse.credential, clientId: credentialResponse.clientId}),
+    body: JSON.stringify({googleToken:credentialResponse.credential}),
   });
   if (response.ok) {
     const data = await response.json();
-    console.log("user Signed up successfully with Google:", data);
+    console.log(data.message);
   } else {
-    console.error("User could not sign Up:", response.status);
+    const errorData = await response.json();
+    console.error(errorData.message);
   }
 };
+
 export const googleLogIn = async (credentialResponse) => {
-  console.log("Google Credential:", credentialResponse);
   const response = await fetch(`${apiUrl}/auth/login/applicant/google`, {
     method: "POST",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    // body: JSON.stringify(credentialResponse.credential),
-    body: JSON.stringify({googleToken:credentialResponse.credential, clientId: credentialResponse.clientId}),
+    body: JSON.stringify({googleToken:credentialResponse.credential}),
   });
   if (response.ok) {
     const data = await response.json();
-    console.log("user Logged in successfully with Google:", data);
+    console.log(data.username);
   } else {
-    console.error("User could not log in:", response.status);
+    const errorData = await response.json();
+    console.error(errorData.message);
   }
 };
+
 export const logIn = async (formData) => {
   formData.password = hashPassword(formData.password);
-  const response = await fetch(`${apiUrl}/auth/login`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-  if (response.ok) {
-    const data = await response.text();
-    console.log("User Logged in successfully:", data);
-    const username = 'testuser';
-    const res2 = await fetch(`${apiUrl}/user/${username}`, {
-      method: "GET",
+
+  try {
+    const response = await fetch(`${apiUrl}/auth/login`, {
+      method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(formData),
     });
-    
-  } else {
-    console.error("User could not log in:", response.status);
+
+    if (response.ok) {
+      const data = await response.json();   //this is the username
+      console.log(data.username);
+
+      // const username = 'testuser'; 
+      // const res2 = await fetch(`${apiUrl}/user/${username}`, {
+      //   method: "GET",
+      //   credentials: "include",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+      // const userData = await res2.json();
+      // console.log(userData);
+    } else {
+      const errorData = await response.json(); 
+      throw new Error(errorData.message); 
+    }
+  } catch (error) {
+    console.error(error.message);
   }
 };
+
 export const resetPassword = async (resetToken, newPassword) => {
   // Append the resetToken as a query parameter
   const response = await fetch(`${apiUrl}/auth/reset-password?resetToken=${resetToken}`, {
@@ -116,4 +130,24 @@ export const resetPassword = async (resetToken, newPassword) => {
     console.error("Backend responded with an error:", response.status);
     throw new Error("Failed to reset password"); // Optionally throw an error to handle in UI
   }
+
+
 };
+
+export const resretPasswordRequest = async (email) => {
+  const response = await fetch(`${apiUrl}/auth/reset-password-request`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data.message);
+  } else {
+    const errorData = await response.json();
+    console.error(errorData.message);
+  }
+}

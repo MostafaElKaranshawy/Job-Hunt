@@ -1,21 +1,19 @@
 package com.software.backend.service;
 
 
+import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.entity.RefreshToken;
 import com.software.backend.repository.RefreshTokenRepository;
 import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
-import com.software.backend.util.SpringContext;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
-public class RefreshTokenService {
+public class TokenService {
     private static final long ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000; // 15 minutes
     private static final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
     private final RefreshTokenRepository refreshTokenRepository;
@@ -52,6 +50,7 @@ public class RefreshTokenService {
         refreshToken.setToken(newRefreshToken);
         refreshTokenRepository.save(refreshToken);
     }
+
     public void saveNewRefreshTokenInDb(String token, String username) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -66,5 +65,19 @@ public class RefreshTokenService {
         refreshTokenRepository.save(refreshToken);
 
     }
+
+    public void storeTokens(
+            AuthenticationResponse authenticationResponse,
+            HttpServletResponse response
+    ) {
+        authenticationResponse.getAccessToken();
+        authenticationResponse.getRefreshToken();
+        CookieUtil cookieUtil = new CookieUtil();
+        cookieUtil.addCookie(response, "accessToken", authenticationResponse.getAccessToken());
+        cookieUtil.addCookie(response, "refreshToken", authenticationResponse.getRefreshToken());
+       saveNewRefreshTokenInDb(authenticationResponse.getRefreshToken(), authenticationResponse.getUsername());
+        System.out.println("tokens stored");
+    }
+
 
 }
