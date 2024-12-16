@@ -5,65 +5,48 @@ import com.software.backend.enums.UserType;
 import com.software.backend.exception.InvalidCredentialsException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    private static final long ACCESS_TOKEN_EXPIRATION = 60 * 1000; // 1 minute
-    private static final long REFRESH_TOKEN_EXPIRATION = 5 * 60 * 1000; // 1 days
+    private final Environment env;
 
-    public static String generateAccessToken(String username) {
+    private Key secretKey;
+
+    @PostConstruct
+    private void initSecretKey() {
+        this.secretKey = new SecretKeySpec(
+                Base64.getDecoder().decode(env.getProperty("JWT_SECRET_KEY")),
+                SignatureAlgorithm.HS256.getJcaName()
+        );
+    }
+
+    public String generateAccessToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
-                .signWith(key)
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("ACCESS_TOKEN_EXPIRATION"))))
+                .signWith(secretKey)
                 .compact();
     }
 
-    public static String generateRefreshToken(String username) {
+    public  String generateRefreshToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
-                .signWith(key)
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("REFRESH_TOKEN_EXPIRATION")))
+                )
+                .signWith(secretKey)
                 .compact();
-    }
-
-    public static Boolean validateToken(String token) {
-        try {
-            // Parse the token and extract claims
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)  // Replace 'key' with your signing key
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            // Check if the token is expired
-            if (claims.getExpiration().before(new Date())) {
-                return false; // Token is expired
-            }
-
-            // If everything is valid, return true
-            return true;
-
-        } catch (Exception e) {
-            // If any exception occurs (malformed token, expired, etc.), return false
-            return false;
-        }
-    }
-
-    public static String getUsernameFromRefreshToken(String refreshToken) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(refreshToken)
-                .getBody()
-                .getSubject();
     }
 
     public String generateSignupToken(SignUpRequest request) {
@@ -77,15 +60,52 @@ public class JwtUtil {
                 .claim("lastName", request.getLastName())
                 .claim("companyName", request.getCompanyName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))// 15 m expiration
-                .signWith(SignatureAlgorithm.HS512, key)
+                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000))// 5 m expiration
+                .signWith(secretKey)
                 .compact();
+    }
+
+    public  String generateResetPasswordToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 minutes
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public  Boolean validateToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)  // Replace 'key' with your signing key
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            if (claims.getExpiration().before(new Date()) ) {
+                throw new InvalidCredentialsException("Token is expired");
+            }
+            return true;
+
+        } catch (Exception e) {
+            // If any exception occurs (malformed token, expired, etc.), return false
+            return false;
+        }
+    }
+
+    public  String getUsernameFromRefreshToken(String refreshToken) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(refreshToken)
+                .getBody()
+                .getSubject();
     }
 
     public SignUpRequest validateSignupToken(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(key)
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(token)
                     .getBody();
             SignUpRequest request = new SignUpRequest();
@@ -96,30 +116,33 @@ public class JwtUtil {
             request.setLastName(claims.get("lastName", String.class));
             request.setCompanyName(claims.get("companyName", String.class));
             System.out.println("token validated");
+            if (claims.getExpiration().before(new Date())) {
+                throw new InvalidCredentialsException("Token has expired");
+            }
             return request;
         } catch (JwtException | IllegalArgumentException e ) {
             throw new InvalidCredentialsException("Invalid or expired token");
         }
     }
 
-    public  String generateResetPasswordToken(String email) {
-        return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 minutes
-                .signWith(key)
-                .compact();
-    }
-
     public String validateResetPasswordToken(String token) {
         try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(key)
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
+
+            Date expirationDate = claims.getExpiration();
+            if (expirationDate.before(new Date())) {
+                throw new InvalidCredentialsException("Token has expired");
+            }
             return claims.getSubject();
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid or expired token");
+        } catch (JwtException e) {
+            throw new InvalidCredentialsException("Invalid or expired token");
+        } catch (IllegalArgumentException e) {
+            throw new InvalidCredentialsException("Token must not be null or empty");
         }
     }
+
 }

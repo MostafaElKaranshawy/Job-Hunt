@@ -1,7 +1,11 @@
-const hashPassword = (password) => {
-  // return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex); // Generate SHA-256 hash
+const bcrypt = require('bcryptjs');
+
+const hashPassword = async (password) => {
+  // const salt = await bcrypt.genSalt(10); // Generates a salt with 10 rounds
+  // const hashedPassword = await bcrypt.hash(password, salt); // Hashes the password with the salt
   return password;
 };
+
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -77,8 +81,7 @@ export const googleLogIn = async (credentialResponse) => {
 };
 
 export const logIn = async (formData) => {
-  formData.password = hashPassword(formData.password);
-
+  formData.password =await hashPassword(formData.password);
   try {
     const response = await fetch(`${apiUrl}/auth/login`, {
       method: "POST",
@@ -93,16 +96,16 @@ export const logIn = async (formData) => {
       const data = await response.json();   //this is the username
       console.log(data.username);
 
-      // const username = 'testuser'; 
-      // const res2 = await fetch(`${apiUrl}/user/${username}`, {
-      //   method: "GET",
-      //   credentials: "include",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
-      // const userData = await res2.json();
-      // console.log(userData);
+      const username = 'testuser'; 
+      const res2 = await fetch(`${apiUrl}/user/${username}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const userData = await res2.json();
+      console.log(userData);
     } else {
       const errorData = await response.json(); 
       throw new Error(errorData.message); 
@@ -110,28 +113,6 @@ export const logIn = async (formData) => {
   } catch (error) {
     console.error(error.message);
   }
-};
-
-export const resetPassword = async (resetToken, newPassword) => {
-  // Append the resetToken as a query parameter
-  const response = await fetch(`${apiUrl}/auth/reset-password?resetToken=${resetToken}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ password: newPassword }), // Send only newPassword in the request body
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    console.log("Password reset successful:", data);
-    return data; // Return response data if needed
-  } else {
-    console.error("Backend responded with an error:", response.status);
-    throw new Error("Failed to reset password"); // Optionally throw an error to handle in UI
-  }
-
-
 };
 
 export const resretPasswordRequest = async (email) => {
@@ -151,3 +132,24 @@ export const resretPasswordRequest = async (email) => {
     console.error(errorData.message);
   }
 }
+
+export const resetPassword = async (resetToken, newPassword) => {
+  const response = await fetch(`${apiUrl}/auth/reset-password?resetToken=${resetToken}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password: newPassword }), // Send only newPassword in the request body
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data.message);
+    // return data.message;
+  } else {
+    const errorData = await response.json();
+    console.error( errorData.message);
+  }
+
+
+};

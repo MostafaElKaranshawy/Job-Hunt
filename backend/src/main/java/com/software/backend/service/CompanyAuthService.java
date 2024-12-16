@@ -1,14 +1,9 @@
 package com.software.backend.service;
 
-import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.entity.Company;
-import com.software.backend.entity.User;
 import com.software.backend.enums.UserType;
 import com.software.backend.enums.ValidationType;
-import com.software.backend.exception.BusinessException;
 import com.software.backend.exception.EmailAlreadyRegisteredException;
-import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.JwtUtil;
 import com.software.backend.validator.Validator;
@@ -26,9 +21,7 @@ public class CompanyAuthService {
 
     private final JwtUtil jwtUtil;
 
-
     public void signUp(SignUpRequest signUpRequest) {
-        System.out.println("Applicant Sign-Up from service");
         Validator validator = ValidatorFactory.createValidator(ValidationType.COMPANY_SIGNUP);
         validator.validate(signUpRequest);  // to be checked later to prevent it from being null(refactor)
         System.out.println("Validated sign-up request data");

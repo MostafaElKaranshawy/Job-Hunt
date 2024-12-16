@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { resetPassword } from "../../services/authServices";
 import "./PasswordResetForm.css";
@@ -6,22 +6,8 @@ import "./PasswordResetForm.css";
 function PasswordResetForm() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [token, setToken] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Get token from URL query parameter
-    const queryParams = new URLSearchParams(location.search);
-    const tokenFromUrl = queryParams.get("token");
-    if (tokenFromUrl) {
-      setToken(tokenFromUrl); // Set token from URL
-    } else {
-      // Handle the case where no token is found
-      console.error("No token found in URL.");
-      navigate("/error"); // Redirect to error page or show a message
-    }
-  }, [location.search, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,16 +17,23 @@ function PasswordResetForm() {
       alert("Passwords do not match!");
       return;
     }
-    console.log("Resetting password...");
-    console.log("Token: ", token);
-    console.log("New Password : ", newPassword  );
-    // Call the backend service to reset the password
-    const response = await resetPassword(token, newPassword);
-    if (response.ok) {
-      console.log("Password reset successful");
-      navigate("/login"); // Redirect to login page
-    } else {
-      console.error("Failed to reset password");
+
+    // Get token from URL query parameter at submit
+    const queryParams = new URLSearchParams(location.search);
+    const tokenFromUrl = queryParams.get("token");
+
+    if (!tokenFromUrl) {
+      alert("No token found in the URL.");
+      navigate("/error"); // Redirect to error page or show a message
+      return;
+    }
+
+    try {
+      await resetPassword(tokenFromUrl, newPassword);
+      navigate("/login"); 
+    } catch (error) {
+      console.error("Password reset failed:", error);
+      alert("Password reset failed. Please try again.");
     }
   };
 

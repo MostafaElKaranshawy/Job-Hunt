@@ -9,7 +9,6 @@ import com.software.backend.entity.Applicant;
 import com.software.backend.entity.User;
 import com.software.backend.enums.UserType;
 import com.software.backend.enums.ValidationType;
-import com.software.backend.exception.BusinessException;
 import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.exception.UserNotFoundException;
@@ -20,7 +19,6 @@ import com.software.backend.validator.Validator;
 import com.software.backend.validator.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor

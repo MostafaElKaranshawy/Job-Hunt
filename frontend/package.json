@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.1",
+    "aws-sdk": "^2.1692.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "crypto": "^1.0.1",
@@ -18,6 +21,8 @@
     "crypto-js": "^4.2.0",
     "intl-tel-input": "^24.8.1",
     "libphonenumber-js": "^1.11.15",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.5.6",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.6",

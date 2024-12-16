@@ -72,13 +72,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // If both tokens are invalid, reject the request
             System.out.println("Invalid or expired tokens");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid or expired tokens");
+            throw new Exception("Invalid or expired tokens");
         } catch (Exception e) {
             System.err.println("Exception occurred in filter: " + e.getMessage());
             e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("An error occurred while processing your request.");
+            throw new ServletException("exception occurred in filter: " + e.getMessage());
         }
     }
 }

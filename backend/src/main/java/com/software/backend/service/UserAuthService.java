@@ -14,6 +14,7 @@ import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.JwtUtil;
+import com.software.backend.validator.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -91,16 +92,18 @@ public class UserAuthService {
         String resetPasswordToken = jwtUtil.generateResetPasswordToken(email);
         System.out.println("Reset password token generated");
         emailService.sendResetEmail(email, resetPasswordToken);
-        System.out.println("Email sent");
     }
 
     public void resetPassword(String resetToken, String password){
         String email = jwtUtil.validateResetPasswordToken(resetToken);
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-        //need to validate with validator
+        SignUpRequest SignUpRequest = new SignUpRequest();
+        SignUpRequest.setPassword(password);
+        PasswordValidator passwordValidator = new PasswordValidator();
+        passwordValidator.validate(SignUpRequest);
         user.setPassword(password);
         userRepository.save(user);
+        System.out.println("Password reset");
     }
 }

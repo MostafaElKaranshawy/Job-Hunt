@@ -22,8 +22,6 @@ public class PasswordValidator extends Validator {
         } else if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
             throw new BusinessException("Password must contain at least one special character.");
         }
-
-
         if (nextValidator != null) {
             nextValidator.validate(signUpRequest);
         }

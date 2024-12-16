@@ -8,15 +8,21 @@ import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 @Component
 @RequiredArgsConstructor
 public class TokenService {
-    private static final long ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000; // 15 minutes
-    private static final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+    private final Environment env;
+
     private final RefreshTokenRepository refreshTokenRepository;
+
+    private final JwtUtil jwtUtil;
 
     public boolean validateRefreshToken(String refreshToken) {
         // Fetch the refresh token from the database
@@ -24,15 +30,15 @@ public class TokenService {
         if (storedRefreshToken == null) {
             return false;
         }
-        return JwtUtil.validateToken(storedRefreshToken);
+        return jwtUtil.validateToken(storedRefreshToken);
     }
 
     public void createNewTokens(String refreshToken,HttpServletResponse response) {
         // Fetch the username from the refresh token
-        String username = JwtUtil.getUsernameFromRefreshToken(refreshToken);
+        String username = jwtUtil.getUsernameFromRefreshToken(refreshToken);
         // Generate new access and refresh tokens
-        String newAccessToken = JwtUtil.generateAccessToken(username);
-        String newRefreshToken = JwtUtil.generateRefreshToken(username);
+        String newAccessToken = jwtUtil.generateAccessToken(username);
+        String newRefreshToken = jwtUtil.generateRefreshToken(username);
         // Save the new refresh token in the database
         saveRefreshTokenInDb(refreshToken, newRefreshToken);
         // Add the new tokens to the response cookies
@@ -53,9 +59,8 @@ public class TokenService {
 
     public void saveNewRefreshTokenInDb(String token, String username) {
         LocalDateTime now = LocalDateTime.now();
-
-        // Set the expiration time, e.g., 1 min from now
-        LocalDateTime expiresAt = now.plusMinutes(1);
+        long refreshTokenExpiration = Long.parseLong(env.getProperty("REFRESH_TOKEN_EXPIRATION"));
+        LocalDateTime expiresAt = now.plus(refreshTokenExpiration, ChronoUnit.MILLIS);
         RefreshToken refreshToken = new RefreshToken(token, username, now, expiresAt);
         System.out.println("Saving refresh token in the database");
         System.out.println("Token: " + token);
