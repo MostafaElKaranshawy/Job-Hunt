@@ -1,5 +1,6 @@
 package com.software.backend.service;
 
+import com.software.backend.dto.HomeDto;
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
 import com.software.backend.enums.JobStatus;
@@ -111,8 +112,9 @@ class JobServiceTest {
 
         // Act
         try {
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             // Assert
@@ -170,8 +172,8 @@ class JobServiceTest {
         // Act
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            HomeDto homeDto= jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             // Assert
@@ -203,10 +205,10 @@ class JobServiceTest {
         // Act
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             // Assert
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();
@@ -236,10 +238,10 @@ class JobServiceTest {
         // Act
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             // Assert
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();
@@ -269,10 +271,10 @@ class JobServiceTest {
         // Act
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             // Assert
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();
@@ -301,10 +303,10 @@ class JobServiceTest {
 
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             // Assert
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();
@@ -334,10 +336,10 @@ class JobServiceTest {
         // Act
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             // Assert
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();
@@ -366,10 +368,10 @@ class JobServiceTest {
 
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             // Assert
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();
@@ -399,8 +401,8 @@ class JobServiceTest {
         // Act
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
-            Assertions.assertEquals(jobDtos.size(), result.size());
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            Assertions.assertEquals(jobDtos.size(), homeDto.getJobs().size());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();
@@ -436,10 +438,10 @@ class JobServiceTest {
 
         try {
 
-            List<JobDto> result = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
             // Assert
-            Assertions.assertTrue(result.isEmpty());
+            Assertions.assertTrue(homeDto.getJobs().isEmpty());
             Mockito.verify(jobCriteriaRunner).matchCriteria(filterCriteria);
         } catch (Exception e) {
             Assertions.fail();

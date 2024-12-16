@@ -1,5 +1,6 @@
 package com.software.backend.service;
 
+import com.software.backend.dto.HomeDto;
 import com.software.backend.sorting.SortingContext;
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
@@ -47,7 +48,7 @@ public class JobService {
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
 
-    public List<JobDto> filterJobs(String type, String location, String category,
+    public HomeDto filterJobs(String type, String location, String category,
                                    String salary, String level, String query,
                                    String sort, int page, int offset
                                    ) throws Exception {
@@ -74,8 +75,11 @@ public class JobService {
             jobs = sortingContext.sortJobs(jobs);
 
         }
-
-        return jobs.stream().skip((long) page * offset).limit(offset).toList();
+        HomeDto homeDto = new HomeDto();
+        homeDto.setTotalJobs(jobs.size());
+        List<JobDto> paginatedJobs = jobs.stream().skip((long) page * offset).limit(offset).toList();
+        homeDto.setJobs(paginatedJobs);
+        return homeDto;
     }
 //
 //    public List<JobDto> getExpiredJobsForCompany(String companyUsername) {

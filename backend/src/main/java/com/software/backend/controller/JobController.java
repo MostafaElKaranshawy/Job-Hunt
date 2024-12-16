@@ -1,5 +1,6 @@
 package com.software.backend.controller;
 
+import com.software.backend.dto.HomeDto;
 import com.software.backend.dto.JobDto;
 import com.software.backend.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class JobController {
     }
 
     @GetMapping("/home/jobs/filter")
-    public ResponseEntity<List<JobDto>> filterJobs(
+    public ResponseEntity<HomeDto> filterJobs(
             @RequestParam(name = "type", defaultValue = "") String type,
             @RequestParam(name = "location", defaultValue = "") String location,
             @RequestParam(name = "category", defaultValue = "") String category,
@@ -84,12 +85,15 @@ public class JobController {
             @RequestParam(name = "offset", defaultValue = "5") Integer offset){
         try {
 
-            List<JobDto> jobs = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
-            return ResponseEntity.ok(jobs);
+            return ResponseEntity.ok(homeDto);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body(new ArrayList<>());
+            HomeDto homeDto = new HomeDto();
+            homeDto.setTotalJobs(0);
+            homeDto.setJobs(new ArrayList<>());
+            return ResponseEntity.status(500).body(homeDto);
         }
     }
 }
