@@ -23,7 +23,7 @@ public class JobSearchCriteria implements JobsFilterCriteria{
     @Override
     public List<JobDto> meetCriteria(String data){
 
-        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(data, data).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByTitleContains(data).orElse(new ArrayList<>());
 
         return jobs.stream().map(mapper::jobToJobDto).collect(Collectors.toList());
     }

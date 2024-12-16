@@ -1,9 +1,9 @@
 package com.software.backend.service;
 
+import com.software.backend.dto.HomeDto;
+import com.software.backend.sorting.SortingContext;
 import com.software.backend.dto.JobDto;
-import com.software.backend.entity.Company;
 import com.software.backend.entity.Job;
-import com.software.backend.entity.User;
 import com.software.backend.enums.JobStatus;
 import com.software.backend.filter.JobCriteriaRunner;
 import com.software.backend.mapper.JobMapper;
@@ -14,9 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,66 +43,43 @@ public class JobService {
     public List<JobDto> searchJobs(String query, int page, int offset){
 
         Pageable pageable = PageRequest.of(page, offset);
-        List<Job> jobs = jobRepository.findAllByTitleContainsOrDescriptionContains(query, query, pageable).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByTitleContains(query).orElse(new ArrayList<>());
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
 
-    public List<JobDto> filterJobs(String type, String location, String category, String salary, String level, String query){
+    public HomeDto filterJobs(String type, String location, String category,
+                                   String salary, String level, String query,
+                                   String sort, int page, int offset
+                                   ) throws Exception {
 
         HashMap<String, String> filterCriteria = new HashMap<>();
 
-        if(type != null )filterCriteria.put("type", type);
+        if (type != null) filterCriteria.put("type", type);
 
-        if(location != null)filterCriteria.put("location", location);
+        if (location != null) filterCriteria.put("location", location);
 
-        if(category != null)filterCriteria.put("category", category);
+        if (category != null) filterCriteria.put("category", category);
 
-        if(salary != null)filterCriteria.put("salary", salary);
+        if (salary != null) filterCriteria.put("salary", salary);
 
-        if(level != null )filterCriteria.put("level", level);
+        if (level != null) filterCriteria.put("level", level);
 
-        if(query != null)filterCriteria.put("search", query);
+        if (query != null) filterCriteria.put("search", query);
 
-        List<JobDto> filteredJobs = jobCriteriaRunner.matchCriterias(filterCriteria);
 
-        if (filteredJobs == null) return new ArrayList<>();
-        return filteredJobs;
-    }
+        List<JobDto> jobs =  jobCriteriaRunner.matchCriteria(filterCriteria);
 
-    public List<JobDto> getExpiredJobsForCompany(String companyUsername) {
-        User user = userRepository.findByUsername(companyUsername).orElse(null);
+        if (sort != null && !sort.isEmpty()) {
+            SortingContext sortingContext = new SortingContext(sort);
+            jobs = sortingContext.sortJobs(jobs);
 
-        if (user == null) return Collections.emptyList();
-
-        Company company = user.getCompany();
-
-        if (company == null) return Collections.emptyList();
-
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        List<Job> jobs = jobRepository.findByCompanyAndApplicationDeadlineBefore(company, currentDateTime).orElse(null);
-
-        if (jobs == null) return Collections.emptyList();
-
-        return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
-    }
-
-    public List<JobDto> getActiveJobsForCompany(String companyUsername) {
-
-        User user = userRepository.findByUsername(companyUsername).orElse(null);
-
-        if (user == null) return Collections.emptyList();
-
-        Company company = user.getCompany();
-
-        if (company == null) return Collections.emptyList();
-
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        List<Job> jobs = jobRepository.findByCompanyAndApplicationDeadlineAfter(company, currentDateTime).orElse(null);
-
-        if (jobs == null) return Collections.emptyList();
-
-        return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
+        }
+        HomeDto homeDto = new HomeDto();
+        homeDto.setTotalJobs(jobs.size());
+        List<JobDto> paginatedJobs = jobs.stream().skip((long) page * offset).limit(offset).toList();
+        homeDto.setJobs(paginatedJobs);
+        return homeDto;
     }
 }
 

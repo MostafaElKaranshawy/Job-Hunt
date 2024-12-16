@@ -10,4 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface JobMapper {
     @Mapping(source = "company", target = "company")
     JobDto jobToJobDto(Job job);
+
+    @Mapping(source = "company", target = "company")
+    Job jobDtoToJob(JobDto jobDto);
 }
