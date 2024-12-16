@@ -1,4 +1,4 @@
-package com.software.backend.Sorting;
+package com.software.backend.sorting;
 
 import com.software.backend.dto.JobDto;
 
