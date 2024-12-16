@@ -7,12 +7,9 @@ export async function fetchJobs(filters, page = 1, offset = 10) {
     const level = `level=${filters.jobLevel}`
     const location = `location=${filters.location}`
     const employmentType = `type=${filters.employmentType}`
-    const salary = `salary=${""}`
-    const sortBy = `sortBy=${filters.sortBy}`   // what is its order in the query
-
-    console.log(filters)
-
-    const response = await fetch(`${url}?${query}&${level}&${location}&${employmentType}&${salary}&page=${page}&offset=${offset}`,
+    const salary = `salary=${filters.salary}`
+    const sortBy = `sort=${filters.sortBy}`   // what is its order in the query
+    const response = await fetch(`${url}?${query}&${level}&${location}&${employmentType}&${salary}&${sortBy}&page=${page}&offset=${offset}`,
         {
             method: 'GET',
             headers: {

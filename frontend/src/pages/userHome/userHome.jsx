@@ -14,16 +14,16 @@ function UserHome() {
     const [expandedJob, setExpandedJob] = useState(null);
 
     const [page, setPage] = useState(0);
-    const [totalJobs, setTotalJobs] = useState(10); // New state for total jobs count
+    const [totalJobsCount, setTotalJobsCount] = useState(0); // New state for total jobs count
 
     const [loading, setLoading] = useState(false);
-    const offset = 10;
+    const offset = 5;
 
     const [filters, setFilters] = useState({
         location: "",
         employmentType: "",
         jobLevel: "",
-        salary: 'any',
+        salary: '0',
         searchQuery: "",
         sortBy: "DateDesc",
     });
@@ -33,9 +33,9 @@ function UserHome() {
         const loadJobs = async () => {
             setLoading(true);
             try {
-                const jobs = await fetchJobs(filters, page, offset);
+                const { jobs, totalJobs } = await fetchJobs(filters, page, offset);
                 setJobs(jobs);
-                // setTotalJobs(total);
+                setTotalJobsCount(totalJobs);
             } catch (err) {
                 console.error(err);
             } finally {
@@ -52,6 +52,8 @@ function UserHome() {
             ...prevFilters,
             sortBy: value,
         }));
+
+        setPage(0);
     };
 
 
@@ -70,6 +72,8 @@ function UserHome() {
             ...prevFilters,
             [filterName]: value,
         }));
+
+        setPage(0);
     };
 
 
@@ -82,7 +86,7 @@ function UserHome() {
 
 
     const startIndex = page * offset + 1;
-    const endIndex = Math.min((page + 1) * offset, totalJobs);
+    const endIndex = Math.min((page + 1) * offset, totalJobsCount);
 
 
     return (
@@ -107,8 +111,8 @@ function UserHome() {
 
                         <div className="jobs-header">
                             <div className="job-range">
-                                {totalJobs > 0 && !loading && (
-                                    <span>{startIndex}-{endIndex} of {totalJobs}</span>
+                                {totalJobsCount > 0 && !loading && (
+                                    <span>{startIndex}-{endIndex} of {totalJobsCount}</span>
                                 )}
                             </div>
 
@@ -126,23 +130,27 @@ function UserHome() {
                         }
 
                         {/* // Pagination */}
-                        <div className="pagination">
-                            <button 
-                                className="custom-pagination-button" 
-                                onClick={() => setPage(page - 1)} 
-                                disabled={page === 0}
-                            >
-                                &lt; Previous
-                            </button>
 
-                            <button 
-                                className="custom-pagination-button" 
-                                onClick={() => setPage(page + 1)} 
-                                disabled={endIndex >= totalJobs}
-                            >
-                                Next &gt;
-                            </button>
-                        </div>
+                        {
+                            totalJobsCount > 0 &&
+                            <div className="pagination">
+                                <button
+                                    className="custom-pagination-button"
+                                    onClick={() => setPage(page - 1)}
+                                    disabled={page === 0 || loading}
+                                >
+                                    &lt; Previous
+                                </button>
+
+                                <button
+                                    className="custom-pagination-button"
+                                    onClick={() => setPage(page + 1)}
+                                    disabled={endIndex >= totalJobsCount || loading}
+                                >
+                                    Next &gt;
+                                </button>
+                            </div>
+                        }
 
                     </div>
                 </div>
