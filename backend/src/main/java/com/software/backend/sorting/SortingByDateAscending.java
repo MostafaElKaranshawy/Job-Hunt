@@ -12,7 +12,7 @@ public class SortingByDateAscending implements SortingTechnique {
         // Create a mutable copy of the input list
         List<JobDto> mutableJobs = new ArrayList<>(jobs);
         // Sort the mutable list
-        mutableJobs.sort(Comparator.comparing(JobDto::getPostedAt).reversed());
+        mutableJobs.sort(Comparator.comparing(JobDto::getPostedAt));
         return mutableJobs;
     }
 }
