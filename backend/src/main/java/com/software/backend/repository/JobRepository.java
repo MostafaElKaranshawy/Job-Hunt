@@ -25,10 +25,10 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     Optional<List<Job>> findAllByTitleContainsOrCompany_NameContainsIgnoreCase(String title, String companyName);
 
     // Filter
-    Optional<List<Job>> findAllByEmploymentTypeContains(EmploymentType type);
-    Optional<List<Job>> findAllByWorkLocationContains(WorkLocation location);
+    Optional<List<Job>> findAllByEmploymentTypeEquals(EmploymentType type);
+    Optional<List<Job>> findAllByWorkLocationEquals(WorkLocation location);
     Optional<List<Job>> findAllByCategoryContainsIgnoreCase(String category);
     Optional<List<Job>> findAllBySalaryGreaterThanEqual(Integer salary);
-    Optional<List<Job>> findAllByLevelContains(Level level);
+    Optional<List<Job>> findAllByLevelEquals(Level level);
 
 }

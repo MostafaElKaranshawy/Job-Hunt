@@ -24,7 +24,7 @@ public class JobLocationCriteria implements JobsFilterCriteria{
     @Override
     public List<JobDto> meetCriteria(String data){
 
-        List<Job> jobs = jobRepository.findAllByWorkLocationContains(WorkLocation.valueOf(data)).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByWorkLocationEquals(WorkLocation.valueOf(data)).orElse(new ArrayList<>());
 
         return jobs.stream().map(mapper::jobToJobDto).collect(Collectors.toList());
     }

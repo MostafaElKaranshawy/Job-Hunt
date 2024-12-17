@@ -86,7 +86,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByWorkLocationContains(WorkLocation.valueOf(location))).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByWorkLocationEquals(WorkLocation.valueOf(location))).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -111,7 +111,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByEmploymentTypeContains(EmploymentType.valueOf(type))).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByEmploymentTypeEquals(EmploymentType.valueOf(type))).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -161,7 +161,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByLevelContains(Level.valueOf(level))).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByLevelEquals(Level.valueOf(level))).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act

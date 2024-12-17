@@ -24,7 +24,7 @@ public class JobTypeCriteria implements JobsFilterCriteria{
     @Override
     public List<JobDto> meetCriteria(String data){
 
-        List<Job> jobs = jobRepository.findAllByEmploymentTypeContains(EmploymentType.valueOf(data)).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByEmploymentTypeEquals(EmploymentType.valueOf(data)).orElse(new ArrayList<>());
 
         return jobs.stream().map(mapper::jobToJobDto).collect(Collectors.toList());
     }
