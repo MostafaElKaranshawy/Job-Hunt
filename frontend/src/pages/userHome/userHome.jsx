@@ -7,6 +7,7 @@ import './userHome.css'
 
 import { fetchJobs } from "../../services/homeService";
 import Sorting from "../../components/sorting/Sorting.jsx";
+import { calculateRelativeTime } from "../../utils/userHomeUtils";
 
 function UserHome() {
 
@@ -123,7 +124,7 @@ function UserHome() {
                         </div>
 
                         {loading ?
-                            <p>Loading jobs...</p> :
+                            <p className="loading-text">Loading jobs...</p> :
                             jobs.length === 0 ?
                                 <p className="no-jobs-message">No matching jobs found</p> :
                                 <JobList jobs={jobs} handleExpandJob={handleExpandJob} />
@@ -176,6 +177,7 @@ function UserHome() {
                                     <span>{expandedJob.level}</span>
                                     <span>${expandedJob.salary}</span>
                                     <span>{expandedJob.posted}</span>
+                                    <span>{calculateRelativeTime(expandedJob.postedAt)}</span>
                                 </div>
                             </div>
 

@@ -92,6 +92,14 @@
 }
 
 
+.loading-text {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
 /* pagination */
 
 
@@ -159,10 +167,11 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
+    padding: 10px;
 }
 
 .close-button:hover {
-    color: red;
+    color: rgb(104, 103, 103);
 }
 
 

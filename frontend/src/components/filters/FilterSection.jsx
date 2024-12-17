@@ -11,8 +11,6 @@ function FilterSection({ title, options, name, selectedValue, handleFilterChange
         }
     };
 
-
-
     return (
         <div className="filter-section">
             <h4>{title}</h4>

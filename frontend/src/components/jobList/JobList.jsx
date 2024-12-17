@@ -1,13 +1,8 @@
 import React from 'react';
 import './JobList.css';
+import { truncateDescription ,calculateRelativeTime } from '../../utils/userHomeUtils';
 
 function JobList({ jobs, handleExpandJob }) {
-
-    const truncateDescription = (description, limit = 100) => {
-        return description.length > limit
-            ? description.substring(0, limit) + '...'
-            : description;
-    };
 
 
     return (
@@ -20,7 +15,6 @@ function JobList({ jobs, handleExpandJob }) {
                             <h3>{job.company.name}</h3>
                             <div className="job-title">
                                 {job.title}
-                                {job.isNew && <span className="new-badge">New post</span>}
                             </div>
                             <div className="job-details">
                                 <span>{job.location}</span>
@@ -28,6 +22,7 @@ function JobList({ jobs, handleExpandJob }) {
                                 <span>{job.level}</span>
                                 <span>${job.salary}</span>
                                 <span>{job.posted}</span>
+                                <span>{calculateRelativeTime(job.postedAt)}</span>
                             </div>
                         </div>
                     </div>

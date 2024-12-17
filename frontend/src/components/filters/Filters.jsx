@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import FilterSection from './FilterSection';
-import { locationOptions, employmentTypes, jobLevels, salaryRanges } from '../../constants/filterOptions';
+import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
 import './Filters.css';
 
 function Filters({ filters, onFilterChange }) {
@@ -39,7 +39,7 @@ function Filters({ filters, onFilterChange }) {
             {/* salary may be needed to be converted into a slider on next milestone */}
             <FilterSection
                 title="Minimum Salary"
-                options={salaryRanges}
+                options={minimumSalary}
                 name="Min salary"
                 selectedValue={filters.salary}
                 handleFilterChange={ (value) => onFilterChange("salary", value) }
