@@ -1,93 +1,27 @@
 package com.software.backend.dto;
 
 import com.software.backend.entity.Company;
+import com.software.backend.enums.EmploymentType;
+import com.software.backend.enums.JobLevel;
+import com.software.backend.enums.WorkLocation;
+import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-
+@Data
 public class JobDto {
-    private Integer id;
     private String title;
     private String description;
     private String category;
     private String location;
     private Company company;
-    private LocalDateTime postedAt;
     private LocalDateTime applicationDeadline;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public LocalDateTime getPostedAt() {
-        return postedAt;
-    }
-
-    public void setPostedAt(LocalDateTime postedAt) {
-        this.postedAt = postedAt;
-    }
-
-    public LocalDateTime getApplicationDeadline() {
-        return applicationDeadline;
-    }
-
-    public void setApplicationDeadline(LocalDateTime applicationDeadline) {
-        this.applicationDeadline = applicationDeadline;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    @Override
-    public String toString() {
-        return "JobDto{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
-                ", location='" + location + '\'' +
-                ", postedAt=" + postedAt +
-                ", applicationDeadline=" + applicationDeadline +
-                '}';
-    }
+    private String salary;
+    private WorkLocation workLocation;
+    private JobLevel level;
+    private EmploymentType employmentType;
+    private List<SectionDto> sections; // sections with fields
+    private List<String> staticSections; // static sections
+    private List<FieldDto> fields;     // standalone fields
 }
