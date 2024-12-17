@@ -21,6 +21,7 @@ function UserHome() {
     const offset = 5;
 
     const [filters, setFilters] = useState({
+        workLocation: "",
         location: "",
         employmentType: "",
         jobLevel: "",
@@ -172,7 +173,7 @@ function UserHome() {
                                     {expandedJob.isNew && <span className="new-badge">New post</span>}
                                 </div>
                                 <div className="job-details">
-                                    <span>{expandedJob.location}</span>
+                                    <span>{expandedJob.workLocation}</span>
                                     <span>{expandedJob.type}</span>
                                     <span>{expandedJob.level}</span>
                                     <span>${expandedJob.salary}</span>

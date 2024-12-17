@@ -5,11 +5,11 @@ export async function fetchJobs(filters, page = 1, offset = 10) {
     const url = `http://localhost:8080/home/jobs/filter`; 
     const query = `query=${filters.searchQuery}`
     const level = `level=${filters.jobLevel}`
-    const location = `location=${filters.location}`
-    const employmentType = `type=${filters.employmentType}`
+    const workLocation = `workLocation=${filters.workLocation}`
+    const employmentType = `employmentType=${filters.employmentType}`
     const salary = `salary=${filters.salary}`
     const sortBy = `sort=${filters.sortBy}`   // what is its order in the query
-    const response = await fetch(`${url}?${query}&${level}&${location}&${employmentType}&${salary}&${sortBy}&page=${page}&offset=${offset}`,
+    const response = await fetch(`${url}?${query}&${level}&${workLocation}&${employmentType}&${salary}&${sortBy}&page=${page}&offset=${offset}`,
         {
             method: 'GET',
             headers: {

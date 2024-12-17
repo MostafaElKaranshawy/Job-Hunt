@@ -11,11 +11,11 @@ function Filters({ filters, onFilterChange }) {
             <h3>Filters</h3>
 
             <FilterSection
-                title="Location"
+                title="location"
                 options={locationOptions}
                 name="location"
-                selectedValue={filters.location}
-                handleFilterChange={ (value) => onFilterChange("location", value) }
+                selectedValue={filters.workLocation}
+                handleFilterChange={ (value) => onFilterChange("workLocation", value) }
             />
 
             {/* full-time, part-time, ...  */}
