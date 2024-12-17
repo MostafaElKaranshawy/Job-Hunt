@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { resretPasswordRequest } from "../../services/authServices";
 
+import "./PasswordResetRequestForm.css";
 function PasswordResetRequestForm() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
@@ -45,7 +46,7 @@ function PasswordResetRequestForm() {
   };
 
   return (
-    <div>
+    <div className="reset-password-request-form">
       <h2>Reset Your Password</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -55,7 +56,7 @@ function PasswordResetRequestForm() {
           value={email}
           onChange={handleInputChange}
         />
-        {errors.email && <span style={{ color: "red" }}>{errors.email}</span>}
+        {errors.email && <span className="error" style={{ color: "red" }}>{errors.email}</span>}
         {successResponse && <p className="success-message">{successResponse}</p>}
         {failureResponse && <p className="error-message">{failureResponse}</p>}
         <button type="submit">Send Reset Link</button>
