@@ -2,6 +2,7 @@ package com.software.backend.filter;
 
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
+import com.software.backend.enums.WorkLocation;
 import com.software.backend.mapper.JobMapper;
 import com.software.backend.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class JobLocationCriteria implements JobsFilterCriteria{
     @Override
     public List<JobDto> meetCriteria(String data){
 
-        List<Job> jobs = jobRepository.findAllByWorkLocationContainsIgnoreCase(data).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByWorkLocationContains(WorkLocation.valueOf(data)).orElse(new ArrayList<>());
 
         return jobs.stream().map(mapper::jobToJobDto).collect(Collectors.toList());
     }

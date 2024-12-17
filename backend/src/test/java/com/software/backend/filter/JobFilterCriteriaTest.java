@@ -75,18 +75,18 @@ class JobFilterCriteriaTest {
     @Test
     void testLocationCriteria() {
         // Arrange
-        String location = "Remote";
+        String location = "REMOTE";
         JobDto jobDto = new JobDto();
         jobDto.setWorkLocation(WorkLocation.REMOTE);
 
         Job job = new Job();
-        job.setLocation("Remote");
+        job.setWorkLocation(WorkLocation.REMOTE);
 
         List<Job> jobs = new ArrayList<>();
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByWorkLocationContainsIgnoreCase(location)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByWorkLocationContains(WorkLocation.valueOf(location))).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -105,13 +105,13 @@ class JobFilterCriteriaTest {
         jobDto.setEmploymentType(EmploymentType.FULL_TIME);
 
         Job job = new Job();
-        job.setType("FULL_TIME");
+        job.setEmploymentType(EmploymentType.FULL_TIME);
 
         List<Job> jobs = new ArrayList<>();
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByEmploymentTypeContainsIgnoreCase(type)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByEmploymentTypeContains(EmploymentType.valueOf(type))).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -155,13 +155,13 @@ class JobFilterCriteriaTest {
         jobDto.setLevel(Level.ENTRY_LEVEL);
 
         Job job = new Job();
-        job.setLevel("ENTRY_LEVEL");
+        job.setLevel(Level.ENTRY_LEVEL);
 
         List<Job> jobs = new ArrayList<>();
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByLevelContainsIgnoreCase(level)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByLevelContains(Level.valueOf(level))).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act

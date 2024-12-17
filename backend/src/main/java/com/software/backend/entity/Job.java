@@ -1,6 +1,9 @@
 package com.software.backend.entity;
 
+import com.software.backend.enums.EmploymentType;
 import com.software.backend.enums.JobStatus;
+import com.software.backend.enums.Level;
+import com.software.backend.enums.WorkLocation;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,11 +40,14 @@ public class Job {
     private Integer salary;     // to be put if needed in frontend
 
     @Column
-    private String type;
+    private EmploymentType employmentType;
 
     @Column
-    private String level;
+    private Level level;
 
+    @Column
+    private WorkLocation workLocation;
+    
     @CreationTimestamp
     @Column(
         nullable = false,
