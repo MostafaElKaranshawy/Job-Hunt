@@ -1,9 +1,11 @@
 import React from 'react';
 import './JobList.css';
 import { truncateDescription ,calculateRelativeTime } from '../../utils/userHomeUtils';
+import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
 
 function JobList({ jobs, handleExpandJob }) {
 
+        
 
     return (
         <div className="job-list">
@@ -17,9 +19,9 @@ function JobList({ jobs, handleExpandJob }) {
                                 {job.title}
                             </div>
                             <div className="job-details">
-                                <span>{job.location}</span>
-                                <span>{job.type}</span>
-                                <span>{job.level}</span>
+                                <span>{locationOptions.find((option) => option.id === job.workLocation).label}</span>
+                                <span>{employmentTypes.find((option) => option.id === job.employmentType).label}</span>
+                                <span>{jobLevels.find((option) => option.id === job.level).label}</span>
                                 <span>${job.salary}</span>
                                 <span>{job.posted}</span>
                                 <span>{calculateRelativeTime(job.postedAt)}</span>

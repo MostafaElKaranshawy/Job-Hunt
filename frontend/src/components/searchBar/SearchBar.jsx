@@ -28,7 +28,7 @@ function SearchBar( {onSearch} ) {
                 <button 
                     type="submit" 
                     className="search-button"
-                    disabled={searchQuery.trim() == ''}
+                    // disabled={searchQuery.trim() == ''}
                 >
                     Search job
                 </button>
