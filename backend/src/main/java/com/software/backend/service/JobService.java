@@ -43,7 +43,7 @@ public class JobService {
     public List<JobDto> searchJobs(String query, int page, int offset){
 
         Pageable pageable = PageRequest.of(page, offset);
-        List<Job> jobs = jobRepository.findAllByTitleContains(query).orElse(new ArrayList<>());
+        List<Job> jobs = jobRepository.findAllByTitleContainsOrCompany_NameContainsIgnoreCase(query, query).orElse(new ArrayList<>());
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }

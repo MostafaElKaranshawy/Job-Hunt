@@ -19,8 +19,7 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     Optional<List<Job>> findByCompanyAndApplicationDeadlineAfter(Company company, LocalDateTime currentDateTime); // active jobs
     Optional<List<Job>> findAllByStatusIs(JobStatus status, Pageable pageable);  // find All Active Jobs for Home page
 
-    // Search for title or description.
-    Optional<List<Job>> findAllByTitleContains(String title);
+    Optional<List<Job>> findAllByTitleContainsOrCompany_NameContainsIgnoreCase(String title, String companyName);
 
     // Filter
     Optional<List<Job>> findAllByTypeContainsIgnoreCase(String type);

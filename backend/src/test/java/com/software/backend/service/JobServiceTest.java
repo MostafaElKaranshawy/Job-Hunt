@@ -70,7 +70,7 @@ class JobServiceTest {
         List<Job> jobs = List.of(new Job(), new Job());
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
-        Mockito.when(jobRepository.findAllByTitleContains(query)).thenReturn(Optional.of(jobs));
+        Mockito.when(jobRepository.findAllByTitleContainsOrCompany_NameContainsIgnoreCase(query, query)).thenReturn(Optional.of(jobs));
         Mockito.when(jobMapper.jobToJobDto(Mockito.any(Job.class))).thenReturn(new JobDto());
 
         // Act
@@ -78,7 +78,7 @@ class JobServiceTest {
 
         // Assert
         Assertions.assertEquals(jobDtos.size(), result.size());
-        Mockito.verify(jobRepository).findAllByTitleContains(query);
+        Mockito.verify(jobRepository).findAllByTitleContainsOrCompany_NameContainsIgnoreCase(query, query);
         Mockito.verify(jobMapper, Mockito.times(jobs.size())).jobToJobDto(Mockito.any(Job.class));
     }
 

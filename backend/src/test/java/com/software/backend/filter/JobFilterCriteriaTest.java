@@ -183,7 +183,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByTitleContains(search)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByTitleContainsOrCompany_NameContainsIgnoreCase(search, search)).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
