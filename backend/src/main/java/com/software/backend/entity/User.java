@@ -2,10 +2,7 @@ package com.software.backend.entity;
 
 import com.software.backend.enums.UserType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = "company")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

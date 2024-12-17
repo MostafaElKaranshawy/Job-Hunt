@@ -3,7 +3,10 @@ package com.software.backend.controller;
 import com.software.backend.dto.HomeDto;
 import com.software.backend.dto.JobDto;
 import com.software.backend.enums.WorkLocation;
+import com.software.backend.dto.SectionDto;
+import com.software.backend.entity.Section;
 import com.software.backend.service.JobService;
+import com.software.backend.service.StaticSectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,8 @@ public class JobController {
 
     @Autowired
     private JobService jobService;
+    @Autowired
+    private StaticSectionService staticSectionService;
 
     @GetMapping("/home/jobs")
     public ResponseEntity<List<JobDto>> getJobs(@RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -70,6 +75,17 @@ public class JobController {
             homeDto.setTotalJobs(0);
             homeDto.setJobs(new ArrayList<>());
             return ResponseEntity.status(500).body(homeDto);
+
+    @PostMapping("/company/{companyUsername}/jobs/create")
+    public ResponseEntity<?> createJob(@PathVariable String companyUsername, @RequestBody JobDto jobDto) {
+        System.out.println("Company Username: " + companyUsername);
+        System.out.println("Job DTO: " + jobDto);
+        try {
+            Integer createdJobId = jobService.createJobWithCustomForm(companyUsername, jobDto);
+            return ResponseEntity.ok(createdJobId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
 }
