@@ -3,9 +3,9 @@ import UserHome from './pages/userHome/userHome'
 import Profile from './pages/profilePage/profilePage'
 import CompanyProfilePage from './pages/profilePage/CompanyProfilePage';
 import Jobs from './pages/jobsPage/Jobs';
-import SignUpPage from './pages/signUpPage/SignUpPage'
+import SignUpPage from './pages/signupPage/SignUpPage'
 import LogInPage from './pages/logInPage/LogInPage'
-import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPsswordRequestPage'
+import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPasswordRequestPage'
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage'
 function App() {
     return (

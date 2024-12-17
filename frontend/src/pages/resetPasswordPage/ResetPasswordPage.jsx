@@ -5,8 +5,10 @@ import "./ResetPasswordPage.css";
 import PasswordResetForm from "../../components/passwordResetForm/PasswordResetForm";
 function ResetPasswordPage(){
     return(
-        <div className="reset-password-page-container">
-            <PasswordResetForm />
+        <div className="t">
+            <div className="reset-password-page-container">
+                <PasswordResetForm />
+            </div>
         </div>
     );
 }

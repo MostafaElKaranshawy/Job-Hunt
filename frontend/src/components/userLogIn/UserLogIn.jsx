@@ -79,8 +79,8 @@ function UserLogIn() {
       <button type="submit" className="send-button" onClick={handleSubmit}>
           Log In
         </button>
-      <p>Don't have an account? <Link to="/" className="link">Sign up</Link></p>
-      <p>Forgot your password? <Link to="/reset-password-request" className="link">Reset it</Link></p>
+      <p className="login">Don't have an account? <Link to="/" className="link">Sign up</Link></p>
+      <p className="login">Forgot your password? <Link to="/reset-password-request" className="link">Reset it</Link></p>
       
     </div>
   );
