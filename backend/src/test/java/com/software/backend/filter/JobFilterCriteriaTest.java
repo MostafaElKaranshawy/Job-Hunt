@@ -2,6 +2,9 @@ package com.software.backend.filter;
 
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
+import com.software.backend.enums.EmploymentType;
+import com.software.backend.enums.Level;
+import com.software.backend.enums.WorkLocation;
 import com.software.backend.mapper.JobMapper;
 import com.software.backend.repository.JobRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +77,7 @@ class JobFilterCriteriaTest {
         // Arrange
         String location = "Remote";
         JobDto jobDto = new JobDto();
-        jobDto.setLocation("Remote");
+        jobDto.setWorkLocation(WorkLocation.REMOTE);
 
         Job job = new Job();
         job.setLocation("Remote");
@@ -83,7 +86,7 @@ class JobFilterCriteriaTest {
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByLocationContainsIgnoreCase(location)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByWorkLocationContainsIgnoreCase(location)).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -91,24 +94,24 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Remote", result.getFirst().getLocation());
+        assertEquals(WorkLocation.REMOTE, result.getFirst().getWorkLocation());
     }
 
     @Test
     void testTypeCriteria() {
         // Arrange
-        String type = "Full-Time";
+        String type = "FULL_TIME";
         JobDto jobDto = new JobDto();
-        jobDto.setType("Full-Time");
+        jobDto.setEmploymentType(EmploymentType.FULL_TIME);
 
         Job job = new Job();
-        job.setType("Full-Time");
+        job.setType("FULL_TIME");
 
         List<Job> jobs = new ArrayList<>();
         jobs.add(job);
 
         when(jobMapper.jobDtoToJob(jobDto)).thenReturn(job);
-        when(jobRepository.findAllByTypeContainsIgnoreCase(type)).thenReturn(Optional.of(jobs));
+        when(jobRepository.findAllByEmploymentTypeContainsIgnoreCase(type)).thenReturn(Optional.of(jobs));
         when(jobMapper.jobToJobDto(job)).thenReturn(jobDto);
 
         // Act
@@ -116,7 +119,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Full-Time", result.getFirst().getType());
+        assertEquals(EmploymentType.FULL_TIME, result.getFirst().getEmploymentType());
     }
 
     @Test
@@ -147,12 +150,12 @@ class JobFilterCriteriaTest {
     @Test
     void testLevelCriteria() {
         // Arrange
-        String level = "Entry-Level";
+        String level = "ENTRY_LEVEL";
         JobDto jobDto = new JobDto();
-        jobDto.setLevel("Entry-Level");
+        jobDto.setLevel(Level.ENTRY_LEVEL);
 
         Job job = new Job();
-        job.setLevel("Entry-Level");
+        job.setLevel("ENTRY_LEVEL");
 
         List<Job> jobs = new ArrayList<>();
         jobs.add(job);
@@ -166,7 +169,7 @@ class JobFilterCriteriaTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Entry-Level", result.getFirst().getLevel());
+        assertEquals(Level.ENTRY_LEVEL, result.getFirst().getLevel());
     }
 
     @Test

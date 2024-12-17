@@ -85,7 +85,7 @@ class JobServiceTest {
     @Test
     void testFilterJobs() {
         // Arrange
-        String type = "Full-Time";
+        String type = "Full_Time";
         String location = "New York";
         String category = "IT";
         String salary = "2000";
@@ -95,8 +95,8 @@ class JobServiceTest {
         int page = 0;
         int offset = 5;
         HashMap<String, String> filterCriteria = new HashMap<>();
-        filterCriteria.put("type", type);
-        filterCriteria.put("location", location);
+        filterCriteria.put("employmentType", type);
+        filterCriteria.put("workLocation", location);
         filterCriteria.put("category", category);
         filterCriteria.put("salary", salary);
         filterCriteria.put("level", level);
@@ -159,8 +159,8 @@ class JobServiceTest {
         HashMap<String, String> filterCriteria = new HashMap<>();
         filterCriteria.put("salary", salary);
         filterCriteria.put("search", query);
-        filterCriteria.put("type", type);
-        filterCriteria.put("location", location);
+        filterCriteria.put("employmentType", type);
+        filterCriteria.put("workLocation", location);
         filterCriteria.put("category", category);
         filterCriteria.put("level", level);
 
@@ -229,7 +229,7 @@ class JobServiceTest {
         int offset = 5;
 
         HashMap<String, String> filterCriteria = new HashMap<>();
-        filterCriteria.put("type", type);
+        filterCriteria.put("employmentType", type);
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
@@ -262,7 +262,7 @@ class JobServiceTest {
         int offset = 5;
 
         HashMap<String, String> filterCriteria = new HashMap<>();
-        filterCriteria.put("location", location);
+        filterCriteria.put("workLocation", location);
 
         List<JobDto> jobDtos = List.of(new JobDto(), new JobDto());
 
@@ -353,7 +353,7 @@ class JobServiceTest {
         String location = null;
         String category = null;
         String salary = null;
-        String level = "Senior";
+        String level = "SENIOR_LEVEL";
         String query = null;
         String sort = "";
         int page = 0;
@@ -415,18 +415,18 @@ class JobServiceTest {
     void testFilterWithNoResult(){
         // Arrange
         String type = "Full Time";
-        String location = "Remote";
+        String location = "REMOTE";
         String category = "Technology";
         String salary = "15000";
-        String level = "Senior";
+        String level = "SENIOR_LEVEL";
         String query = "mostafa";
         String sort = "";
         int page = 0;
         int offset = 5;
 
         HashMap<String, String> filterCriteria = new HashMap<>();
-        filterCriteria.put("type", type);
-        filterCriteria.put("location", location);
+        filterCriteria.put("employmentType", type);
+        filterCriteria.put("workLocation", location);
         filterCriteria.put("category", category);
         filterCriteria.put("salary", salary);
         filterCriteria.put("level", level);

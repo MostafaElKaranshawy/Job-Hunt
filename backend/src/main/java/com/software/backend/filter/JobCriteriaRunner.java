@@ -40,11 +40,11 @@ public class JobCriteriaRunner {
             Set<JobDto> filteredJobs;
 
             switch (criteria) {
-                case "type" -> filteredJobs = new HashSet<>(jobTypeCriteria.meetCriteria(data));
+                case "employmentType" -> filteredJobs = new HashSet<>(jobTypeCriteria.meetCriteria(data));
 
                 case "category" -> filteredJobs = new HashSet<>(jobCategoryCriteria.meetCriteria(data));
 
-                case "location" -> filteredJobs = new HashSet<>(jobLocationCriteria.meetCriteria(data));
+                case "workLocation" -> filteredJobs = new HashSet<>(jobLocationCriteria.meetCriteria(data));
 
                 case "salary" -> filteredJobs = new HashSet<>(jobSalaryCriteria.meetCriteria(data));
 

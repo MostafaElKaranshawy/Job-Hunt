@@ -1,6 +1,9 @@
 package com.software.backend.filter;
 
 import com.software.backend.dto.JobDto;
+import com.software.backend.enums.EmploymentType;
+import com.software.backend.enums.Level;
+import com.software.backend.enums.WorkLocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -43,24 +46,24 @@ class JobCriteriaRunnerTest {
         jobCriteriaRunner = new JobCriteriaRunner(jobTypeCriteria, jobCategoryCriteria, jobLocationCriteria, jobSalaryCriteria, jobLevelCriteria, jobSearchCriteria);
         // Setup test data
         HashMap<String, String> criteria = new HashMap<>();
-        criteria.put("type", "full time");
+        criteria.put("employmentType", "FULL_TIME");
         criteria.put("category", "IT");
 
         JobDto job1 = new JobDto();
         job1.setTitle("Developer");
-        job1.setType("full time");
+        job1.setEmploymentType(EmploymentType.FULL_TIME);
         job1.setCategory("Technology");
-        job1.setLocation("Remote");
+        job1.setWorkLocation(WorkLocation.REMOTE);
         job1.setSalary(50000);
-        job1.setLevel("Entry");
+        job1.setLevel(Level.ENTRY_LEVEL);
 
         JobDto job2 = new JobDto();
         job2.setTitle("Designer");
-        job2.setType("full time");
+        job2.setEmploymentType(EmploymentType.FULL_TIME);
         job2.setCategory("IT");
-        job2.setLocation("Hybrid");
+        job2.setWorkLocation(WorkLocation.HYBRID);
         job2.setSalary(45000);
-        job2.setLevel("Junior");
+        job2.setLevel(Level.JUNIOR_LEVEL);
 
         List<JobDto> filteredJobsType = new ArrayList<>();
         List<JobDto> filteredJobsCategory = new ArrayList<>();
@@ -69,7 +72,7 @@ class JobCriteriaRunnerTest {
         filteredJobsCategory.add(job1);
 
         // Mock the meetCriteria methods
-        when(jobTypeCriteria.meetCriteria("full time")).thenReturn(filteredJobsType);
+        when(jobTypeCriteria.meetCriteria("FULL_TIME")).thenReturn(filteredJobsType);
         when(jobCategoryCriteria.meetCriteria("IT")).thenReturn(filteredJobsCategory);
 
 
@@ -85,23 +88,23 @@ class JobCriteriaRunnerTest {
         jobCriteriaRunner = new JobCriteriaRunner(jobTypeCriteria, jobCategoryCriteria, jobLocationCriteria, jobSalaryCriteria, jobLevelCriteria, jobSearchCriteria);
         // Setup test data
         HashMap<String, String> criteria = new HashMap<>();
-        criteria.put("type", "full time");
+        criteria.put("employmentType", "FULL_TIME");
         criteria.put("category", "Technology");
 
         JobDto job1 = new JobDto();
         job1.setTitle("Developer");
-        job1.setType("full time");
+        job1.setEmploymentType(EmploymentType.FULL_TIME);
         job1.setCategory("IT");
-        job1.setLocation("Remote");
+        job1.setWorkLocation(WorkLocation.REMOTE);
         job1.setSalary(50000);
-        job1.setLevel("Entry");
+        job1.setLevel(Level.ENTRY_LEVEL);
 
         List<JobDto> filteredJobsType = new ArrayList<>();
         filteredJobsType.add(job1);
         List<JobDto> filteredJobsCategory = new ArrayList<>();
 
         // Mock the meetCriteria methods
-        when(jobTypeCriteria.meetCriteria("full time")).thenReturn(filteredJobsType);
+        when(jobTypeCriteria.meetCriteria("FULL_TIME")).thenReturn(filteredJobsType);
         when(jobCategoryCriteria.meetCriteria("Technology")).thenReturn(filteredJobsCategory);
 
         // Call the method
@@ -114,11 +117,11 @@ class JobCriteriaRunnerTest {
     void testMatchCriteriaWithLocationCriteria() {
         jobCriteriaRunner = new JobCriteriaRunner(jobTypeCriteria, jobCategoryCriteria, jobLocationCriteria, jobSalaryCriteria, jobLevelCriteria, jobSearchCriteria);
         HashMap<String, String> criteria = new HashMap<>();
-        criteria.put("location", "Remote");
+        criteria.put("workLocation", "Remote");
 
         JobDto job1 = new JobDto();
         job1.setTitle("Developer");
-        job1.setLocation("Remote");
+        job1.setWorkLocation(WorkLocation.REMOTE);
 
         List<JobDto> filteredJobsLocation = new ArrayList<>();
         filteredJobsLocation.add(job1);
@@ -164,7 +167,7 @@ class JobCriteriaRunnerTest {
 
         JobDto job1 = new JobDto();
         job1.setTitle("Developer");
-        job1.setLevel("Entry");
+        job1.setLevel(Level.ENTRY_LEVEL);
 
         List<JobDto> filteredJobsLevel = new ArrayList<>();
         filteredJobsLevel.add(job1);

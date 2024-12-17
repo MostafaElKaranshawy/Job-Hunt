@@ -51,13 +51,13 @@ public class JobService {
     public HomeDto filterJobs(String type, String location, String category,
                                    String salary, String level, String query,
                                    String sort, int page, int offset
-                                   ) throws Exception {
+                                   ){
 
         HashMap<String, String> filterCriteria = new HashMap<>();
 
-        if (type != null) filterCriteria.put("type", type);
+        if (type != null) filterCriteria.put("employmentType", type);
 
-        if (location != null) filterCriteria.put("location", location);
+        if (location != null) filterCriteria.put("workLocation", location);
 
         if (category != null) filterCriteria.put("category", category);
 

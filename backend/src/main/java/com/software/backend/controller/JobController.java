@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("")
@@ -74,8 +73,8 @@ public class JobController {
 
     @GetMapping("/home/jobs/filter")
     public ResponseEntity<HomeDto> filterJobs(
-            @RequestParam(name = "type", defaultValue = "") String type,
-            @RequestParam(name = "location", defaultValue = "") String location,
+            @RequestParam(name = "employmentType", defaultValue = "") String employmentType,
+            @RequestParam(name = "workLocation", defaultValue = "") String workLocation,
             @RequestParam(name = "category", defaultValue = "") String category,
             @RequestParam(name = "salary", defaultValue = "0") String salary,
             @RequestParam(name = "level", defaultValue = "") String level,
@@ -85,7 +84,7 @@ public class JobController {
             @RequestParam(name = "offset", defaultValue = "5") Integer offset){
         try {
 
-            HomeDto homeDto = jobService.filterJobs(type, location, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.filterJobs(employmentType, workLocation, category, salary, level, query, sort, page, offset);
 
             return ResponseEntity.ok(homeDto);
         } catch (Exception e) {
