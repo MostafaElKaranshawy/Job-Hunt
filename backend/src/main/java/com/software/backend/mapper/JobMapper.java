@@ -9,4 +9,6 @@ import org.mapstruct.ReportingPolicy;
 public interface JobMapper {
 
     JobDto jobToJobDto(Job job);
+
+    Job jobDtoToJob(JobDto jobDto);
 }
