@@ -57,4 +57,5 @@ describe('SearchBar Component', () => {
     //     expect(preventDefaultMock).toHaveBeenCalled();
     // });
 
+
 });

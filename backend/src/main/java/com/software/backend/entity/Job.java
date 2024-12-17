@@ -34,18 +34,22 @@ public class Job {
     private String location;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private JobStatus status;
 
     @Column
     private Integer salary;     // to be put if needed in frontend
 
     @Column
+    @Enumerated(EnumType.STRING)
     private EmploymentType employmentType;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private Level level;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private WorkLocation workLocation;
     
     @CreationTimestamp

@@ -14,17 +14,17 @@ export const employmentTypes = [
 
 
 export const jobLevels = [
-    { id: 'ENTRY', label: 'Entry Level' },
-    { id: 'JUNIOR', label: 'Junior' },
-    { id: 'MID', label: 'Mid-Level' },
-    { id: 'SENIOR', label: 'Senior' },
+    { id: 'ENTRY_LEVEL', label: 'Entry Level' },
+    { id: 'JUNIOR_LEVEL', label: 'Junior' },
+    { id: 'MID_LEVEL', label: 'Mid-Level' },
+    { id: 'SENIOR_LEVEL', label: 'Senior' },
     { id: 'EXECUTIVE', label: 'Executive' },
 ];
 
 
 export const minimumSalary = [
-    { id: '5000', label: '5000K' },
-    { id: '10000', label: '10000K' },
-    { id: '15000', label: '15000K' },
-    { id: '20000', label: '20000K' },
+    { id: '5000', label: '5K' },
+    { id: '10000', label: '10K' },
+    { id: '15000', label: '15K' },
+    { id: '20000', label: '20K' },
 ];  

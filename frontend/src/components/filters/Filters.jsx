@@ -11,16 +11,16 @@ function Filters({ filters, onFilterChange }) {
             <h3>Filters</h3>
 
             <FilterSection
-                title="location"
+                title="Work Location"
                 options={locationOptions}
-                name="location"
+                name="work location"
                 selectedValue={filters.workLocation}
                 handleFilterChange={ (value) => onFilterChange("workLocation", value) }
             />
 
             {/* full-time, part-time, ...  */}
             <FilterSection
-                title="Type of employment"
+                title="Type of Employment"
                 options={employmentTypes}
                 name="employment"
                 selectedValue={filters.employmentType}
@@ -29,7 +29,7 @@ function Filters({ filters, onFilterChange }) {
 
             {/* Entry, Junior, Mid, Senior, Executive */}
             <FilterSection
-                title="Experience level"
+                title="Experience Level"
                 options={jobLevels}
                 name="level"
                 selectedValue={filters.jobLevel}

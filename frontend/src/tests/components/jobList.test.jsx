@@ -76,7 +76,7 @@ describe("JobList Component", () => {
         expect(screen.getByText(mockJobs[0].level)).toBeInTheDocument();
         expect(screen.getByText(`$${mockJobs[0].salary}`)).toBeInTheDocument();
         // expect(screen.getByText("🕛 2 days ago ")).toBeInTheDocument();
-
+    
 
         expect(screen.getByText(mockJobs[1].company.name)).toBeInTheDocument();
         expect(screen.getByText(mockJobs[1].location)).toBeInTheDocument();

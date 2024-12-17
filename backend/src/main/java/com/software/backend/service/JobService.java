@@ -55,15 +55,15 @@ public class JobService {
 
         HashMap<String, String> filterCriteria = new HashMap<>();
 
-        if (type != null) filterCriteria.put("employmentType", type);
+        if (type != null && !type.isEmpty()) filterCriteria.put("employmentType", type);
 
-        if (location != null) filterCriteria.put("workLocation", location);
+        if (location != null && !location.isEmpty()) filterCriteria.put("workLocation", location);
 
         if (category != null) filterCriteria.put("category", category);
 
         if (salary != null) filterCriteria.put("salary", salary);
 
-        if (level != null) filterCriteria.put("level", level);
+        if (level != null && !level.isEmpty()) filterCriteria.put("level", level);
 
         if (query != null) filterCriteria.put("search", query);
 

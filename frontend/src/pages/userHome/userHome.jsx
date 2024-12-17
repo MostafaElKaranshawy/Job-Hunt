@@ -8,6 +8,8 @@ import './userHome.css'
 import { fetchJobs } from "../../services/homeService";
 import Sorting from "../../components/sorting/Sorting.jsx";
 import { calculateRelativeTime } from "../../utils/userHomeUtils";
+import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
+
 
 function UserHome() {
 
@@ -22,7 +24,7 @@ function UserHome() {
 
     const [filters, setFilters] = useState({
         workLocation: "",
-        location: "",
+        // location: "",
         employmentType: "",
         jobLevel: "",
         salary: '0',
@@ -84,6 +86,8 @@ function UserHome() {
             ...prevFilters,
             searchQuery,
         }));
+
+        setPage(0);
     };
 
 
@@ -173,9 +177,9 @@ function UserHome() {
                                     {expandedJob.isNew && <span className="new-badge">New post</span>}
                                 </div>
                                 <div className="job-details">
-                                    <span>{expandedJob.workLocation}</span>
-                                    <span>{expandedJob.type}</span>
-                                    <span>{expandedJob.level}</span>
+                                    <span>{locationOptions.find((option) => option.id === expandedJob.workLocation).label}</span>
+                                    <span>{employmentTypes.find((option) => option.id === expandedJob.employmentType).label}</span>
+                                    <span>{jobLevels.find((option) => option.id === expandedJob.level).label}</span>
                                     <span>${expandedJob.salary}</span>
                                     <span>{expandedJob.posted}</span>
                                     <span>{calculateRelativeTime(expandedJob.postedAt)}</span>

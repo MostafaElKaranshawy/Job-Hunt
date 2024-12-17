@@ -30,9 +30,9 @@ describe('Filters Component', () => {
         );
 
         expect(screen.getByText('Filters')).toBeInTheDocument();
-        expect(screen.getByText('Location')).toBeInTheDocument();
-        expect(screen.getByText('Type of employment')).toBeInTheDocument();
-        expect(screen.getByText('Experience level')).toBeInTheDocument();
+        expect(screen.getByText('Work Location')).toBeInTheDocument();
+        expect(screen.getByText('Type of Employment')).toBeInTheDocument();
+        expect(screen.getByText('Experience Level')).toBeInTheDocument();
         expect(screen.getByText('Minimum Salary')).toBeInTheDocument();
     });
 
@@ -180,7 +180,7 @@ describe('Filters Component', () => {
             />
         );
 
-        const partTimeOption = employmentTypes.find(option => option.id === 'PART TIME');
+        const partTimeOption = employmentTypes.find(option => option.id === 'PART_TIME');
 
         const selectedOption = screen.getByLabelText('Part-time');
         fireEvent.click(selectedOption);
@@ -201,7 +201,7 @@ describe('Filters Component', () => {
         const selectedOption = screen.getByLabelText('Remote');
         fireEvent.click(selectedOption);
 
-        expect(mockOnFilterChange).toHaveBeenCalledWith('location', remoteOption.id);
+        expect(mockOnFilterChange).toHaveBeenCalledWith('workLocation', remoteOption.id);
     });
 
     test('calls onFilterChange when a new filter option is selected from job levels', () => {
@@ -233,7 +233,7 @@ describe('Filters Component', () => {
         const salaryOption = minimumSalary.find(option => option.id === '10000');
     
         // Find the salary option by its label
-        const selectedOption = screen.getByLabelText('10000K');
+        const selectedOption = screen.getByLabelText('10K');
         fireEvent.click(selectedOption);
     
         // Verify onFilterChange was called with correct arguments
@@ -246,7 +246,7 @@ describe('Filters Component', () => {
     test('deselects the filter if the same option is clicked (employment type)', () => {
         render(
             <Filters
-                filters={{ ...mockFilters, employmentType: 'FULL TIME' }}
+                filters={{ ...mockFilters, employmentType: 'FULL_TIME' }}
                 onFilterChange={mockOnFilterChange}
             />
         );
@@ -260,7 +260,7 @@ describe('Filters Component', () => {
     test('deselects the filter if the same option is clicked (location)', () => {
         render(
             <Filters
-                filters={{ ...mockFilters, location: 'REMOTE' }}
+                filters={{ ...mockFilters, workLocation: 'REMOTE' }}
                 onFilterChange={mockOnFilterChange}
             />
         );
@@ -268,7 +268,7 @@ describe('Filters Component', () => {
         const selectedOption = screen.getByLabelText('Remote');
         fireEvent.click(selectedOption);
 
-        expect(mockOnFilterChange).toHaveBeenCalledWith('location', '');
+        expect(mockOnFilterChange).toHaveBeenCalledWith('workLocation', '');
     });
 
     test('deselects the filter if the same option is clicked (job level)', () => {
@@ -293,7 +293,7 @@ describe('Filters Component', () => {
             />
         );
 
-        const selectedOption = screen.getByLabelText('10000K');
+        const selectedOption = screen.getByLabelText('10K');
         fireEvent.click(selectedOption);
 
         expect(mockOnFilterChange).toHaveBeenCalledWith('salary', '');
@@ -316,7 +316,7 @@ describe('Filters Component', () => {
         expect(mockOnFilterChange).toHaveBeenCalledWith('jobLevel', 'MID');
     
         // Select "10000K" for Minimum Salary
-        const salaryOption = screen.getByLabelText('10000K');
+        const salaryOption = screen.getByLabelText('10K');
         fireEvent.click(salaryOption);
         expect(mockOnFilterChange).toHaveBeenCalledWith('salary', '10000');
     });
@@ -332,12 +332,12 @@ describe('Filters Component', () => {
         // Select "Onsite" for Location
         const onsiteOption = screen.getByLabelText('Onsite');
         fireEvent.click(onsiteOption);
-        expect(mockOnFilterChange).toHaveBeenCalledWith('location', 'ONSITE');
+        expect(mockOnFilterChange).toHaveBeenCalledWith('workLocation', 'ONSITE');
     
         // Select "Part-time" for Employment Type
         const partTimeOption = screen.getByLabelText('Part-time');
         fireEvent.click(partTimeOption);
-        expect(mockOnFilterChange).toHaveBeenCalledWith('employmentType', 'PART TIME');
+        expect(mockOnFilterChange).toHaveBeenCalledWith('employmentType', 'PART_TIME');
     
         // Select "Senior" for Job Levels
         const seniorOption = screen.getByLabelText('Senior');
@@ -357,7 +357,7 @@ describe('Filters Component', () => {
         // Select "Hybrid" for Location
         const hybridOption = screen.getByLabelText('Hybrid');
         fireEvent.click(hybridOption);
-        expect(mockOnFilterChange).toHaveBeenCalledWith('location', 'HYBRID');
+        expect(mockOnFilterChange).toHaveBeenCalledWith('workLocation', 'HYBRID');
     
         // Select "Intern" for Employment Type
         const internOption = screen.getByLabelText('Intern');
@@ -370,7 +370,7 @@ describe('Filters Component', () => {
         expect(mockOnFilterChange).toHaveBeenCalledWith('jobLevel', 'EXECUTIVE');
     
         // Select "20000K" for Minimum Salary
-        const salaryOption = screen.getByLabelText('20000K');
+        const salaryOption = screen.getByLabelText('20K');
         fireEvent.click(salaryOption);
         expect(mockOnFilterChange).toHaveBeenCalledWith('salary', '20000');
     });
