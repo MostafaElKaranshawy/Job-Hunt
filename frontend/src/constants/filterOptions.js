@@ -23,8 +23,8 @@ export const jobLevels = [
 
 
 export const salaryRanges = [
-    { id: '5000', label: '> 5000K' },
-    { id: '10000', label: '> 10000K' },
-    { id: '15000', label: '> 15000K' },
-    { id: '20000', label: '> 20000K' },
+    { id: '5000', label: '5000K' },
+    { id: '10000', label: '10000K' },
+    { id: '15000', label: '15000K' },
+    { id: '20000', label: '20000K' },
 ];  

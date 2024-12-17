@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Header from "../../components/header/header";
-import SearchBar from "../../components/homeSearch/SearchBar";
+import SearchBar from "../../components/searchBar/SearchBar";
 import Filters from "../../components/filters/Filters";
 import JobList from "../../components/jobList/JobList";
 import './userHome.css'

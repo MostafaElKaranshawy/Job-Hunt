@@ -36,10 +36,11 @@ function Filters({ filters, onFilterChange }) {
                 handleFilterChange={ (value) => onFilterChange("jobLevel", value) }
             />
 
+            {/* salary may be needed to be converted into a slider on next milestone */}
             <FilterSection
-                title="Salary"
+                title="Minimum Salary"
                 options={salaryRanges}
-                name="salary"
+                name="Min salary"
                 selectedValue={filters.salary}
                 handleFilterChange={ (value) => onFilterChange("salary", value) }
             />

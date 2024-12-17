@@ -7,22 +7,29 @@ function SearchBar( {onSearch} ) {
     const handleSearchLocally = (e) => {
         e.preventDefault();
        
-        onSearch(searchQuery);
-
-        console.log('Searching for:', searchQuery);
+        onSearch(searchQuery.trim());
     };
 
     return (
-        <form className="search-container" onSubmit={handleSearchLocally}>
+        <form 
+            className="search-container" 
+            data-testid="search-form"
+            onSubmit={handleSearchLocally} 
+        >
             <div className="search-input-container">
                 <input
                     type="text"
-                    placeholder="What position are you looking for?"
+                    placeholder="Search by company name or job title (e.g., 'Google', 'Software Engineer')"
+                    data-testid="search-input"
                     className="search-input"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button type="submit" className="search-button">
+                <button 
+                    type="submit" 
+                    className="search-button"
+                    disabled={searchQuery.trim() == ''}
+                >
                     Search job
                 </button>
             </div>
