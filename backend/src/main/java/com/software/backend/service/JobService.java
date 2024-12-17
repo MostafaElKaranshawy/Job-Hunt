@@ -7,7 +7,6 @@ import com.software.backend.entity.Job;
 import com.software.backend.enums.JobStatus;
 import com.software.backend.filter.JobCriteriaRunner;
 import com.software.backend.dto.FieldDto;
-import com.software.backend.dto.JobDto;
 import com.software.backend.dto.SectionDto;
 import com.software.backend.entity.*;
 import com.software.backend.mapper.FieldMapper;
@@ -22,8 +21,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JobService {
@@ -36,6 +35,12 @@ public class JobService {
     @Autowired
     private JobCriteriaRunner jobCriteriaRunner;
 
+    @Autowired
+    private StaticSectionService staticSectionService;
+    @Autowired
+    private FieldMapper fieldMapper;
+
+
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
         Pageable pageable = PageRequest.of(page, offset);
@@ -45,17 +50,9 @@ public class JobService {
 
         return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
     }
-    public List<JobDto> searchJobs(String query, int page, int offset){
-
-        Pageable pageable = PageRequest.of(page, offset);
-        List<Job> jobs = jobRepository.findAllByTitleContainsOrCompany_NameContainsIgnoreCase(query, query).orElse(new ArrayList<>());
-    private StaticSectionService staticSectionService;
-    @Autowired
-    private FieldMapper fieldMapper;
-
 
     public Integer createJobWithCustomForm(String companyUsername, JobDto jobDto) {
-        try{
+        try {
             User user = userRepository.findByUsername(companyUsername).orElse(null);
             if (user == null) throw new IllegalArgumentException("User not found for username: " + companyUsername);
 
@@ -69,6 +66,18 @@ public class JobService {
             List<Section> staticSections = getStaticSections(jobDto, job);
             sections.addAll(staticSections);
             job.setSections(sections);
+
+            List<Field> fields = getFields(jobDto, job);
+            job.setFields(fields);
+
+            jobRepository.save(job);
+            return job.getId();
+        } catch (Exception e) {
+            System.out.println("### Error : " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
 
     public HomeDto filterJobs(String type, String location, String category,
                                    String salary, String level, String query,
@@ -102,16 +111,6 @@ public class JobService {
         List<JobDto> paginatedJobs = jobs.stream().skip((long) page * offset).limit(offset).toList();
         homeDto.setJobs(paginatedJobs);
         return homeDto;
-            List<Field> fields = getFields(jobDto, job);
-            job.setFields(fields);
-
-            jobRepository.save(job);
-            return job.getId();
-        } catch (Exception e) {
-            System.out.println("### Error : " + e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
     }
 
     private List<Field> getFields(JobDto jobDto, Job job) {
