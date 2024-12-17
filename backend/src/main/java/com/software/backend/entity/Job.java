@@ -1,6 +1,8 @@
 package com.software.backend.entity;
 
 import com.software.backend.enums.EmploymentType;
+import com.software.backend.enums.JobStatus;
+import com.software.backend.enums.Level;
 import com.software.backend.enums.JobLevel;
 import com.software.backend.enums.WorkLocation;
 import jakarta.persistence.*;
@@ -34,6 +36,26 @@ public class Job {
     @Column
     private String location;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private JobStatus status;
+
+    @Column
+    private Integer salary;     // to be put if needed in frontend
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private EmploymentType employmentType;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Level level;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private WorkLocation workLocation;
+    
+
     @CreationTimestamp
     @Column(
         nullable = false,
@@ -41,13 +63,11 @@ public class Job {
     )
     private LocalDateTime postedAt;
 
-    private String salary;
-
     @Column(name = "application_deadline")
     private LocalDateTime applicationDeadline;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "work-location", nullable = false)
+    @Column(name = "work_location", nullable = false)
     private WorkLocation workLocation;
 
     @Enumerated(EnumType.STRING)

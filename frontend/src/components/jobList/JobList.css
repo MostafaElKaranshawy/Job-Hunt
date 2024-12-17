@@ -1,0 +1,78 @@
+.job-list {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.job-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.job-card-header {
+    display: flex;
+    gap: 1rem;
+    /* margin-bottom: 1rem; */
+
+}
+
+.company-logo {
+    width: 60px;
+    height: 60px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.job-info h3 {
+    margin: 0;
+    color: #333;
+}
+
+.job-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.new-badge {
+    background-color: #e6f3f0;
+    color: #557B70;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.job-details {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.job-description {
+
+    color: #666;
+    margin: 1rem 0;
+    border-top: 1px solid #cdcdcd;
+    padding-top: 1rem;
+}
+
+.job-list .learn-more-button {
+    background-color: white;
+    color: #4caf50;
+    border: 1px solid #bbbbbb;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.25s;
+}
+
+.job-list .learn-more-button:hover {
+    background-color: #f9f9f9;
+}
