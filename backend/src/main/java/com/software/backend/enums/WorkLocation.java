@@ -1,6 +1,6 @@
 package com.software.backend.enums;
 
-public enum JobType {
+public enum WorkLocation {
     ONSITE,
     REMOTE,
     HYBRID

@@ -1,6 +1,6 @@
 package com.software.backend.enums;
 
-public enum PositionType {
+public enum EmploymentType {
     FULL_TIME,
     PART_TIME,
     INTERNSHIP,

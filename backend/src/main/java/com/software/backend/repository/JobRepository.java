@@ -12,8 +12,4 @@ import java.util.Optional;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, Integer> {
-
-    Optional<List<Job>> findByCompanyAndApplicationDeadlineBefore(Company company, LocalDateTime currentDateTime);// expired jobs
-    Optional<List<Job>> findByCompanyAndApplicationDeadlineAfter(Company company, LocalDateTime currentDateTime); // active jobs
-    Optional<Job> findByCompanyAndId(Company company, Integer jobId);
 }

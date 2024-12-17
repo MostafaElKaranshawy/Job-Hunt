@@ -1,16 +1,14 @@
 package com.software.backend.entity;
 
+import com.software.backend.enums.EmploymentType;
 import com.software.backend.enums.JobLevel;
-import com.software.backend.enums.JobStatus;
-import com.software.backend.enums.JobType;
-import com.software.backend.enums.PositionType;
+import com.software.backend.enums.WorkLocation;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,25 +47,25 @@ public class Job {
     private LocalDateTime applicationDeadline;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "job_type", nullable = false)
-    private JobType type;
+    @Column(name = "work-location", nullable = false)
+    private WorkLocation workLocation;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "job_level", nullable = false)
     private JobLevel level;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "position_type", nullable = false)
-    private PositionType positionType;
+    @Column(name = "employment_type", nullable = false)
+    private EmploymentType employmentType;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
-    private List<Section> sections = new ArrayList<>();
+    private List<Section> sections;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
-    private List<Field> fields = new ArrayList<>();
+    private List<Field> fields;
 }
 

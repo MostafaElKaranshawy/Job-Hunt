@@ -25,7 +25,7 @@ public class Field {
     private FieldType fieldType;
 
     @Column
-    private List<String> options = new ArrayList<>();
+    private List<String> options;
 
     @Column
     private String type;  // can be changed later to enum
@@ -46,12 +46,4 @@ public class Field {
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
-
 }
-
-/*
-*   options is to be further inspected when implementing the frontend
-*           and to check how will it be dealt with in java
-*
-*
-* */
