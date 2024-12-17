@@ -1,24 +1,30 @@
 package com.software.backend.service;
 
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.entity.User;
+import com.software.backend.enums.UserType;
+import com.software.backend.enums.ValidationType;
 import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.repository.UserRepository;
 import com.software.backend.util.JwtUtil;
-import com.software.backend.validator.Validator;
-import com.software.backend.validator.ValidatorFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.software.backend.validation.ValidationFactory;
+import com.software.backend.validation.validators.Validator;
+
+import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CompanyAuthServiceTest {
+
+    @InjectMocks
+    private CompanyAuthService companyAuthService;
 
     @Mock
     private UserRepository userRepository;
@@ -30,60 +36,76 @@ class CompanyAuthServiceTest {
     private JwtUtil jwtUtil;
 
     @Mock
-    private ValidatorFactory validatorFactory;
+    private PasswordService passwordService;
 
-    @InjectMocks
-    private CompanyAuthService companyAuthService;
+    @Mock
+    private Validator validator;
+
+    private static MockedStatic<ValidationFactory> validationFactoryMock;
+
+    @BeforeAll
+    static void initStaticMock() {
+        validationFactoryMock = Mockito.mockStatic(ValidationFactory.class);
+    }
+
+    @AfterAll
+    static void closeStaticMock() {
+        validationFactoryMock.close();
+    }
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-    }
 
-//    @Test
-//    void testSignUp_invalidRequest_throwsException() {
-//        SignUpRequest signUpRequest = new SignUpRequest();
-//        Validator validator = Mockito.mock(Validator.class);
-//        when(validatorFactory.createValidator(any())).thenReturn(validator);
-//        doThrow(new RuntimeException()).when(validator).validate(signUpRequest);
-//        try {
-//            companyAuthService.signUp(signUpRequest);
-//        } catch (RuntimeException e) {
-//            assert(e.getMessage().equals(null));
-//        }
-//        verify(validatorFactory, times(1)).createValidator(any());
-//        verify(validator, times(1)).validate(signUpRequest);
-//    }
+        // Mock static method ValidationFactory.createValidator
+        validationFactoryMock.when(() -> ValidationFactory.createValidator(ValidationType.COMPANY_SIGNUP))
+                .thenReturn(validator);
 
+        // Mock validator behavior
+        doNothing().when(validator).validate(any(SignUpRequest.class));
 
-    @Test
-    void testSignUp_emailAlreadyExists_throwsEmailAlreadyRegisteredException() {
-
-        SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setEmail("test@gmail.com");
-        signUpRequest.setCompanyName("Test Company");
-        signUpRequest.setPassword("Password12345@");
-        when(userRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.of(new User()));  // Mock email already exists
-        try {
-            companyAuthService.signUp(signUpRequest);
-        } catch (EmailAlreadyRegisteredException e) {
-
-            assert(e.getMessage().equals("Email already exists."));
-        }
-        verify(userRepository, times(1)).findByEmail(signUpRequest.getEmail());
+        // Other mocks
+        when(passwordService.hashPassword(anyString())).thenReturn("hashedPassword123");
+        when(jwtUtil.generateSignupToken(any(SignUpRequest.class))).thenReturn("signupToken123");
     }
 
     @Test
-    void testSignUp_validRequest_sendsConfirmationEmail() {
+    void testSignUp_Success() {
+        // Arrange
+        SignUpRequest request = new SignUpRequest();
+        request.setEmail("company@example.com");
+        request.setPassword("securePassword");
 
-        SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setEmail("test@gmail.com");
-        signUpRequest.setCompanyName("Test Company");
-        signUpRequest.setPassword("Password12345@");
-        when(userRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.empty());  // Mock email does not exist
-        when(jwtUtil.generateSignupToken(signUpRequest)).thenReturn("mockToken");
-        companyAuthService.signUp(signUpRequest);
-        verify(emailService, times(1)).sendConfirmationEmail(signUpRequest.getEmail(), "mockToken");
+        when(userRepository.findByEmail("company@example.com")).thenReturn(Optional.empty());
+
+        // Act
+        companyAuthService.signUp(request);
+
+        // Assert
+        verify(validator).validate(request);
+        verify(userRepository).findByEmail("company@example.com");
+        verify(passwordService).hashPassword("securePassword");
+        verify(jwtUtil).generateSignupToken(request);
+        verify(emailService).sendConfirmationEmail("company@example.com", "signupToken123");
+
+        assertEquals(UserType.COMPANY, request.getUserType());
     }
 
+    @Test
+    void testSignUp_WhenEmailAlreadyRegistered_ThrowsException() {
+        // Arrange
+        SignUpRequest request = new SignUpRequest();
+        request.setEmail("company@example.com");
+
+        when(userRepository.findByEmail("company@example.com")).thenReturn(Optional.of(new com.software.backend.entity.User()));
+
+        // Act & Assert
+        EmailAlreadyRegisteredException exception = assertThrows(EmailAlreadyRegisteredException.class, () -> {
+            companyAuthService.signUp(request);
+        });
+
+        assertEquals("Email already exists.", exception.getMessage());
+        verify(userRepository).findByEmail("company@example.com");
+        verifyNoInteractions(passwordService, jwtUtil, emailService);
+    }
 }

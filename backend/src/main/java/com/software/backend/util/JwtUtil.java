@@ -23,7 +23,7 @@ public class JwtUtil {
     private Key secretKey;
 
     @PostConstruct
-    private void initSecretKey() {
+    protected void initSecretKey() {
         this.secretKey = new SecretKeySpec(
                 Base64.getDecoder().decode(env.getProperty("JWT_SECRET_KEY")),
                 SignatureAlgorithm.HS256.getJcaName()
@@ -145,4 +145,7 @@ public class JwtUtil {
         }
     }
 
+    public Key getSecretKey() {
+        return secretKey;
+    }
 }
