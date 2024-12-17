@@ -3,11 +3,14 @@ package com.software.backend.entity;
 import com.software.backend.enums.FieldType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"job", "section"})
 @Table(name = "field")
 public class Field {
 
@@ -17,14 +20,15 @@ public class Field {
     private Integer id;
 
     @Column(
-        name = "field_type",
-        nullable = false
+        name = "field_type"
     )
     private FieldType fieldType;
 
     @Column
-    private List<String> options;
+    private List<String> options = new ArrayList<>();
 
+    @Column
+    private String type;  // can be changed later to enum
 
     @Column(nullable = false)
     private String label;
@@ -35,16 +39,9 @@ public class Field {
     )
     private Boolean isRequired;
 
-    @Column(
-        name = "field_order",
-        nullable = false
-    )
-    private Integer fieldOrder;
-
     @ManyToOne
     @JoinColumn(name = "section_id")
     private Section section;
-
 
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)

@@ -6,13 +6,16 @@ import com.software.backend.enums.JobType;
 import com.software.backend.enums.PositionType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"company", "sections", "fields"})
 @Table(name = "job")
 public class Job {
 
@@ -30,11 +33,8 @@ public class Job {
     @Column(nullable = false)
     private String category;
 
-    @Column(nullable = false)
+    @Column
     private String location;
-
-    @Column(nullable = false)
-    private JobStatus status;
 
     @CreationTimestamp
     @Column(
@@ -60,12 +60,14 @@ public class Job {
     @Column(name = "position_type", nullable = false)
     private PositionType positionType;
 
-
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
-    private List<Section> sections;
+    private List<Section> sections = new ArrayList<>();
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Field> fields = new ArrayList<>();
 }
 

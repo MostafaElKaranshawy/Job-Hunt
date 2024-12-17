@@ -20,8 +20,6 @@ public class Admin {
     )
     private String username;
 
-    @Column(
-            nullable = false
-    )
+    @Column(nullable = false)
     private String password;
 }
