@@ -16,66 +16,69 @@ export default function CreateJob() {
     const [jobType, setJobType] = useState("");
     const [jobDeadline, setJobDeadline] = useState("");
     const [salaryRange, setSalaryRange] = useState([0, 0]);
-    const [showCreateForm, setShowCreateForm] = useState(false); // State to toggle the CreateForm component
+    const [showCreateForm, setShowCreateForm] = useState(false);
 
     const locations = ["Hybrid", "Onsite", "Remote"];
-    const types = ["Full time", "Part time", "Internship", "Temporary"]
+    const types = ["Full time", "Part time", "Internship", "Temporary"];
     const levels = ["Entry", "Junior", "Mid", "Senior", "Executive"];
-    let jobDetails = {}
+    const [jobDetails, setJobDetails] = useState();
 
     const handleSalaryChange = (event, newValue) => {
         setSalaryRange(newValue);
     };
 
     const handleLogData = () => {
-        jobDetails = {
+        const tempDetails = {
             title: jobTitle,
             description: jobDesc,
             category: jobCategory,
-            location: jobLocation,
+            workLocation: jobLocation,
             level: jobLevel,
-            type: jobType,
+            employmentType: jobType,
             deadline: jobDeadline,
-            salaryRange: {
-                min: salaryRange[0],
-                max: salaryRange[1],
-            },
+            salaryRange: `${salaryRange[0]} - ${salaryRange[1]} USD per year`
+           
         };
 
-        // Validation
-        if (!jobDetails.title.trim()) {
+        if (!tempDetails.title.trim()) {
             alert("Title cannot be empty.");
             return;
         }
-        if (!jobDetails.location.trim()) {
-            alert("Location cannot be empty.");
-            return;
-        }
-        if (!jobDetails.category.trim()) {
-            alert("Category cannot be empty.");
-            return;
-        }
-        if (!jobDetails.description.trim()) {
+        if (!tempDetails.description.trim()) {
             alert("Description cannot be empty.");
             return;
         }
-        if (!jobDetails.level.trim()) {
+        if (!tempDetails.category.trim()) {
+            alert("Category cannot be empty.");
+            return;
+        }
+        if (!tempDetails.workLocation.trim()) {
+            alert("Work Location cannot be empty.");
+            return;
+        }
+        
+        if (!tempDetails.level.trim()) {
             alert("Level cannot be empty.");
             return;
         }
-        if (!jobDetails.deadline.trim()) {
+        if (!tempDetails.employmentType.trim()) {
+            alert("Employment Type cannot be empty.");
+            return;
+        }
+        if (!tempDetails.deadline.trim()) {
             alert("Deadline cannot be empty.");
             return;
         }
 
-        console.log("Job Details:", jobDetails);
+        console.log("Job Details:", tempDetails);
+        setJobDetails(tempDetails);
 
         // Show CreateForm component
         setShowCreateForm(true);
     };
 
     return (
-            <>
+        <>
             {!showCreateForm ? (
                 <div className="special-form">
                     <h1 style={{ textAlign: "center" }}>Create Job</h1>
@@ -88,22 +91,17 @@ export default function CreateJob() {
                                 <br />
                                 <SimpleText name="Category" value={jobCategory} onChange={setJobCategory} />
                                 <br />
-                                <DropDown name="Location" options={locations} value={jobLocation} onChange={setJobLocation} />
+                                <DropDown name="workLocation" options={locations} value={jobLocation} onChange={setJobLocation} />
                                 <br />
                                 <DropDown name="Level" options={levels} value={jobLevel} onChange={setJobLevel} />
                                 <br />
-                                <DropDown name="Type" options={types} value={jobType} onChange={setJobType} />
+                                <DropDown name="employmentType" options={types} value={jobType} onChange={setJobType} />
                                 <br />
                                 <DateInput name="Deadline" value={jobDeadline} onChange={setJobDeadline} />
                                 <br />
                                 {/* Salary Range Slider */}
                                 <div className="salary-slider">
-                                    {/* <Typography variant="h6" gutterBottom>
-                                        Salary Range
-                                    </Typography> */}
-                                    <label>
-                                    Salary Range
-                                    </label>
+                                    <label>Salary Range</label>
                                     <Slider
                                         value={salaryRange}
                                         onChange={handleSalaryChange}
@@ -125,7 +123,7 @@ export default function CreateJob() {
                     </form>
                 </div>
             ) : (
-                <CreateForm jobDetails={jobDetails}/>
+                <CreateForm jobDetails={jobDetails} />
             )}
         </>
     );

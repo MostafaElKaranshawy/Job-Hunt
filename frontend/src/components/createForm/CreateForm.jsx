@@ -5,7 +5,7 @@ import PersonalSection from "../primarySections/PersonalSection.jsx";
 import SkillSection from "../primarySections/skillSection";
 import SpecialSection from "../specialSection/SpecialSection.jsx";
 import SpecialField from "../specialSection/SpecialField.jsx";
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import "./specialForm.css";
 
@@ -36,7 +36,7 @@ export default function CreateForm({jobDetails}) {
     const [trackedSections, setTrackedSections] = useState([]);
 
     const mainSections = ["Personal Information", "Education", "Experience", "Skills"];
-    // const { companyUsername } = useParams();
+    const { companyUsername } = useParams();
 
     const handleLogData = () => {
         const formattedSections = specialSections.map(section => ({
@@ -55,17 +55,33 @@ export default function CreateForm({jobDetails}) {
         }));
     
         console.log({
-            jobDetails,
+            title: jobDetails.title,
+            description: jobDetails.description,
+            category: jobDetails.category,
+            workLocation: jobDetails.workLocation,
+            level: jobDetails.level,
+            employmentType: jobDetails.employmentType,
+            deadline: jobDetails.deadline,
+            salary: jobDetails.salaryRange,
+
             sections:formattedSections,
             staticSections:trackedSections,
             fields: formattedStandaloneFields
         });
     
-        const companyUsername = "temp name";
+        // const companyUsername = "temp name";
         const url = `http://localhost:8080/company/${companyUsername}/jobs/create`;
     
         axios.post(url, { 
-                jobDetails,
+                title: jobDetails.title,
+                description: jobDetails.description,
+                category: jobDetails.category,
+                workLocation: jobDetails.workLocation,
+                level: jobDetails.level,
+                employmentType: jobDetails.employmentType,
+                deadline: jobDetails.deadline,
+                salary: jobDetails.salaryRange,
+
                 sections:formattedSections,
                 staticSections:trackedSections,
                 fields: formattedStandaloneFields
