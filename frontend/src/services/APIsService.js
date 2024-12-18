@@ -1,13 +1,14 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-async function fetchSkills(query){
+async function fetchSkills(query) {
     let myHeaders = new Headers();
     myHeaders.append("apikey", "AfAbEfRxDYiRaNIzQHh54FUF2wSn2unP");
 
     let requestOptions = {
-    method: 'GET',
-    redirect: 'follow',
-    headers: myHeaders
+        method: 'GET',
+        redirect: 'follow',
+        headers: myHeaders,
+        Credentials: 'include'
     };
     try {
         const response = await fetch(`https://api.apilayer.com/skills?q=${query}`, requestOptions);
@@ -24,18 +25,18 @@ async function fetchSkills(query){
 
 async function fetchCountries() {
     fetch("./json/countries.json")
-    .then(response => {
-        console.log(response);
-        // return response.json(); // Ensure you return the parsed JSON here
-    })
-    // .then(data => {
-    //     console.log(data); // Now you can use the data
-    //     return data; // If you need to return the data for further use
-    // })
-    .catch(error => {
-        console.error('Error fetching countries:', error);
-        return []; // Return an empty array as a fallback
-    });
+        .then(response => {
+            console.log(response);
+            // return response.json(); // Ensure you return the parsed JSON here
+        })
+        // .then(data => {
+        //     console.log(data); // Now you can use the data
+        //     return data; // If you need to return the data for further use
+        // })
+        .catch(error => {
+            console.error('Error fetching countries:', error);
+            return []; // Return an empty array as a fallback
+        });
 
 }
 

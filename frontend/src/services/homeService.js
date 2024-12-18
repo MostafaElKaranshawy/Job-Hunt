@@ -1,8 +1,8 @@
-
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 export async function fetchJobs(filters, page = 1, offset = 10) {
-    const url = `http://localhost:8080/home/jobs/filter`; 
+    const url = `${backendUrl}/home/jobs/filter`; 
     const query = `query=${filters.searchQuery}`
     const level = `level=${filters.jobLevel}`
     const workLocation = `workLocation=${filters.workLocation}`
@@ -13,6 +13,7 @@ export async function fetchJobs(filters, page = 1, offset = 10) {
     const response = await fetch(`${url}?${query}&${level}&${workLocation}&${employmentType}&${salary}&${sortBy}&page=${page}&offset=${offset}`,
         {
             method: 'GET',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },

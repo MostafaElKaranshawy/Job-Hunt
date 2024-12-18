@@ -35,6 +35,8 @@ public class UserAuthService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("email or password is incorrect"));
 
+
+        System.out.println("Username found");
         if (!passwordService.verifyPassword(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("email or password is incorrect");
         }

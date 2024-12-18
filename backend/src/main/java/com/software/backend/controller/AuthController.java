@@ -66,10 +66,12 @@ public class AuthController {
             HttpServletResponse response
     ) {
             System.out.println("Login Endpoint ");
+
             AuthenticationResponse authenticationResponse = userAuthService.login(request);
             tokenService.storeTokens(authenticationResponse, response);
             AuthenticationResponse usernameObject = new AuthenticationResponse();
             usernameObject.setUsername(authenticationResponse.getUsername());
+            System.out.println("Username: " + usernameObject.getUsername());
             return ResponseEntity.ok().body(usernameObject);
     }
 

@@ -5,6 +5,7 @@ async function getUserProfile(userName) {
         const url = `${backendURL}/users/${userName}/profile`;
         const response = await fetch(url, {
             method: 'GET', // Specify the method here
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -26,6 +27,7 @@ async function editUserProfile(userName, userData) {
     try {
         const response = await fetch(url, {
             method: 'PUT', // Specify the method here
+            credentials : 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -56,6 +58,7 @@ async function handleCustomSectionOperation(
         }
         let options = {
             method: operation, // 'GET', 'POST', 'PUT', 'DELETE
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -86,6 +89,7 @@ async function getUserSkills(userName) {
     try {
         const response = await fetch(url, {
             method: 'GET', // Specify the method here
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -107,6 +111,7 @@ async function editUserSkills(userName, skills){
     try {
         const response = await fetch(url, {
             method: 'PUT', // Specify the method here
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },

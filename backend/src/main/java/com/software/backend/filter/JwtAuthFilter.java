@@ -55,6 +55,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // Extract and validate access token
             Optional<Cookie> accessTokenCookie = Optional.ofNullable(cookieUtil.getCookie(request, "accessToken"));
+
+            System.out.println("Access token: " + accessTokenCookie);
             if (accessTokenCookie.isPresent() && jwtUtil.validateToken(accessTokenCookie.get().getValue())) {
                 System.out.println("Valid access token");
                 filterChain.doFilter(request, response);
