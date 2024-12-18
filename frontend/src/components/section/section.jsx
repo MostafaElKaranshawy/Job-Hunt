@@ -51,17 +51,20 @@ export default function Section({ sectionData, sectionChange, errors, save, canc
     const handleSave = async () => {
 
         await save(editedFields);
+      
+        setRender(!render);
+    };
 
+    useEffect(() => {
         if (Object.keys(errors).length === 0) {
-            
+            console.log("No errors");
             setIsEditing(false); // Exit edit mode if no errors
         }
         else {
-
+            console.log("Errors");
             setIsEditing(true); // Stay in edit mode if there are errors
         }
-        setRender(!render);
-    };
+    },[errors])
 
     const handleCancel = () => {
 
