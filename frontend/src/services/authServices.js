@@ -83,12 +83,16 @@ export const googleLogIn = async (credentialResponse) => {
             body: JSON.stringify({ googleToken: credentialResponse.credential }),
         });
         const data = await response.json();
+        console.log(data);
         if (response.ok) {
-            console.log(data.username);
+            document.cookie = `username=${data.username};`;
+            console.log(data.message);
+            return { success: true };
         } else {
             console.error(data.message);
             return { success: false, message: data.message };
         }
+
     } catch (error) {
         console.error(error.message);
         return { success: false, message: data.message };
@@ -96,6 +100,7 @@ export const googleLogIn = async (credentialResponse) => {
 };
 
 export const logIn = async (formData) => {
+  
     console.log(formData);
     try {
         const response = await fetch(`${apiUrl}/auth/login`, {

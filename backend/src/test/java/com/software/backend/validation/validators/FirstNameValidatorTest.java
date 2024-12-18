@@ -91,18 +91,18 @@ class FirstNameValidatorTest {
         assertEquals("First name must not contain spaces", exception.getMessage());
     }
 
-//    @Test
-//    public void shouldThrowExceptionWhenFirstNameContainsSpecialCharacters() {
-//        // Arrange
-//        SignUpRequest signUpRequest = new SignUpRequest();
-//        signUpRequest.setFirstName("Youssef@");
-//
-//        // Act & Assert
-//        BusinessException exception = assertThrows(BusinessException.class,
-//                () -> firstNameValidator.doValidation(signUpRequest));
-//
-//        assertEquals("First name must not contain special characters", exception.getMessage());
-//    }
+    @Test
+    public void shouldThrowExceptionWhenFirstNameContainsSpecialCharacters() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setFirstName("Youssef@");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> firstNameValidator.doValidation(signUpRequest));
+
+        assertEquals("First name must not contain special characters", exception.getMessage());
+    }
 
     @Test
     public void shouldThrowExceptionWhenFirstNameContainsNumbers() {

@@ -21,5 +21,7 @@ public class FirstNameValidator extends Validator {
         if (firstName.length() >= 30)
             throw new BusinessException("First name must not exceed 30 characters");
 
+        if (firstName.matches(".*[!@#$%^&*(),.?\":{}|<>].*"))
+            throw new BusinessException("First name must not contain special characters");
     }
 }

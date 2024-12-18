@@ -55,6 +55,7 @@ function PasswordResetRequestForm() {
           placeholder="Enter your email"
           value={email}
           onChange={handleInputChange}
+          className={errors.email ? "error-input" : ""}
         />
         {errors.email && <span className="error" style={{ color: "red" }}>{errors.email}</span>}
         {successResponse && <p className="success-message">{successResponse}</p>}

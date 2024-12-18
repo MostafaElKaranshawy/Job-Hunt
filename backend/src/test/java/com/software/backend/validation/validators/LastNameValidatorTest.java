@@ -104,6 +104,17 @@ class LastNameValidatorTest {
 
         assertEquals("Last name must not contain numbers", exception.getMessage());
     }
+    @Test
+    public void shouldThrowExceptionWhenLastNameContainsSpecialCharacters() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setLastName("Youssef@");
 
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> lastNameValidator.doValidation(signUpRequest));
+
+        assertEquals("Last name must not contain special characters", exception.getMessage());
+    }
 
 }

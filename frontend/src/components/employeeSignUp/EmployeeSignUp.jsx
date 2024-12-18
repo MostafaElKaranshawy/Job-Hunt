@@ -38,8 +38,10 @@ function EmployeeSignUp() {
       newErrors.firstName = "First name must not contain numbers.";
   } else if (/\s/.test(formData.firstName)) {
     newErrors.firstName = "First name must not contain spaces.";
+  }else if (/[^a-zA-Z\-']/g.test(formData.firstName)) {
+    newErrors.firstName = "First name must not contain invalid special characters.";
   }
-  
+ 
   if (!formData.lastName || formData.lastName.trim() === "") {
       newErrors.lastName = "Last name is required.";
   } else if (formData.lastName.length > 30) {
@@ -48,7 +50,10 @@ function EmployeeSignUp() {
       newErrors.lastName = "Last name must not contain numbers.";
   } else if (/\s/.test(formData.lastName)) {
     newErrors.lastName = "Last name must not contain spaces.";
-  }
+  }else if (/[^a-zA-Z0-9\-']/g.test(formData.firstName)) {
+    newErrors.firstName = "First name must not contain invalid special characters.";
+}
+
   
     if (!formData.email) {
       newErrors.email = "Email is required.";

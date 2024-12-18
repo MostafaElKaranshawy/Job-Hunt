@@ -82,6 +82,7 @@ function PasswordResetForm() {
             name="password"
             value={formData.password}
             onChange={handleInputChange}
+             className={errors.password ? "error-input" : ""}
           />
         </div>
         {errors.password && <p className="error">{errors.password}</p>}
@@ -93,6 +94,7 @@ function PasswordResetForm() {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleInputChange}
+            className={errors.confirmPassword ? "error-input" : ""}
           />
         </div>
         {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
