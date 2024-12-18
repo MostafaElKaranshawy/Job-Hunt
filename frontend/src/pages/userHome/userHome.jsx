@@ -100,7 +100,7 @@ function UserHome() {
             <Header />
             <main className="main-content">
                 <div className="hero-section">
-                    <h1>Find your <span className="highlight">right jobs offers</span> today</h1>
+                    <h1>Find your right jobs offers today</h1>
                     <p>Thousands of companies in the computer, engineering and technology sectors are waiting for you.</p>
                     <SearchBar
                         onSearch={handleSearch}
@@ -152,9 +152,8 @@ function UserHome() {
                                     className="custom-pagination-button"
                                     onClick={() => setPage(page + 1)}
                                     disabled={endIndex >= totalJobsCount || loading}
-                                >
-                                    Next &gt;
-                                </button>
+                                    data-testid="next-button"
+                                >Next &gt;</button>
                             </div>
                         }
 
