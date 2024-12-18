@@ -47,6 +47,9 @@ public class Applicant{
 
     private List<String> skills;
 
+    @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobApplication> jobApplicationsList;
+
     @Override
     public String toString() {
         return "Applicant {" +

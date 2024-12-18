@@ -1,4 +1,3 @@
-
 function parseEducation(education){
     return ([
         { fieldName: "Institution", fieldValue: education.institution, fieldType: "text", minLength: 3, maxLength: 20 },
@@ -13,9 +12,9 @@ function parseExperience(experience){
         { fieldName: "Title", fieldValue: experience.title, fieldType: "text", minLength: 3, maxLength: 20 },
         { fieldName: "Company", fieldValue: experience.company, fieldType: "text", minLength: 3, maxLength: 50 },
         { fieldName: "Location", fieldValue: experience.location, fieldType: "text", minLength: 3, maxLength: 20 },
-        { fieldName: "Start Date", fieldValue: experience.startDate, fieldType: "date", minLength: 0, maxLength: 10 },
-        { fieldName: "End Date", fieldValue: experience.endDate, fieldType: "date", minLength: 0, maxLength: 10 },
-        { fieldName: "Description", fieldValue: experience.description, fieldType: "textArea", minLength: 3, maxLength: 50 },
+        { fieldName: "Start Date", fieldValue: experience.startDate, fieldType: "date", minLength: 0, maxLength: 20 },
+        { fieldName: "End Date", fieldValue: experience.endDate, fieldType: "date", minLength: 0, maxLength: 20 },
+        { fieldName: "Description", fieldValue: experience.description, fieldType: "textArea", minLength: 0, maxLength: 50 },
 
     ]);
 }

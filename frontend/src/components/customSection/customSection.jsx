@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Section from "../section/section";
 import "./customSection.css";
+import ConfirmationBox from "../confirmationBox/confirmationBox.";
 
 export default function CustomSection({ sectionData, sectionChange, addSection, editSection, removeSection, refreshCustomSections }) {
     const [render, setRender] = useState(false);
@@ -24,6 +25,7 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                 { fieldName: "Description", fieldValue: "", fieldType: "text" },
               ]
     });
+    const [showConfirmationBox, setShowConfirmationBox] = useState(false);
     const [newSectionErrors, setNewSectionErrors] = useState({});
 
     const handleFieldChange = (sectionName, fieldName, fieldValue) => {
@@ -86,6 +88,7 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
 
     return (
         <div className="custom-section">
+            
             <div className="section-header">
                 <div className="section-name">{sectionData.sectionName}</div>
                 <div
@@ -113,8 +116,16 @@ export default function CustomSection({ sectionData, sectionChange, addSection, 
                         />
                         {/* {console.log(sectionData.sectionErrors)} */}
                         <i className="fa-solid fa-trash delete-section" onClick={()=>{
-                            removeSection(sectionData.sectionName, section.id);
+                            setShowConfirmationBox(true);
+                            
                         }} />
+                        {showConfirmationBox && (
+                            <ConfirmationBox 
+                                content={`Are you sure you want to delete ${sectionData.sectionName} section?`} 
+                                confirm={()=>{removeSection(sectionData.sectionName, section.id)}} 
+                                cancel={()=>{setShowConfirmationBox(false)}} 
+                            />
+                        )}
                     </div>
                 ))}
                 {addSectionVisible && (

@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import UserHome from './pages/userHome/userHome'
 import Profile from './pages/profilePage/profilePage'
-import CompanyProfilePage from './pages/profilePage/CompanyProfilePage';
-import Jobs from './pages/jobsPage/Jobs';
+import CompanyProfilePage from './pages/profilePage/CompanyProfilePage'
+import Jobs from './pages/jobsPage/Jobs'
 import SignUpPage from './pages/signupPage/SignUpPage'
 import LogInPage from './pages/logInPage/LogInPage'
 import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPasswordRequestPage'

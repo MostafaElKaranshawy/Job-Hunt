@@ -35,7 +35,7 @@
     background-color: white;
     border-radius: 5px;
     padding: 10px 20px;
-    width: 150px;
+    width: 250px;
     color: black;
     border: 1px solid lightgreen;
     margin: 20px 5px;
@@ -54,15 +54,33 @@
     padding: 5px 10px;
     font-size: 15px;
     background-color: lightgreen;
-    margin: 5px;
+    margin: 10px 5px;
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
-}
-.skill.user-skill{
-    color: red;
+    position: relative;
 }
 
 .skill.add-skill{
     color: rgb(0, 85, 0);
+}
+.skill.add-skill:hover{
+    background-color: rgb(0, 85, 0);
+    color: white;
+}
+.remove-skill-button{
+    position: absolute;
+    top: -18px;
+    right: -7px;
+    background: rgb(243, 104, 104);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.remove-skill-button:hover{
+    background: red;
 }
