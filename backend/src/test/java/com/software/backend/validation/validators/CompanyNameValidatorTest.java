@@ -55,4 +55,29 @@ class CompanyNameValidatorTest {
         assertEquals("Company name is too long", exception.getMessage());
     }
 
+    @Test
+    public void shouldThrowExceptionWhenCompanyNameStartsWithSpace() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setCompanyName(" Company");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> companyNameValidator.doValidation(signUpRequest));
+
+        assertEquals("Company name must not start with a space", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenCompanyNameStartsWithNumber() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setCompanyName("1Company");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> companyNameValidator.doValidation(signUpRequest));
+
+        assertEquals("Company name must not start with a number", exception.getMessage());
+    }
 }

@@ -116,4 +116,18 @@ class PasswordValidatorTest {
         // Act & Assert
         assertDoesNotThrow(() -> passwordValidator.doValidation(signUpRequest));
     }
+
+    @Test
+    public void shouldThrowExceptionWhenPasswordIsTooLong() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setPassword("This is a very long password that exceeds the maximum length of 30 characters");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> passwordValidator.doValidation(signUpRequest));
+
+        assertEquals("Password must not exceed 30 characters", exception.getMessage());
+    }
+
 }

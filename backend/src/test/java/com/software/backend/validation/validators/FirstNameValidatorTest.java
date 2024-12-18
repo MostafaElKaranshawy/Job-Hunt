@@ -46,7 +46,7 @@ class FirstNameValidatorTest {
     public void shouldThrowExceptionWhenFirstNameExceedsMaxLength() {
         // Arrange
         SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setFirstName("This is a very long first name that exceeds the maximum length");
+        signUpRequest.setFirstName("ThisIsAVeryLongFirstNameThatExceedsTheMaximumLength");
 
         // Act & Assert
         BusinessException exception = assertThrows(BusinessException.class,
@@ -64,5 +64,58 @@ class FirstNameValidatorTest {
         // Act & Assert
         assertDoesNotThrow(() -> firstNameValidator.doValidation(signUpRequest));
     }
+
+    @Test
+    public void shouldThrowExceptionWhenFirstNameContainsSpaces() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setFirstName("Youssef Mahmoud");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> firstNameValidator.doValidation(signUpRequest));
+
+        assertEquals("First name must not contain spaces", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenFirstNameStartsWithSpace() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setFirstName(" Youssef");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> firstNameValidator.doValidation(signUpRequest));
+
+        assertEquals("First name must not contain spaces", exception.getMessage());
+    }
+
+//    @Test
+//    public void shouldThrowExceptionWhenFirstNameContainsSpecialCharacters() {
+//        // Arrange
+//        SignUpRequest signUpRequest = new SignUpRequest();
+//        signUpRequest.setFirstName("Youssef@");
+//
+//        // Act & Assert
+//        BusinessException exception = assertThrows(BusinessException.class,
+//                () -> firstNameValidator.doValidation(signUpRequest));
+//
+//        assertEquals("First name must not contain special characters", exception.getMessage());
+//    }
+
+    @Test
+    public void shouldThrowExceptionWhenFirstNameContainsNumbers() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setFirstName("Youssef123");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> firstNameValidator.doValidation(signUpRequest));
+
+        assertEquals("First name must not contain numbers", exception.getMessage());
+    }
+
 
 }

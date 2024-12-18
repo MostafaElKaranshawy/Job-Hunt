@@ -12,10 +12,13 @@ public class LastNameValidator extends Validator {
 
         if (lastName == null || lastName.isEmpty())
             throw new BusinessException("Last name is required");
+
         if(lastName.contains(" "))
             throw new BusinessException("Last name must not contain spaces");
+
         if(lastName.matches(".*\\d.*"))
             throw new BusinessException("Last name must not contain numbers");
+
         if (lastName.length() >= 30)
             throw new BusinessException("Last name must not exceed 30 characters");
 

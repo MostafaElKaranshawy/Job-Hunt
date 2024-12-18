@@ -15,6 +15,9 @@ public class PasswordValidator extends Validator {
         if (password.length() <= 8)
             throw new BusinessException("Password must be at least 8 characters long");
 
+        if (password.length() >= 30)
+            throw new BusinessException("Password must not exceed 30 characters");
+
         if (!password.matches(".*[A-Z].*"))
             throw new BusinessException("Password must contain at least one uppercase letter");
 

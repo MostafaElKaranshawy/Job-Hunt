@@ -46,7 +46,7 @@ class LastNameValidatorTest {
     public void shouldThrowExceptionWhenLastNameExceedsMaxLength() {
         // Arrange
         SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setLastName("This is a very long last name that exceeds the maximum length");
+        signUpRequest.setLastName("ThisIsAVeryLongLastNameThatExceedsTheMaximumLength");
 
         // Act & Assert
         BusinessException exception = assertThrows(BusinessException.class,
@@ -64,5 +64,46 @@ class LastNameValidatorTest {
         // Act & Assert
         assertDoesNotThrow(() -> lastNameValidator.doValidation(signUpRequest));
     }
+
+    @Test
+    public void shouldThrowExceptionWhenLastNameContainsSpace() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setLastName("Mahmoud Ali");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> lastNameValidator.doValidation(signUpRequest));
+
+        assertEquals("Last name must not contain spaces", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenLastNameStartsWithSpace() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setLastName(" Mahmoud");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> lastNameValidator.doValidation(signUpRequest));
+
+        assertEquals("Last name must not contain spaces", exception.getMessage());
+    }
+
+
+    @Test
+    public void shouldThrowExceptionWhenLastNameContainsNumber() {
+        // Arrange
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setLastName("Mahmoud1");
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> lastNameValidator.doValidation(signUpRequest));
+
+        assertEquals("Last name must not contain numbers", exception.getMessage());
+    }
+
 
 }
