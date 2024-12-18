@@ -6,6 +6,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 @Data
 @Table(name = "applicant")
@@ -19,6 +20,8 @@ public class Applicant{
     @JoinColumn(name = "applicant_id", nullable = false, referencedColumnName = "id")
     @MapsId
     private User user;
+
+
     @Column( nullable = false )
     private String firstName;
 
@@ -61,3 +64,15 @@ public class Applicant{
                 '}';
     }
 }
+
+
+/*
+* address   (done)
+* city   (done)
+* state   (done)
+* country   (done)
+* resume  (to be put after specifying how exactly will it be dealt with in java)
+*
+*
+*
+* */
