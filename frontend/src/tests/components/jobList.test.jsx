@@ -2,6 +2,7 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import JobList from "../../components/jobList/JobList";
 import { truncateDescription, calculateRelativeTime } from "../../utils/userHomeUtils";
+import { locationOptions, employmentTypes, jobLevels, minimumSalary } from "../../constants/filterOptions";
 
 describe("JobList Component", () => {
     const mockHandleExpandJob = vi.fn();
@@ -10,9 +11,9 @@ describe("JobList Component", () => {
             id: 1,
             company: { name: "Company A" },
             title: "Frontend Developer",
-            location: "Remote",
-            type: "Full-Time",
-            level: "Mid-Level",
+            workLocation: "REMOTE",
+            employmentType: "FULL_TIME",
+            level: "MID_LEVEL",
             salary: "80,000",
             postedAt: "2 days ago",
             description: "This is a job description for Frontend Developer.",
@@ -21,9 +22,9 @@ describe("JobList Component", () => {
             id: 2,
             company: { name: "Company B" },
             title: "Backend Developer",
-            location: "New York, NY",
-            type: "Part-Time",
-            level: "Senior",
+            workLocation: "ONSITE",
+            employmentType: "PART_TIME",
+            level: "SENIOR_LEVEL",
             salary: "120,000",
             postedAt: "5 days ago",
             description: "Backend Developer required with experience in Node.js.",
@@ -71,17 +72,17 @@ describe("JobList Component", () => {
 
         // Verify job details are displayed correctly
         expect(screen.getByText(mockJobs[0].company.name)).toBeInTheDocument();
-        expect(screen.getByText(mockJobs[0].location)).toBeInTheDocument();
-        expect(screen.getByText(mockJobs[0].type)).toBeInTheDocument();
-        expect(screen.getByText(mockJobs[0].level)).toBeInTheDocument();
+        expect(screen.getByText(locationOptions.find((option) => option.id === mockJobs[0].workLocation).label)).toBeInTheDocument();
+        expect(screen.getByText(employmentTypes.find((option) => option.id === mockJobs[0].employmentType).label)).toBeInTheDocument();
+        expect(screen.getByText(jobLevels.find((option) => option.id === mockJobs[0].level).label)).toBeInTheDocument();
         expect(screen.getByText(`$${mockJobs[0].salary}`)).toBeInTheDocument();
         // expect(screen.getByText("🕛 2 days ago ")).toBeInTheDocument();
     
 
         expect(screen.getByText(mockJobs[1].company.name)).toBeInTheDocument();
-        expect(screen.getByText(mockJobs[1].location)).toBeInTheDocument();
-        expect(screen.getByText(mockJobs[1].type)).toBeInTheDocument();
-        expect(screen.getByText(mockJobs[1].level)).toBeInTheDocument();
+        expect(screen.getByText(locationOptions.find((option) => option.id === mockJobs[1].workLocation).label)).toBeInTheDocument();
+        expect(screen.getByText(employmentTypes.find((option) => option.id === mockJobs[1].employmentType).label)).toBeInTheDocument();
+        expect(screen.getByText(jobLevels.find((option) => option.id === mockJobs[1].level).label)).toBeInTheDocument();
         expect(screen.getByText(`$${mockJobs[1].salary}`)).toBeInTheDocument();
         // expect(screen.getByText("🕛 5 days ago")).toBeInTheDocument();
     });

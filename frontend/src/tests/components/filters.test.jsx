@@ -212,7 +212,7 @@ describe('Filters Component', () => {
             />
         );
     
-        const jobLevelOption = jobLevels.find(option => option.id === 'JUNIOR');
+        const jobLevelOption = jobLevels.find(option => option.id === 'JUNIOR_LEVEL');
     
         // Find the job level option by its label
         const selectedOption = screen.getByLabelText('Junior');
@@ -274,7 +274,7 @@ describe('Filters Component', () => {
     test('deselects the filter if the same option is clicked (job level)', () => {
         render(
             <Filters
-                filters={{ ...mockFilters, jobLevel: 'JUNIOR' }}
+                filters={{ ...mockFilters, jobLevel: 'JUNIOR_LEVEL' }}
                 onFilterChange={mockOnFilterChange}
             />
         );
@@ -313,7 +313,7 @@ describe('Filters Component', () => {
         // Select "Mid-Level" for Job Levels
         const midLevelOption = screen.getByLabelText('Mid-Level');
         fireEvent.click(midLevelOption);
-        expect(mockOnFilterChange).toHaveBeenCalledWith('jobLevel', 'MID');
+        expect(mockOnFilterChange).toHaveBeenCalledWith('jobLevel', 'MID_LEVEL');
     
         // Select "10000K" for Minimum Salary
         const salaryOption = screen.getByLabelText('10K');
@@ -342,7 +342,7 @@ describe('Filters Component', () => {
         // Select "Senior" for Job Levels
         const seniorOption = screen.getByLabelText('Senior');
         fireEvent.click(seniorOption);
-        expect(mockOnFilterChange).toHaveBeenCalledWith('jobLevel', 'SENIOR');
+        expect(mockOnFilterChange).toHaveBeenCalledWith('jobLevel', 'SENIOR_LEVEL');
     });
     
     test(`calls onFilterChange when all filters are selected: "Location", 
