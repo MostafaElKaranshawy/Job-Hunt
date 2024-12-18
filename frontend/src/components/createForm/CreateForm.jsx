@@ -65,8 +65,8 @@ export default function CreateForm({jobDetails,whenSave}) {
             workLocation: jobDetails.workLocation,
             level: jobDetails.level,
             employmentType: jobDetails.employmentType,
-            deadline: jobDetails.deadline,
-            salary:`${jobDetails.salaryRange[0]} - ${jobDetails.salaryRange[1]} USD per year`,
+            applicationDeadline: jobDetails.deadline,
+            salary:jobDetails.salary,
 
             sections:formattedSections,
             staticSections:trackedSections,
@@ -77,18 +77,19 @@ export default function CreateForm({jobDetails,whenSave}) {
         const url = `http://localhost:8080/company/${companyUsername}/jobs/create`;
     
         axios.post(url, { 
-                title: jobDetails.title,
-                description: jobDetails.description,
-                category: jobDetails.category,
-                workLocation: jobDetails.workLocation,
-                level: jobDetails.level,
-                employmentType: jobDetails.employmentType,
-                deadline: jobDetails.deadline,
-                salary: jobDetails.salaryRange,
+            title: jobDetails.title,
+            description: jobDetails.description,
+            category: jobDetails.category,
+            location: jobDetails.location,
+            workLocation: jobDetails.workLocation,
+            level: jobDetails.level,
+            employmentType: jobDetails.employmentType,
+            applicationDeadline: jobDetails.deadline,
+            salary:jobDetails.salary,
 
-                sections:formattedSections,
-                staticSections:trackedSections,
-                fields: formattedStandaloneFields
+            sections:formattedSections,
+            staticSections:trackedSections,
+            fields: formattedStandaloneFields
             })
             .then(response => {
                 console.log('Data successfully sent to the backend:', response.data);

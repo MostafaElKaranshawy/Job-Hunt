@@ -16,24 +16,18 @@ export default function CreateJob({detailsHistory, whenClose}) {
     const [jobLevel, setJobLevel] = useState(detailsHistory.level);
     const [jobType, setJobType] = useState(detailsHistory.employmentType);
     const [jobDeadline, setJobDeadline] = useState(detailsHistory.deadline);
-    const [salaryRange, setSalaryRange] = useState([detailsHistory.salaryRange[0], detailsHistory.salaryRange[1]]);
+    const [jobSalary, setJobSalary] = useState(detailsHistory.salary);
     const [showCreateForm, setShowCreateForm] = useState(false);
 
-    const locations = ["Hybrid", "Onsite", "Remote"];
-    const types = ["Full time", "Part time", "Internship", "Temporary"];
-    const levels = ["Entry", "Junior", "Mid", "Senior", "Executive"];
+    const locations = ["ONSITE","REMOTE","HYBRID"];
+    const types = ["FULL_TIME","PART_TIME","INTERNSHIP","TEMPORARY"];
+    const levels = ["JUNIOR_LEVEL","MID_LEVEL","SENIOR_LEVEL","ENTRY_LEVEL","EXECUTIVE"];
     const [jobDetails, setJobDetails] = useState();
 
-    // useEffect(() => {
-    //     console.log("HI HI Captain");
-    //     console.log(detailsHistory);
-    // },[])
 
-    const handleSalaryChange = (event, newValue) => {
-        setSalaryRange(newValue);
-    };
 
     const handleLogData = () => {
+
         const tempDetails = {
             title: jobTitle,
             description: jobDesc,
@@ -42,8 +36,8 @@ export default function CreateJob({detailsHistory, whenClose}) {
             workLocation: jobLocation,
             level: jobLevel,
             employmentType: jobType,
-            deadline: jobDeadline,
-            salaryRange: [salaryRange[0],salaryRange[1]],
+            deadline: `${jobDeadline}T00:00:00`,
+            salary: jobSalary,
            
         };
 
@@ -80,6 +74,10 @@ export default function CreateJob({detailsHistory, whenClose}) {
             alert("Deadline cannot be empty.");
             return;
         }
+        if (!tempDetails.salary.trim()) {
+            alert("Salary cannot be empty.");
+            return;
+        }
 
         console.log("Job Details:", tempDetails);
         setJobDetails(tempDetails);
@@ -92,11 +90,14 @@ export default function CreateJob({detailsHistory, whenClose}) {
 
     const handleDateChange = (date) => {
         if (date >= today) {
+            // const date1 = date.target.value;
+            // const dateTime = `${date1}T00:00:00`;
             setJobDeadline(date);
         } else {
             alert("Please select a date from today onwards.");
         }
     };
+
 
     return (
         <>
@@ -122,22 +123,15 @@ export default function CreateJob({detailsHistory, whenClose}) {
                                 <br />
                                 <DateInput name="Deadline" value={jobDeadline} onChange={handleDateChange} />
                                 <br />
-                                {/* Salary Range Slider */}
-                                <div className="salary-slider">
-                                    <label className="input-label">Salary Range</label>
-                                    <Slider
-                                        value={salaryRange}
-                                        onChange={handleSalaryChange}
-                                        valueLabelDisplay="auto"
-                                        min={0}
-                                        max={200000}
-                                        step={500}
-                                    />
-                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <Typography variant="body1">Min: ${salaryRange[0]}</Typography>
-                                        <Typography variant="body1">Max: ${salaryRange[1]}</Typography>
-                                    </div>
-                                </div>
+                                <label className="input-label">Yearly salary in $</label>
+                                <br />
+                                <input
+                                type="number"
+                                value={jobSalary}
+                                onChange={(e) => setJobSalary(e.target.value)}
+                                required
+                                />
+                                
                             </div>
                         </div>
                         <button type="button" className="form-button" onClick={handleLogData}>
