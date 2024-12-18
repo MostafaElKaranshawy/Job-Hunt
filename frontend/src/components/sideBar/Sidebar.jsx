@@ -29,6 +29,13 @@ function Sidebar() {
             Jobs
           </Link>
         </NavItem>
+        <div className="navItem logout" onClick={() => {
+          console.log("Logout");
+          document.cookie = ";";
+          window.location.href = "/";
+        }}>
+          Log out
+        </div>
       </Nav>
     </div>
   );

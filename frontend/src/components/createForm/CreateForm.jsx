@@ -89,8 +89,12 @@ export default function CreateForm({jobDetails,whenSave}) {
 
             sections:formattedSections,
             staticSections:trackedSections,
-            fields: formattedStandaloneFields
-            })
+            fields: formattedStandaloneFields,
+            
+            },{
+                withCredentials: true
+            }
+        )
             .then(response => {
                 console.log('Data successfully sent to the backend:', response.data);
             })
