@@ -87,7 +87,7 @@ export const googleLogIn = async (credentialResponse) => {
         if (response.ok) {
             document.cookie = `username=${data.username};`;
             console.log(data.message);
-            return { success: true };
+            return { success: true, userType: data.userType, username: data.username };
         } else {
             console.error(data.message);
             return { success: false, message: data.message };
@@ -116,7 +116,7 @@ export const logIn = async (formData) => {
         if (response.ok) {
             document.cookie = `username=${data.username};`;
             console.log(data.message);
-            return { success: true };
+            return { success: true, userType: data.userType, username: data.username };
         } else {
             console.error(data.message);
             return { success: false, message: data.message };

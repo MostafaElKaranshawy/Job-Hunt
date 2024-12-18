@@ -17,6 +17,8 @@ public class AuthenticationResponse {
     private String refreshToken;
     @JsonProperty("username")
     private String username;
+    @JsonProperty("userType")
+    private String userType;
 
     public String getAccessToken() {
         return accessToken;
@@ -35,5 +37,13 @@ public class AuthenticationResponse {
     }
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

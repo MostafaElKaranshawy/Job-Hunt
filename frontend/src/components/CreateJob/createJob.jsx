@@ -3,7 +3,6 @@ import SimpleText from "../InputTypes/SimpleText";
 import TextArea from "../InputTypes/TextArea";
 import DateInput from "../InputTypes/DateInput";
 import DropDown from "../InputTypes/DropDown";
-import { Slider, Typography } from "@mui/material";
 import CreateForm from "../createForm/CreateForm.jsx";
 import "../specialForm/specialForm.css";
 

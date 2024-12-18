@@ -14,7 +14,8 @@ export default function ProfilePage() {
     }, [showConfirmationBox]);
 
     const logOut = () => {
-        setShowConfirmationBox(false);
+        setShowConfirmationBox(false);  
+        document.cookie = ";";
         window.location.href = "/";
     };
 

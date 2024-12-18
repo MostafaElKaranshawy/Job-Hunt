@@ -1,9 +1,4 @@
-:root {
-  background-color: #ecebeb;
-}
-
-input[type="text"], input[type="url"], input[type="email"], input[type="tel"] {
-  font-size: 1.5em;
+.special-form input[type="text"], input[type="url"], input[type="email"], input[type="tel"] {
   font-weight: 500;
   width: 100%;
   max-width: 400px;
@@ -16,24 +11,24 @@ input[type="text"], input[type="url"], input[type="email"], input[type="tel"] {
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-input[type="text"]:focus, input[type="url"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
+.special-form input[type="text"]:focus, input[type="url"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
   border-color: #70ca8e;
   box-shadow: 0 0 8px rgba(112, 202, 142, 0.5);
 }
 
-input[type="radio"], input[type="checkbox"], input[type="date"] {
+.special-form input[type="radio"], input[type="checkbox"], input[type="date"] {
   font-size: 1.5em;
   display: inline-block;
   margin-right: 10px;
 }
 
-.year-input {
+.special-form .year-input {
   font-size: 1.5em;
   max-width: 3em;
   display: inline-block;
 }
 
-textarea {
+.special-form textarea {
   font-size: 1.5em;
   font-weight: 500;
   color: #333;
@@ -49,18 +44,18 @@ textarea {
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-textarea:focus {
+.special-form textarea:focus {
   border-color: #70ca8e;
   box-shadow: 0 0 8px rgba(112, 202, 142, 0.5);
 }
 
-input::placeholder, textarea::placeholder {
+.special-form input::placeholder, textarea::placeholder {
   color: #999;
   font-style: italic;
   opacity: 0.75;
 }
 
-select {
+.special-form select {
   font-size: 1.5em;
   font-weight: 500;
   color: #333;
@@ -73,12 +68,12 @@ select {
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-select:focus {
+.special-form select:focus {
   border-color: #70ca8e;
   box-shadow: 0 0 8px rgba(112, 202, 142, 0.5);
 }
 
-.input-label {
+.special-form .input-label {
   font-size: 1.3em;
   font-weight: bold;
   color: #333;
@@ -87,7 +82,7 @@ select:focus {
   margin-right: 50px;
 }
 
-.myp {
+.special-form .myp {
   font-size: 1.8em;
   font-weight: bold;
   color: #7b0707;
@@ -99,20 +94,20 @@ select:focus {
   overflow-wrap: break-word;
 }
 
-.radio-group, .checkbox-group {
+.special-form .radio-group, .checkbox-group {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   width: fit-content;
 }
 
-.section-container {
+.special-form .section-container {
   position: relative;
   width: 100%;
   max-width: 600px;
 }
 
-.section {
+.special-form .section {
   font-size: 1em;
   border-radius: 20px;
   padding: 20px;
@@ -126,15 +121,15 @@ select:focus {
   transition: transform 0.3s ease;
 }
 
-.section:hover {
+.special-form .section:hover {
   transform: translateY(-5px);
 }
 
-.section::-webkit-scrollbar {
+.special-form .section::-webkit-scrollbar {
   display: none;
 }
 
-.section-header {
+.special-form .section-header {
   margin-left: 1.5%;
   margin-bottom: 0%;
   font-size: 1.2em;

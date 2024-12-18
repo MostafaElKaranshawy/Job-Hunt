@@ -41,6 +41,8 @@ public class UserAuthService {
             throw new InvalidCredentialsException("email or password is incorrect");
         }
         String username = user.getUsername();
+        String userType = String.valueOf(user.getUserType());
+        System.out.println(userType);
         String accessToken = jwtUtil.generateAccessToken(username);
         String refreshToken = jwtUtil.generateRefreshToken(username);
 
@@ -48,6 +50,7 @@ public class UserAuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .username(username)
+                .userType(userType)
                 .build();
     }
 

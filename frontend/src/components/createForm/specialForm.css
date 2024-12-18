@@ -23,7 +23,7 @@
     transform: scale(1.1);
 }
 
-.remove-field-button {
+.special-form .remove-field-button {
     position: absolute;
     top: 10px;
     right: -20px;
@@ -48,7 +48,7 @@
     transform: scale(1.1);
 }
 
-.section-buttons-container {
+.special-form .section-buttons-container {
     display: flex;
     justify-content: center;
     gap: 10px; /* Add space between buttons /
@@ -56,7 +56,7 @@
     flex-wrap: wrap; / Allow buttons to wrap to the next line if needed */
 }
 
-.section-button {
+.special-form .section-button {
     background-color: #ff6f61;
     color: white;
     border: none;
@@ -68,12 +68,12 @@
     margin-bottom: 0px;
 }
 
-.section-button:hover {
+.special-form .section-button:hover {
     background-color: #e65c50;
     transform: scale(1.05);
 }
 
-.section-button:focus {
+.special-form .section-button:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }

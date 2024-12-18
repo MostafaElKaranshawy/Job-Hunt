@@ -71,6 +71,7 @@ public class AuthController {
             tokenService.storeTokens(authenticationResponse, response);
             AuthenticationResponse usernameObject = new AuthenticationResponse();
             usernameObject.setUsername(authenticationResponse.getUsername());
+            usernameObject.setUserType(authenticationResponse.getUserType());
             System.out.println("Username: " + usernameObject.getUsername());
             return ResponseEntity.ok().body(usernameObject);
     }

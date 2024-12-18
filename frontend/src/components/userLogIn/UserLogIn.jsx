@@ -43,7 +43,11 @@ function UserLogIn() {
             const response = await logIn(formData);
             if (response.success === true) {
                 setErrors({});
-                window.location.href = '/home';
+                console.log(response);
+                if(response.userType == "APPLICANT")
+                    window.location.href = '/home';
+                else if (response.userType == "COMPANY")
+                    window.location.href = `/company/${response.username}`;
             }
             else {
                 setErrors({ ...errors, failureMessage: response.message });
