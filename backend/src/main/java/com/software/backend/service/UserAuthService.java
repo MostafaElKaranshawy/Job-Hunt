@@ -1,106 +1,111 @@
 package com.software.backend.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.software.backend.auth.AuthenticationResponse;
-import com.software.backend.config.JwtService;
+import com.software.backend.dto.AuthenticationResponse;
+import com.software.backend.dto.LogInRequest;
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.entity.Token;
+import com.software.backend.entity.Applicant;
+import com.software.backend.entity.Company;
 import com.software.backend.entity.User;
-import com.software.backend.enums.TokenType;
+import com.software.backend.enums.UserType;
+import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.exception.UserNotFoundException;
-import com.software.backend.repository.TokenRepository;
+import com.software.backend.repository.ApplicantRepository;
+import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.software.backend.util.JwtUtil;
+import com.software.backend.validation.validators.PasswordValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 
 @Service
 @RequiredArgsConstructor
 public class UserAuthService {
 
-    private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
-    private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
+    private final ApplicantRepository applicantRepository;
+    private final CompanyRepository companyRepository;
+    private final JwtUtil jwtUtil;
+    private final EmailService emailService;
+    private final PasswordService passwordService;
+
+    public AuthenticationResponse login(LogInRequest request) {
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new InvalidCredentialsException("email or password is incorrect"));
 
 
-    public AuthenticationResponse login(SignUpRequest request) {
-
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid credentials");
+        System.out.println("Username found");
+        if (!passwordService.verifyPassword(request.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException("email or password is incorrect");
         }
+        String username = user.getUsername();
+        String accessToken = jwtUtil.generateAccessToken(username);
+        String refreshToken = jwtUtil.generateRefreshToken(username);
 
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .username(username)
                 .build();
     }
 
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
-    }
+    public void createNewUser(SignUpRequest request) {
+        String username = request.getEmail().split("@")[0];
 
-    private void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
+        if(userRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new EmailAlreadyRegisteredException("User already exists");
+        }
+        request.setPassword(passwordService.hashPassword(request.getPassword()));
+        var user = User.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .userType(request.getUserType())
+                .username(username)
+                .isBanned(false)
                 .build();
-        tokenRepository.save(token);
+        userRepository.save(user);
+        if (request.getUserType().equals(UserType.APPLICANT)) {
+            Applicant applicant = new Applicant();
+            applicant.setUser(user);
+            applicant.setFirstName(request.getFirstName());
+            applicant.setLastName(request.getLastName());
+            applicantRepository.save(applicant);
+            System.out.println("Applicant saved");
+            } else if (request.getUserType().equals(UserType.COMPANY)) {
+            Company company = new Company();
+            company.setUser(user);
+            company.setName(request.getCompanyName());
+            companyRepository.save(company);
+            System.out.println("Company saved");
+        }
+
     }
 
-
-    public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
+    public void resetPasswordRequest(String email){
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        System.out.println("User found");
+        if(user.getPassword() == null){
+            throw new InvalidCredentialsException("User is google authenticated");
         }
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractEmail(refreshToken);
-        if (userEmail != null) {
-            var user = this.repository.findByEmail(userEmail)
-                    .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
-        }
+        String resetPasswordToken = jwtUtil.generateResetPasswordToken(email);
+        System.out.println("Reset password token generated");
+        emailService.sendResetEmail(email, resetPasswordToken);
     }
 
+    public void resetPassword(String resetToken, String password){
+        String email = jwtUtil.validateResetPasswordToken(resetToken);
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        SignUpRequest SignUpRequest = new SignUpRequest();
+        SignUpRequest.setPassword(password);
+        PasswordValidator passwordValidator = new PasswordValidator();
+        passwordValidator.validate(SignUpRequest);
+        password = passwordService.hashPassword(password);
+        user.setPassword(password);
+        userRepository.save(user);
+        System.out.println("Password reset");
+    }
 }

@@ -1,81 +1,165 @@
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+const ERROR_MESSAGE = "Sign-up failed. Please try again.";
 
 export const employerSignUp = async (formData) => {
-  const response = await fetch(`${apiUrl}/auth/signup/company`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-  if (response.ok) {
-    const data = await response.json();
-    console.log("Backend Response:", data);
-  } else {
-    console.error("Backend responded with an error:", response.status);
-  }
+    try {
+        const response = await fetch(`${apiUrl}/auth/signup/company`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data.message);
+            return { success: true, message: data.message };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: ERROR_MESSAGE };
+    }
 };
+
 export const employeeSignUp = async (formData) => {
-  console.log("Form Data:", formData);
-  const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-  if (response.ok) {
-    const data = await response.json();
-    console.log("Backend Response:", data);
-  } else {
-    console.error("Backend responded with an error:", response.status);
-  }
+    try {
+        const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data.message);
+            return { success: true, message: data.message };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: ERROR_MESSAGE };
+    }
 };
+
 export const googleSignUp = async (credentialResponse) => {
-  console.log("Google Credential:", credentialResponse);
-  const response = await fetch(`${apiUrl}/auth/signup/applicant/google`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({googleToken:credentialResponse.credential, clientId: credentialResponse.clientId}),
-  });
-  if (response.ok) {
-    const data = await response.json();
-    console.log("user Signed up successfully with Google:", data);
-  } else {
-    console.error("User could not sign Up:", response.status);
-  }
+    try {
+        const response = await fetch(`${apiUrl}/auth/signup/applicant/google`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ googleToken: credentialResponse.credential }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data.message);
+            return { success: true, message: data.message };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return { success: false, message: ERROR_MESSAGE };
+    }
 };
+
 export const googleLogIn = async (credentialResponse) => {
-  console.log("Google Credential:", credentialResponse);
-  const response = await fetch(`${apiUrl}/auth/login/applicant/google`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // body: JSON.stringify(credentialResponse.credential),
-    body: JSON.stringify({googleToken:credentialResponse.credential, clientId: credentialResponse.clientId}),
-  });
-  if (response.ok) {
-    const data = await response.json();
-    console.log("user Logged in successfully with Google:", data);
-  } else {
-    console.error("User could not log in:", response.status);
-  }
+    try {
+        const response = await fetch(`${apiUrl}/auth/login/applicant/google`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ googleToken: credentialResponse.credential }),
+        });
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+            document.cookie = `username=${data.username};`;
+            console.log(data.message);
+            return { success: true };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+
+    } catch (error) {
+        console.error(error.message);
+        return { success: false, message: data.message };
+    }
 };
+
 export const logIn = async (formData) => {
-  const response = await fetch(`${apiUrl}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-  if (response.ok) {
+  
+    console.log(formData);
+    try {
+        const response = await fetch(`${apiUrl}/auth/login`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+            document.cookie = `username=${data.username};`;
+            console.log(data.message);
+            return { success: true };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+
+    } catch (error) {
+        console.error(error.message);
+        return { success: false, message: data.message };
+    }
+};
+
+export const resretPasswordRequest = async (email) => {
+    const response = await fetch(`${apiUrl}/auth/reset-password-request`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+    });
     const data = await response.json();
-    console.log("User Logged in successfully:", data);
-  } else {
-    console.error("User could not log in:", response.status);
-  }
+    if (response.ok) {
+        console.log(data.message);
+        return { success: true, message: data.message };
+    } else {
+        console.error(data.message);
+        return { success: false, message: data.message };
+    }
+}
+
+export const resetPassword = async (resetToken, newPassword) => {
+    const response = await fetch(`${apiUrl}/auth/reset-password?resetToken=${resetToken}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: newPassword }), // Send only newPassword in the request body
+    });
+    const data = await response.json();
+    if (response.ok) {
+        console.log(data.message);
+        return { success: true, message: data.message };
+    } else {
+        console.error(data.message);
+        return { success: false, message: data.message };
+    }
 };

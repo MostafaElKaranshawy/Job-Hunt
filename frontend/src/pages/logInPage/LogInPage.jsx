@@ -5,7 +5,7 @@ import "./LogInPage.css";
 
 function LogInPage() {
     return (
-        <>
+        <div className="t">
         <div className="login-page">
             <div className="user-login">
             <UserLogIn />
@@ -17,7 +17,7 @@ function LogInPage() {
             <GoogleOAuth mode="login"/>
             </div>
         </div>
-        </>
+        </div>
     );
 }
 export default LogInPage;

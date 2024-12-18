@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Section from "../../section/section";
+import ProfileSection from "../../profileSection/profileSection";
 import CustomSection from "../../customSection/customSection";
 import Skills from "../../skills/skills";
 import "./profileInfoSection.css";
@@ -15,18 +16,35 @@ import { getUserProfile,
     editUserProfile,
     handleCustomSectionOperation,
 } from "../../../services/userProfileService";
+
+
 export default function ProfileInfoSection() {
-    const [render, setRender] = useState(false);
     const { userName } = useParams();
+    const [render, setRender] = useState(false);
     const [userSections, setUserSections] = useState([]);
     const [customSections, setCustomSections] = useState([]);
     const [sections, setSections] = useState(userSections);
-    const[userData, setUserData] = useState({})
+    const [userData, setUserData] = useState({})
+
     useEffect(() => {
-        if(userName){
+        if (userName) {
             getUserData();
         }
     },[userName])
+
+    useEffect(() => {
+        if (userData.id) {
+            refreshCustomSections();
+        }
+    }, [userData]);
+    
+    useEffect(()=>{
+        if (userSections) {
+            setSections(userSections)
+        }
+    },[userSections])
+
+
     async function getUserData() {
         const userData = await getUserProfile(userName);
         console.log(userData)
@@ -37,8 +55,8 @@ export default function ProfileInfoSection() {
                 sectionFields: [
                     { fieldName: "First Name", fieldValue: userData.firstName, fieldType: "text", minLength: 5, maxLength: 20 },
                     { fieldName: "Last Name", fieldValue: userData.lastName, fieldType: "text", minLength: 5, maxLength: 20 },
-                    { fieldName: "Phone Number", fieldValue: userData.phoneNumber, fieldType: "text", minLength: 11, maxLength: 11 },
-                    { fieldName: "Country", fieldValue: userData.country, fieldType: "text", minLength: 5, maxLength: 20 },
+                    { fieldName: "Phone Number", fieldValue: userData.phoneNumber, fieldType: "text", minLength: 10, maxLength: 20 },
+                    { fieldName: "Country", fieldValue: userData.country, fieldType: "select", minLength: 0, maxLength: 30 },
                     { fieldName: "State", fieldValue: userData.state, fieldType: "text", minLength: 5, maxLength: 20 },
                     { fieldName: "City", fieldValue: userData.city, fieldType: "text", minLength: 5, maxLength: 20 },
                     { fieldName: "Address", fieldValue: userData.address, fieldType: "text", minLength: 5, maxLength: 50 },
@@ -48,16 +66,6 @@ export default function ProfileInfoSection() {
         ]);
         setRender(!render);
     }
-    useEffect(() => {
-        if (userData.id) {
-            refreshCustomSections();
-        }
-    }, [userData]);
-    useEffect(()=>{
-        if(userSections){
-            setSections(userSections)
-        }
-    },[userSections])
 
     const handleSectionChange = (sectionName, fieldName, fieldValue) => {
         setSections(
@@ -269,7 +277,7 @@ export default function ProfileInfoSection() {
     
         // Validate each field in Personal Info
         personalInfo.sectionFields.forEach((field) => {
-            if(field.value.length > 0 && field.value.length < field.minLength || field.value.length > field.maxLength){
+            if(field.fieldValue.length > 0 && field.fieldValue.length < field.minLength || field.fieldValue.length > field.maxLength){
                 errors[field.fieldName] = `${field.fieldName} should be between ${field.minLength} and ${field.maxLength} characters.`;
             }
             if(field.fieldName == 'First Name'){
@@ -318,7 +326,7 @@ export default function ProfileInfoSection() {
                 {sections &&
                     sections.map((section, index) => {
                         return (
-                            <Section
+                            <ProfileSection
                                 sectionData={section}
                                 sectionChange={handleSectionChange}
                                 key={index}

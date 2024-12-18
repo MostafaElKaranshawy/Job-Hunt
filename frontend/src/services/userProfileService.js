@@ -5,6 +5,7 @@ async function getUserProfile(userName) {
         const url = `${backendURL}/users/${userName}/profile`;
         const response = await fetch(url, {
             method: 'GET', // Specify the method here
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -26,6 +27,7 @@ async function editUserProfile(userName, userData) {
     try {
         const response = await fetch(url, {
             method: 'PUT', // Specify the method here
+            credentials : 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -56,6 +58,7 @@ async function handleCustomSectionOperation(
         }
         let options = {
             method: operation, // 'GET', 'POST', 'PUT', 'DELETE
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -86,6 +89,7 @@ async function getUserSkills(userName) {
     try {
         const response = await fetch(url, {
             method: 'GET', // Specify the method here
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -101,33 +105,13 @@ async function getUserSkills(userName) {
   }
 }
 
-async function fetchSkills(query){
-    let myHeaders = new Headers();
-    myHeaders.append("apikey", "AfAbEfRxDYiRaNIzQHh54FUF2wSn2unP");
-
-    let requestOptions = {
-    method: 'GET',
-    redirect: 'follow',
-    headers: myHeaders
-    };
-    try {
-        const response = await fetch(`https://api.apilayer.com/skills?q=${query}`, requestOptions);
-        if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-        }
-        const result = await response.json(); // Parse the JSON response
-        return result; // Ensure the result is returned
-    } catch (error) {
-        console.error('Error fetching skills:', error);
-        return []; // Return an empty array or appropriate default on error
-    }
-}
 async function editUserSkills(userName, skills){
     console.log(userName, skills)
     const url = `${backendURL}/users/${userName}/profile/skills`;
     try {
         const response = await fetch(url, {
             method: 'PUT', // Specify the method here
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -141,11 +125,11 @@ async function editUserSkills(userName, skills){
     console.error(error.message);
   }
 }
+
 export{
     getUserProfile,
     editUserProfile,
     handleCustomSectionOperation,
     getUserSkills,
-    fetchSkills,
     editUserSkills
 }
