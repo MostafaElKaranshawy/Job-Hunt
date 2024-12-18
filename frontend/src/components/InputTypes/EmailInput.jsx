@@ -10,7 +10,7 @@ export default function EmailInput({ name, isMust, value, onChange }) {
 
     return (
         <div className="email-input">
-            <label>{name}</label>
+            <label className="input-label">{name}</label>
             <br />
             <input type="email" value={value} onChange={handleEmailChange}
                 placeholder="Enter Email Address" maxLength={50} required={isMust} />

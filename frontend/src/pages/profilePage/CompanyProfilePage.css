@@ -165,3 +165,9 @@ label {
   max-width: 70%; 
   width: 100%; 
 }
+
+.custom-btn {
+  font-size: 1.2rem; 
+  padding: 1rem 2rem;
+
+}

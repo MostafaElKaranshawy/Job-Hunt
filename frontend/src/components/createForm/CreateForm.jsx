@@ -5,11 +5,12 @@ import PersonalSection from "../primarySections/PersonalSection.jsx";
 import SkillSection from "../primarySections/skillSection";
 import SpecialSection from "../specialSection/SpecialSection.jsx";
 import SpecialField from "../specialSection/SpecialField.jsx";
+import CreateJob from '../../components/CreateJob/createJob';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import "./specialForm.css";
 
-export default function CreateForm({jobDetails}) {
+export default function CreateForm({jobDetails,whenSave}) {
     const [personalData, setPersonalData] = useState({});
     const [educationData, setEducationData] = useState({});
     const [experienceData, setExperienceData] = useState({});
@@ -35,6 +36,8 @@ export default function CreateForm({jobDetails}) {
 
     const [trackedSections, setTrackedSections] = useState([]);
 
+    const [showCreateJob, setShowCreateJob] = useState(false);
+
     const mainSections = ["Personal Information", "Education", "Experience", "Skills"];
     const { companyUsername } = useParams();
 
@@ -58,11 +61,12 @@ export default function CreateForm({jobDetails}) {
             title: jobDetails.title,
             description: jobDetails.description,
             category: jobDetails.category,
+            location: jobDetails.location,
             workLocation: jobDetails.workLocation,
             level: jobDetails.level,
             employmentType: jobDetails.employmentType,
             deadline: jobDetails.deadline,
-            salary: jobDetails.salaryRange,
+            salary:`${jobDetails.salaryRange[0]} - ${jobDetails.salaryRange[1]} USD per year`,
 
             sections:formattedSections,
             staticSections:trackedSections,
@@ -92,6 +96,7 @@ export default function CreateForm({jobDetails}) {
             .catch(error => {
                 console.error('Error sending data to the backend:', error);
             });
+            whenSave();
     };
 
     const addSection = (sectionName) => {
@@ -252,8 +257,13 @@ export default function CreateForm({jobDetails}) {
         setStandaloneFields(standaloneFields.filter((_, i) => i !== index));
     };
 
+
+
     return (
+        <>
+        {!showCreateJob &&
         <div className="special-form">
+            <button type="button" className="" onClick={() => setShowCreateJob(true)}>Back</button>
             <h1 style={{ textAlign: "center" }}>Create Form with Simulation</h1>
             <form>
             <div className="section-buttons-container">
@@ -452,6 +462,8 @@ export default function CreateForm({jobDetails}) {
                 <button type="button" className="form-button" onClick={handleLogData}>Save</button>
     
             </form>
-        </div>
+        </div>}
+        {showCreateJob && <CreateJob detailsHistory={jobDetails} />}
+        </>
     );
 }

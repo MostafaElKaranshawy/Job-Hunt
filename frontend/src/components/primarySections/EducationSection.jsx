@@ -96,7 +96,7 @@ export default function EducationSection({ onChange }) {
                 <SimpleText name="Field Of Study" value={fieldOfStudy} onChange={setFieldOfStudy} />
                 <br />
 
-                <label>University/Institution Name</label>
+                <label className="input-label">University/Institution Name</label>
                 <br />
                 <input type="text" value={searchKey} placeholder="Search here University Name" onChange={handleSelect} />
                 {suggest && <div className="suggestions">

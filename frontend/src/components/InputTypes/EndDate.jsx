@@ -20,7 +20,7 @@ export default function EndDate({ name, value, onChange, currentRule, onCurrentR
         <div className="date-input">
             {!currentRule && (
                 <>
-                <label>{name}</label>
+                <label className="input-label">{name}</label>
                 <br />
                 <input
                     type="date"

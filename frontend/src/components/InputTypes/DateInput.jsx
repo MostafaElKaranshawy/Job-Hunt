@@ -19,13 +19,13 @@ export default function DateInput({ name, fullDate, isMust, value, onChange}) {
         <div className="date-input">
             {fullDate ? (
                 <>
-                <label> {name} </label>
+                <label className="input-label"> {name} </label>
                 <br />
                 <input type="date" value={value} onChange={handleDateChange} required={isMust}/>
                 </>
             ) : (
                 <>
-                <label> {name} </label>
+                <label className="input-label"> {name} </label>
                 <br />
                 <input className="year-input" type="text" value={value} onChange={handleYearChange} pattern="\d{4}" 
                         placeholder="YYYY" title="Enter a valid year (e.g., 2024)" required={isMust} />

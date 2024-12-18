@@ -23,11 +23,11 @@ export default function CheckboxInput({ name, options, value, onChange }) {
 
     return (
         <>
-            <label>{name}</label>
+            <label className="input-label">{name}</label>
             <br />
             <div className="checkbox-group">
                 {options.map((option, index) => (
-                    <label key={index}>
+                    <label className="input-label" key={index}>
                         <input
                             type="checkbox"
                             value={option}

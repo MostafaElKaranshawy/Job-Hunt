@@ -259,7 +259,7 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                <button className="btn btn-primary" onClick={handleCreateJob}>Create new job</button>
+                <button className="btn btn-primary custom-btn" onClick={handleCreateJob}>Create New Job</button>
 
                 {/* Modal */}
                 {showCreateJob && (
@@ -268,10 +268,10 @@ function CompanyProfilePage() {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Create Job</h5>
-                                <button type="button" className="btn-close" onClick={handleCloseModal}></button>
+                                {/* <button type="button" className="btn-close" onClick={handleCloseModal}></button> */}
                             </div>
                             <div className="modal-body">
-                                <CreateJob />
+                                <CreateJob whenClose={handleCloseModal}/>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Close</button>

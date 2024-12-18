@@ -11,7 +11,7 @@ export default function URLInput({ name, isMust,value, onChange }) {
 
     return (
         <div className="url-input">
-            <label>{name}</label>
+            <label className="input-label">{name}</label>
             <br />
             <input type="url" value={value} onChange={handleURLChange}
                 placeholder="Enter URL" maxLength={200} required={isMust} />

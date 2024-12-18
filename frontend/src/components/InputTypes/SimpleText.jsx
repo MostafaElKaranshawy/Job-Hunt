@@ -10,7 +10,7 @@ export default function SimpleText({ name, isMust, value, onChange }) {
 
     return (
         <div className="simple-text-input">
-            <label>{name}</label>
+            <label className="input-label">{name}</label>
             <br />
             <input type="text" value={value} onChange={handleTextChange}
                 placeholder="Enter your text" maxLength={30} required={isMust} />

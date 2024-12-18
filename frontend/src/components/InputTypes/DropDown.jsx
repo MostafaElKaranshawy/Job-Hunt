@@ -10,7 +10,7 @@ export default function DropDown({name, options, isMust, value, onChange}) {
 
     return (
         <div className="dropdown-input">
-            <label> {name} </label>
+            <label className="input-label"> {name} </label>
             <br />
             <select value={value} onChange={handleSelect} required = {isMust}>
                 <option value="">Select a value</option>

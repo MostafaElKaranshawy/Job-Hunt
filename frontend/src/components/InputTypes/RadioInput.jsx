@@ -13,7 +13,7 @@ export default function RadioInput({ name, options, onChange }) {
 
     return (
         <>
-        <label>{name}</label>
+        <label className="input-label">{name}</label>
         <br />
         <div className="radio-group">
             {options.map((option, index) => (

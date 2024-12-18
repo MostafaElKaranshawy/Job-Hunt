@@ -10,7 +10,7 @@ export default function PhoneInput({ name, isMust, value, onChange}) {
 
     return (
         <div className="tel-input">
-            <label>{name}</label>
+            <label className="input-label">{name}</label>
             <br />
             <input  type="tel"  value={value}  onChange={handlePhoneChange} 
                 placeholder="Enter Phone Number" required={isMust} pattern="^\+?[1-9][0-9\s\-\(\)]{7,16}$" 

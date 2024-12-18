@@ -10,7 +10,7 @@ export default function TextArea({ name, isMust,value, onChange }) {
 
     return (
         <div className="textArea-input">
-            <label>{name}</label>
+            <label className="input-label">{name}</label>
             <br />
             <textarea value={value} onChange={handleTextAreaChange} 
                 placeholder="Enter the information" required={isMust} />
