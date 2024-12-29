@@ -8,7 +8,7 @@ export const locationOptions = [
 export const employmentTypes = [
     { id: 'FULL_TIME', label: 'Full-time' },
     { id: 'PART_TIME', label: 'Part-time' },
-    { id: 'INTERN', label: 'Intern' },
+    { id: 'INTERNSHIP', label: 'Intern' },
     { id: 'TEMPORARY', label: 'Temporary' },
 ];
 
