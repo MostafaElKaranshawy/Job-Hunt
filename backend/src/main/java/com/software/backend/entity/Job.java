@@ -37,7 +37,7 @@ public class Job {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private JobStatus status;
+    private JobStatus status = JobStatus.OPEN;
 
     @Column
     private Integer salary;     // to be put if needed in frontend
