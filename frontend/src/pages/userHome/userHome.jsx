@@ -9,9 +9,48 @@ import { fetchJobs } from "../../services/homeService";
 import Sorting from "../../components/sorting/Sorting.jsx";
 import { calculateRelativeTime } from "../../utils/userHomeUtils";
 import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
+import SpecialForm from "../../components/specialForm/SpecialForm.jsx";
 
 
 function UserHome() {
+
+    const mockedSectionData = {
+        staticSections: [
+            "Personal Information","Education","skills",
+        ],
+        sections: [
+          {
+            Mandatory: [false, true],
+            labels: ["f1", "f2"],
+            sectionName: "sec1",
+            fieldOptions: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
+            fieldType: ["text", "dropdown"]
+          },
+          {
+            Mandatory: [false, true],
+            labels: ["f1", "f2"],
+            sectionName: "sec1",
+            fieldOptions: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
+            fieldType: ["text", "dropdown"]
+          },
+          
+        ],
+        fields: [
+            {
+                isMandatory: true,
+                label: "ff1",
+                fieldOptions: ["Option 1", "Option 2", "Option 3", "Option 4"],
+                fieldType: "dropdown"
+            },
+            {
+                isMandatory: false,
+                label: "ff2",
+                fieldOptions: [],
+                fieldType: "text"
+            },
+        ]
+      }
+    const [isOpen, setIsOpen] = useState(false);
 
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
@@ -94,8 +133,13 @@ function UserHome() {
     const startIndex = page * offset + 1;
     const endIndex = Math.min((page + 1) * offset, totalJobsCount);
 
-
+    const handleApplyClick = () => {
+        setIsOpen(true); // Set isOpen directly to true
+        setExpandedJob(null);
+    };
+      
     return (
+        <>
         <div className="home">
             <Header />
             <main className="main-content">
@@ -188,14 +232,24 @@ function UserHome() {
                         </div>
 
                         {/* Apply button */}
-                        <button className="apply-button">Apply Now</button>
+                        <button className="apply-button" onClick={handleApplyClick}>Apply Now</button>
 
                         <p className="job-description">{expandedJob.description}</p>
 
+                        
+
                     </div>
                 </div>
+                
             )}
+        
         </div>
+        <SpecialForm 
+            open={isOpen} 
+            onClose={() => setIsOpen(false)} 
+            sectionData={mockedSectionData}
+        />
+    </>
     )
 }
 

@@ -7,7 +7,7 @@ import SpecialSection from "../specialSection/SpecialSection.jsx";
 import SpecialField from "../specialSection/SpecialField.jsx";
 import "./specialForm.css";
 
-export default function SpecialForm({ sectionData }) {
+export default function SpecialForm({open, onClose, sectionData }) {
     const [personalData, setPersonalData] = useState({});
     const [educationData, setEducationData] = useState({});
     const [experienceData, setExperienceData] = useState({});
@@ -24,6 +24,7 @@ export default function SpecialForm({ sectionData }) {
             specialSectionsData,
             specialFieldsData,
         });
+        onClose();
     };
 
     const handleSpecialSectionChange = (sectionName, data) => {
@@ -42,7 +43,9 @@ export default function SpecialForm({ sectionData }) {
     };
 
     return (
-        <div className="special-form">
+        <>
+        {open && <div className="special-form">
+            <button onClick={onClose}>x</button>
             <h1 style={{ textAlign: "center" }}>Form</h1>
             <form>
                 {(sectionData.staticSections.includes("Personal Information")) && (<PersonalSection onChange={setPersonalData} />)}
@@ -76,6 +79,9 @@ export default function SpecialForm({ sectionData }) {
 
                 <button type="button" className="form-button" onClick={handleLogData}>Send</button>
             </form>
+            
         </div>
+        }
+        </>
     );
 }
