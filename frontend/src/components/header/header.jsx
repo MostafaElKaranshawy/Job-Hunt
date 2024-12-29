@@ -3,13 +3,13 @@ import { NavLink, useParams} from "react-router-dom";
 import "./header.css";
 import logo from "../../assets/logo.png";
 function Header() {
-    const { userName } = useParams();
+    const userName = document.cookie.split("username=")[1];
     return (
         <div className="header">
             <div className="logo">
                 <img src={logo}/>
             </div>
-            <div className="nav">
+            <div className="header-nav">
                 <ul className="nav-menu">
                     <li>
                         <NavLink to="/home" className="menu-item">

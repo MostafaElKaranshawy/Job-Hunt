@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import UserHome from './pages/userHome/userHome'
 import Profile from './pages/profilePage/profilePage'
-import CompanyProfilePage from './pages/profilePage/CompanyProfilePage';
-import Jobs from './pages/jobsPage/Jobs';
-import SignUpPage from './pages/signUpPage/SignUpPage'
+import CompanyProfilePage from './pages/profilePage/CompanyProfilePage'
+import Jobs from './pages/jobsPage/Jobs'
+import SignUpPage from './pages/signupPage/SignUpPage'
 import LogInPage from './pages/logInPage/LogInPage'
+import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPasswordRequestPage'
+import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage'
 function App() {
     return (
         <div className='app'>
@@ -17,6 +19,8 @@ function App() {
                     <Route path="user/:userName/profile/" element={<Profile/>} />
                     <Route path="user/:userName/profile/:profileSection" element={<Profile/>} />
                     <Route path="/home" element={<UserHome/>}></Route>
+                    <Route path="/reset-password" element={< ResetPasswordPage/>} />
+                    <Route path="/reset-password-request" element={< ResetPasswordRequestPage/>} />
                 </Routes>
             </Router>
         </div>
