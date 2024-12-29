@@ -126,10 +126,32 @@ async function editUserSkills(userName, skills){
   }
 }
 
+async function changePassword(userName, passwordData) {
+    const url = `${backendURL}/users/${userName}/profile/password`;
+    try {
+        const response = await fetch(url, {
+            method: 'PUT', // Specify the method here
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(passwordData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        return "ok";
+  } catch (error) {
+    return error.message;
+  }
+
+}
 export{
     getUserProfile,
     editUserProfile,
     handleCustomSectionOperation,
     getUserSkills,
-    editUserSkills
+    editUserSkills,
+    changePassword
 }
