@@ -1,4 +1,4 @@
-const backendURL = import.meta.env.VITE_BACKEND_URL;
+const backendURL = 'http://localhost:8080';
 
 async function getUserProfile(userName) {
     try{
