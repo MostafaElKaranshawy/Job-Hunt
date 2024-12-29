@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_BACKEND_URL;
+const apiUrl = 'http://localhost:8080';
 const ERROR_MESSAGE = "Sign-up failed. Please try again.";
 
 export const employerSignUp = async (formData) => {
@@ -23,7 +23,6 @@ export const employerSignUp = async (formData) => {
         return { success: false, message: ERROR_MESSAGE };
     }
 };
-
 export const employeeSignUp = async (formData) => {
     try {
         const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
@@ -100,7 +99,7 @@ export const googleLogIn = async (credentialResponse) => {
 };
 
 export const logIn = async (formData) => {
-  
+
     console.log(formData);
     try {
         const response = await fetch(`${apiUrl}/auth/login`, {

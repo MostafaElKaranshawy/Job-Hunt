@@ -51,6 +51,7 @@ public class JwtUtil {
 
     public String generateSignupToken(SignUpRequest request) {
         System.out.println("userType: " + request.getUserType());
+        System.out.println("password at generateToken"+ request.getPassword());
         return Jwts.builder()
 
                 .claim("userType", request.getUserType())
@@ -115,6 +116,7 @@ public class JwtUtil {
             request.setFirstName(claims.get("firstName", String.class));
             request.setLastName(claims.get("lastName", String.class));
             request.setCompanyName(claims.get("companyName", String.class));
+            System.out.println("password in validateToken"+request.getPassword());
             System.out.println("token validated");
             if (claims.getExpiration().before(new Date())) {
                 throw new InvalidCredentialsException("Token has expired");

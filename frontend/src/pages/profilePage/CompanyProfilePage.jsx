@@ -65,6 +65,7 @@ function CompanyProfilePage() {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({ [field]: companyInfo[field] }),
             });
             if (response.ok) {
