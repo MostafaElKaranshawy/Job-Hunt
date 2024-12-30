@@ -1,5 +1,6 @@
 package com.software.backend.service;
 
+import com.software.backend.dto.ChangePasswordDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
@@ -8,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 @Service
 public class PasswordService {
-    public static String hashPassword(String password) {
+    public String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -23,4 +24,5 @@ public class PasswordService {
         System.out.println(hashPassword(rawPassword).equals(hashedPassword));
         return hashPassword(rawPassword).equals(hashedPassword);
     }
+
 }

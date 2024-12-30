@@ -1,5 +1,6 @@
 package com.software.backend.controller;
 
+import com.software.backend.dto.ChangePasswordDto;
 import com.software.backend.entity.User;
 import com.software.backend.service.UserServices;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,19 +15,33 @@ import org.springframework.web.bind.annotation.*;
 
 public class UserController {
     @Autowired
-    UserServices service;
+    UserServices userServices;
     @CrossOrigin
     @GetMapping("/{username}")
     public ResponseEntity<User> getApplicant(
             @PathVariable String username
     ){
         System.out.println("Username: " + username);
-        User user = service.getUser(username);
+        User user = userServices.getUser(username);
         if(user != null)
             return new ResponseEntity<>(user, HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @CrossOrigin
+    @PutMapping("/{userName}/profile/password")
+    public ResponseEntity<String> changePassword(
+            @PathVariable String userName,
+            @RequestBody ChangePasswordDto changePasswordDto
+            ){
+        changePasswordDto.setUserName(userName);
+        userServices.changePassword(changePasswordDto);
+        return ResponseEntity.ok().body("Password changed successfully");
+    }
+
+
+
 
 
 }

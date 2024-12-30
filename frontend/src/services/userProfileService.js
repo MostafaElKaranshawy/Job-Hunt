@@ -127,7 +127,8 @@ async function editUserSkills(userName, skills){
 }
 
 async function changePassword(userName, passwordData) {
-    const url = `${backendURL}/users/${userName}/profile/password`;
+    console.log("passwordData", passwordData);
+    const url = `${backendURL}/user/${userName}/profile/password`;
     try {
         const response = await fetch(url, {
             method: 'PUT', // Specify the method here
@@ -137,7 +138,7 @@ async function changePassword(userName, passwordData) {
             },
             body: JSON.stringify(passwordData)
         });
-
+        console.log(response)
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
