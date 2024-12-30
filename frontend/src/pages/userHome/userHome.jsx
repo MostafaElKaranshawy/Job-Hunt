@@ -55,6 +55,7 @@ function UserHome() {
 
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
+    const [currentJob, setCurrentJob] = useState({});
 
     const [page, setPage] = useState(0);
     const [totalJobsCount, setTotalJobsCount] = useState(0); // New state for total jobs count
@@ -136,6 +137,7 @@ function UserHome() {
 
     async function handleApplyClick (){
         setIsOpen(true); 
+        setCurrentJob(structuredClone(expandedJob));
         setExpandedJob(null);
         try {
             const form = await getJobForm(expandedJob.id);
@@ -272,7 +274,7 @@ function UserHome() {
             open={isOpen} 
             onClose={() => setIsOpen(false)} 
             sectionData={formData}
-            job={expandedJob}
+            job={currentJob}
         />
         </div>
     )

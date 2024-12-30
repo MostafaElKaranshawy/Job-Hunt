@@ -14,34 +14,75 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
     const [skillData, setSkillData] = useState([]);
     const [specialSectionsData, setSpecialSectionsData] = useState([]);
     const [specialFieldsData, setSpecialFieldsData] = useState([]);
+    const [currentJob, setCurrentJob] = useState({});
     
+    useEffect(() => {
+        setCurrentJob(job);
+    },[job])
+    
+    async function sendResponse(id,data) {
+        try{
+            const url = `http://localhost:8080/job/${id}/form/response`;
+            const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+    
+            const res = await response.json();
+            return res;
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
 
     const handleSubmitButton = () => {
-        console.log({
+        const data = {
             personalData,
             educationData,
             experienceData,
             skillData,
             specialSectionsData,
             specialFieldsData,
-        });
-        // onClose();
+        }
+        console.log(data);
+        sendResponse(currentJob.id,data);
+        onClose();
     };
 
     const handleSpecialSectionChange = (sectionName, data) => {
         setSpecialSectionsData((prevData) => {
-            const updatedData = prevData.filter(section => section.sectionName !== sectionName);
-            return [...updatedData, { sectionName, data }];
-        });
-    };
-
-    const handleSpecialFieldChange = (index, data) => {
-        setSpecialFieldsData((prevData) => {
-            const updatedData = [...prevData];
-            updatedData[index] = data;
+            const updatedData = prevData.map((section) =>
+                section.sectionName === sectionName ? { sectionName, data } : section
+            );
+            // Check if the sectionName doesn't already exist in the state
+            const isNewSection = !prevData.some(section => section.sectionName === sectionName);
+            if (isNewSection) {
+                updatedData.push({ sectionName, data });
+            }
             return updatedData;
         });
     };
+
+    const handleSpecialFieldChange = (index, value) => {
+        setSpecialFieldsData((prevData) => {
+            const updatedData = [...prevData];
+            // Update the specific field object with both fieldName and value
+            updatedData[index] = {
+                fieldName: sectionData.fields[index].label, // Or field.name if it exists
+                data: value,
+            };
+            return updatedData;
+        });
+    };
+    
 
     return (
         <>
@@ -65,7 +106,7 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
                         fieldType={data.type}
                         fieldOptions={data.options}
                         Mandatory={data.isRequired}
-                        onChange={(sectionData) => handleSpecialSectionChange(data.sectionName, sectionData)}
+                        onChange={(sectionData) => handleSpecialSectionChange(data.name, sectionData)}
                     />
                 ))}
 
@@ -80,7 +121,7 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
                     />
                 ))}
 
-                <button type="sumbit" className="form-button" onClick={handleSubmitButton}>Submit</button>
+                <button type="" className="form-button" onClick={handleSubmitButton}>Submit</button>
             </form>
             
         </div>

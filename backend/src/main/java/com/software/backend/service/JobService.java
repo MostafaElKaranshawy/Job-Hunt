@@ -174,6 +174,37 @@ public class JobService {
         List<String> staticSections = new ArrayList<>();
 
         List<Section> sections = sectionRepository.findAllByJobId(jobId);
+        addSections(sections, staticSections, sectionsDTO);
+
+        List<Field> fields = fieldRepository.findAllByJobId(jobId);
+        addFields(fields, fieldsDTO);
+
+        FormDTO result = new FormDTO();
+        result.setSections(sectionsDTO);
+        result.setFields(fieldsDTO);
+        result.setStaticSections(staticSections);
+
+        return result;
+    }
+
+    private static void addFields(List<Field> fields, List<FieldDto> fieldsDTO) {
+        for(Field field : fields){
+            try {
+                int i = field.getSection().getId();
+            }
+            catch (NullPointerException e){
+                FieldDto fDto = new FieldDto();
+                fDto.setLabel(field.getLabel());
+                fDto.setType(field.getType());
+                fDto.setOptions(field.getOptions());
+                fDto.setIsRequired(field.getIsRequired());
+
+                fieldsDTO.add(fDto);
+            }
+        }
+    }
+
+    private void addSections(List<Section> sections, List<String> staticSections, List<SectionDto> sectionsDTO) {
         for(Section section : sections){
             String name = section.getName();
             if(name.equalsIgnoreCase("Personal Information")
@@ -205,29 +236,6 @@ public class JobService {
 
             sectionsDTO.add(secDTO);
         }
-
-        List<Field> fields = fieldRepository.findAllByJobId(jobId);
-        for(Field field : fields){
-            try {
-                int i = field.getSection().getId();
-            }
-            catch (NullPointerException e){
-                FieldDto fDto = new FieldDto();
-                fDto.setLabel(field.getLabel());
-                fDto.setType(field.getType());
-                fDto.setOptions(field.getOptions());
-                fDto.setIsRequired(field.getIsRequired());
-
-                fieldsDTO.add(fDto);
-            }
-        }
-
-        FormDTO result = new FormDTO();
-        result.setSections(sectionsDTO);
-        result.setFields(fieldsDTO);
-        result.setStaticSections(staticSections);
-
-        return result;
     }
 }
 

@@ -246,6 +246,9 @@ export default function CreateForm({jobDetails,whenSave}) {
     };
     
     const finishField = () => {
+        const normalizedFieldName = currentField.label.trim().toLowerCase();
+        const existingFieldNames = standaloneFields.map(field => field.label.trim().toLowerCase());
+    
         if (currentField.label.trim() === "") {
             alert("Field label cannot be empty.");
             return;
@@ -254,10 +257,15 @@ export default function CreateForm({jobDetails,whenSave}) {
             alert("Field label cannot exceed 50 characters.");
             return;
         }
+        if (existingFieldNames.includes(normalizedFieldName)) {
+            alert(`Field label must be unique. A field with the label "${currentField.label}" already exists.`);
+            return;
+        }
     
         setStandaloneFields([...standaloneFields, currentField]);
         setIsCreatingField(false);
     };
+    
     
     const removeStandaloneField = (index) => {
         setStandaloneFields(standaloneFields.filter((_, i) => i !== index));
