@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SavedJobRepository extends JpaRepository<SavedJob, Integer> {
     Optional<List<Integer>> getJobIdByApplicantId(Integer applicantId);
+    void deleteByApplicantIdAndJobId(Integer applicantId, Integer jobId);
 }
