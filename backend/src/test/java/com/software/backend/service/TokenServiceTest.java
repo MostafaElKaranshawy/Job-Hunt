@@ -6,6 +6,7 @@ import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.entity.RefreshToken;
 import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.repository.RefreshTokenRepository;
+import com.software.backend.util.CookieUtil;
 import com.software.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,9 @@ class TokenServiceTest {
     @Mock
     private HttpServletResponse response;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
     @InjectMocks
     private TokenService tokenService;
 
@@ -49,7 +53,7 @@ class TokenServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        tokenService = new TokenService(env, refreshTokenRepository, jwtUtil);
+        tokenService = new TokenService(env, refreshTokenRepository, jwtUtil, cookieUtil);
         refreshToken = "sampleRefreshToken";
         username = "testUser";
     }
@@ -120,6 +124,13 @@ class TokenServiceTest {
             tokenService.verifyGoogleToken(invalidIdToken);
         });
     }
-
+    @Test
+    void testDeleteCookies() {
+        // Act
+        tokenService.deleteCookies(response);
+        // Assert
+        verify(cookieUtil, times(1)).deleteCookie(response, "accessToken");
+        verify(cookieUtil, times(1)).deleteCookie(response, "refreshToken");
+    }
 
 }

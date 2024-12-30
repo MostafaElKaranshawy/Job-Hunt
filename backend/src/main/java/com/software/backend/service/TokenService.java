@@ -27,6 +27,8 @@ public class TokenService {
 
     private final JwtUtil jwtUtil;
 
+    private final CookieUtil cookieUtil;
+
     public boolean validateRefreshToken(String refreshToken) {
         // Fetch the refresh token from the database
         String storedRefreshToken = fetchRefreshTokenFromDb(refreshToken);
@@ -44,9 +46,10 @@ public class TokenService {
         String newRefreshToken = jwtUtil.generateRefreshToken(username);
         // Save the new refresh token in the database
         saveRefreshTokenInDb(refreshToken, newRefreshToken);
+        CookieUtil cookieUtil = new CookieUtil();
         // Add the new tokens to the response cookies
-        CookieUtil.addCookie(response, "accessToken", newAccessToken);
-        CookieUtil.addCookie(response, "refreshToken", newRefreshToken);
+        cookieUtil.addCookie(response, "accessToken", newAccessToken);
+        cookieUtil.addCookie(response, "refreshToken", newRefreshToken);
     }
 
     private String fetchRefreshTokenFromDb(String token) {
@@ -100,6 +103,11 @@ public class TokenService {
         } catch (Exception e) {
             throw new InvalidCredentialsException("Invalid Google Token");
         }
+    }
+
+    public void deleteCookies(HttpServletResponse response) {
+        cookieUtil.deleteCookie(response, "accessToken");
+        cookieUtil.deleteCookie(response, "refreshToken");
     }
 
 }
