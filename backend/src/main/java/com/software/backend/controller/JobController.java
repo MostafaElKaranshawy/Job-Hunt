@@ -1,5 +1,6 @@
 package com.software.backend.controller;
 
+import com.software.backend.dto.FormDTO;
 import com.software.backend.dto.HomeDto;
 import com.software.backend.dto.JobDto;
 import com.software.backend.service.JobService;
@@ -52,6 +53,16 @@ public class JobController {
         try {
             Integer createdJobId = jobService.createJobWithCustomForm(companyUsername, jobDto);
             return ResponseEntity.ok(createdJobId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+    @GetMapping("/job/{jobId}/form")
+    public ResponseEntity<?> getJobForm(@PathVariable int jobId){
+        try {
+            FormDTO jobForm = jobService.getJobForm(jobId);
+            return ResponseEntity.ok(jobForm);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());

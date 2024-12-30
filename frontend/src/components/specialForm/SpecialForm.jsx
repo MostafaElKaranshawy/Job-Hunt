@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EducationSection from "../primarySections/EducationSection";
 import ExperienceSection from "../primarySections/ExperienceSection";
 import PersonalSection from "../primarySections/PersonalSection.jsx";
@@ -7,23 +7,24 @@ import SpecialSection from "../specialSection/SpecialSection.jsx";
 import SpecialField from "../specialSection/SpecialField.jsx";
 import "./specialForm.css";
 
-export default function SpecialForm({open, onClose, sectionData }) {
+export default function SpecialForm({open, onClose, sectionData, job }) {
     const [personalData, setPersonalData] = useState({});
     const [educationData, setEducationData] = useState({});
     const [experienceData, setExperienceData] = useState({});
     const [skillData, setSkillData] = useState([]);
     const [specialSectionsData, setSpecialSectionsData] = useState([]);
     const [specialFieldsData, setSpecialFieldsData] = useState([]);
+    
 
     const handleLogData = () => {
-        console.log({
-            personalData,
-            educationData,
-            experienceData,
-            skillData,
-            specialSectionsData,
-            specialFieldsData,
-        });
+        // console.log({
+        //     personalData,
+        //     educationData,
+        //     experienceData,
+        //     skillData,
+        //     specialSectionsData,
+        //     specialFieldsData,
+        // });
         onClose();
     };
 
@@ -50,36 +51,36 @@ export default function SpecialForm({open, onClose, sectionData }) {
             </button>
             <h1 style={{ textAlign: "center" }}>Form</h1>
             <form>
-                {(sectionData.staticSections.includes("Personal Information")) && (<PersonalSection onChange={setPersonalData} />)}
-                {(sectionData.staticSections.includes("Education")) && (<EducationSection onChange={setEducationData} />)}
-                {(sectionData.staticSections.includes("Experience")) && (<ExperienceSection onChange={setExperienceData} />)}
-                {(sectionData.staticSections.includes("Skills")) && (<SkillSection onChange={setSkillData} />)}
+                {sectionData?.staticSections?.includes("Personal Information") && (<PersonalSection onChange={setPersonalData} />)}
+                {sectionData?.staticSections?.includes("Education") && (<EducationSection onChange={setEducationData} />)}
+                {sectionData?.staticSections?.includes("Experience") && (<ExperienceSection onChange={setExperienceData} />)}
+                {sectionData?.staticSections?.includes("Skills") && (<SkillSection onChange={setSkillData} />)}
 
 
-                {sectionData.sections.map((data, index) => (
+                {sectionData?.sections?.map((data, index) => (
                     <SpecialSection
                         key={index}
-                        sectionName={data.sectionName}
-                        labels={data.labels}
-                        fieldType={data.fieldType}
-                        fieldOptions={data.fieldOptions}
-                        Mandatory={data.Mandatory}
+                        sectionName={data.name}
+                        labels={data.label}
+                        fieldType={data.type}
+                        fieldOptions={data.options}
+                        Mandatory={data.isRequired}
                         onChange={(sectionData) => handleSpecialSectionChange(data.sectionName, sectionData)}
                     />
                 ))}
 
-                {sectionData.fields.map((field, index) => (
+                {sectionData.fields?.map((field, index) => (
                     <SpecialField
                         key={index}
                         label={field.label}
-                        fieldType={field.fieldType}
-                        fieldOptions={field.fieldOptions}
-                        isMandatory={field.isMandatory}
+                        fieldType={field.type}
+                        fieldOptions={field.options}
+                        isMandatory={field.isRequired}
                         onChange={(fieldData) => handleSpecialFieldChange(index, fieldData)}
                     />
                 ))}
 
-                <button type="button" className="form-button" onClick={handleLogData}>Send</button>
+                <button type="sumbit" className="form-button" onClick={handleLogData}>Send</button>
             </form>
             
         </div>

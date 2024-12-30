@@ -14,43 +14,44 @@ import SpecialForm from "../../components/specialForm/SpecialForm.jsx";
 
 function UserHome() {
 
-    const mockedSectionData = {
+    const SectionData = {
         staticSections: [
             "Personal Information","Education","skills",
         ],
         sections: [
           {
-            Mandatory: [false, true],
-            labels: ["f1", "f2"],
-            sectionName: "sec1",
-            fieldOptions: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
-            fieldType: ["text", "dropdown"]
+            isRequired: [false, true],
+            label: ["f1", "f2"],
+            name: "sec1",
+            options: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
+            type: ["text", "dropdown"]
           },
           {
-            Mandatory: [false, true],
-            labels: ["f1", "f2"],
-            sectionName: "sec1",
-            fieldOptions: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
-            fieldType: ["text", "radio"]
+            isRequired: [false, true],
+            label: ["f1", "f2"],
+            name: "sec1",
+            options: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
+            type: ["text", "radio"]
           },
           
         ],
         fields: [
             {
-                isMandatory: true,
+                isRequired: true,
                 label: "ff1",
-                fieldOptions: ["Option 1", "Option 2", "Option 3", "Option 4"],
-                fieldType: "dropdown"
+                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+                type: "dropdown"
             },
             {
-                isMandatory: false,
+                isRequired: false,
                 label: "ff2",
-                fieldOptions: [],
-                fieldType: "text"
+                options: [],
+                type: "text"
             },
         ]
       }
     const [isOpen, setIsOpen] = useState(false);
+    const [formData, setFormData] = useState({});
 
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
@@ -133,10 +134,39 @@ function UserHome() {
     const startIndex = page * offset + 1;
     const endIndex = Math.min((page + 1) * offset, totalJobsCount);
 
-    const handleApplyClick = () => {
+    async function handleApplyClick (){
         setIsOpen(true); 
         setExpandedJob(null);
+        try {
+            const form = await getJobForm(expandedJob.id);
+            // console.log(form);
+            setFormData(form);
+        } catch (error) {
+            console.error(error.message);
+        }
+        
     };
+    async function getJobForm(id) {
+        try{
+            const url = `http://localhost:8080/job/${id}/form`;
+            const response = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+    
+            const form = await response.json();
+            return form;
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
       
     return (
         <div className="home">
@@ -241,7 +271,8 @@ function UserHome() {
         <SpecialForm 
             open={isOpen} 
             onClose={() => setIsOpen(false)} 
-            sectionData={mockedSectionData}
+            sectionData={formData}
+            job={expandedJob}
         />
         </div>
     )

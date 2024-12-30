@@ -17,4 +17,8 @@ public class FieldDto {
         this.isRequired = isRequired;
         this.options = options;
     }
+
+    public FieldDto() {
+
+    }
 }

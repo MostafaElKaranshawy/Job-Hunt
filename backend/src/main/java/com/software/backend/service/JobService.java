@@ -1,13 +1,12 @@
 package com.software.backend.service;
 
-import com.software.backend.dto.HomeDto;
+import com.software.backend.dto.*;
+import com.software.backend.repository.FieldRepository;
+import com.software.backend.repository.SectionRepository;
 import com.software.backend.sorting.SortingContext;
-import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
 import com.software.backend.enums.JobStatus;
 import com.software.backend.filter.JobCriteriaRunner;
-import com.software.backend.dto.FieldDto;
-import com.software.backend.dto.SectionDto;
 import com.software.backend.entity.*;
 import com.software.backend.mapper.FieldMapper;
 import com.software.backend.mapper.JobMapper;
@@ -30,6 +29,10 @@ public class JobService {
     private UserRepository userRepository;
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private SectionRepository sectionRepository;
+    @Autowired
+    private FieldRepository fieldRepository;
     @Autowired
     private JobMapper jobMapper;
     @Autowired
@@ -163,6 +166,68 @@ public class JobService {
             sections.add(section);
         }
         return sections;
+    }
+
+    public FormDTO getJobForm(int jobId) {
+        List<SectionDto> sectionsDTO = new ArrayList<>();
+        List<FieldDto> fieldsDTO = new ArrayList<>();
+        List<String> staticSections = new ArrayList<>();
+
+        List<Section> sections = sectionRepository.findAllByJobId(jobId);
+        for(Section section : sections){
+            String name = section.getName();
+            if(name.equalsIgnoreCase("Personal Information")
+                    || name.equalsIgnoreCase("Education")
+                    || name.equalsIgnoreCase("Experience")
+                    || name.equalsIgnoreCase("Skills")){
+                staticSections.add(name);
+                continue;
+            }
+            SectionDto secDTO = new SectionDto();
+            secDTO.setName(name);
+            List<String> labels = new ArrayList<>();
+            List<String> types = new ArrayList<>();
+            List<List<String>> options = new ArrayList<>();
+            List<Boolean> isRequired = new ArrayList<>();
+
+            List<Field> fields = fieldRepository.findAllBySectionId(section.getId());
+            for(Field field : fields) {
+
+                labels.add(field.getLabel());
+                types.add(field.getType());
+                options.add(field.getOptions());
+                isRequired.add(field.getIsRequired());
+            }
+            secDTO.setLabel(labels);
+            secDTO.setType(types);
+            secDTO.setOptions(options);
+            secDTO.setIsRequired(isRequired);
+
+            sectionsDTO.add(secDTO);
+        }
+
+        List<Field> fields = fieldRepository.findAllByJobId(jobId);
+        for(Field field : fields){
+            try {
+                int i = field.getSection().getId();
+            }
+            catch (NullPointerException e){
+                FieldDto fDto = new FieldDto();
+                fDto.setLabel(field.getLabel());
+                fDto.setType(field.getType());
+                fDto.setOptions(field.getOptions());
+                fDto.setIsRequired(field.getIsRequired());
+
+                fieldsDTO.add(fDto);
+            }
+        }
+
+        FormDTO result = new FormDTO();
+        result.setSections(sectionsDTO);
+        result.setFields(fieldsDTO);
+        result.setStaticSections(staticSections);
+
+        return result;
     }
 }
 

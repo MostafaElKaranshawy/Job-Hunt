@@ -102,6 +102,7 @@ export default function CreateForm({jobDetails,whenSave}) {
                 console.error('Error sending data to the backend:', error);
             });
             whenSave();
+            setShowCreateJob(false);
     };
 
     const addSection = (sectionName) => {
