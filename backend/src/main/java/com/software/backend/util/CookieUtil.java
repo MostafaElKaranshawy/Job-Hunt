@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CookieUtil {
 
-    public static void addCookie(HttpServletResponse response, String name, String value) {
+    public  void addCookie(HttpServletResponse response, String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
@@ -18,7 +18,7 @@ public class CookieUtil {
         response.addCookie(cookie);
     }
 
-    public static Cookie getCookie(HttpServletRequest request, String name) {
+    public  Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -31,4 +31,12 @@ public class CookieUtil {
         return null;
     }
 
+    public  void deleteCookie(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 }
