@@ -29,6 +29,7 @@ public class JobReport {
     private LocalDateTime createdAt;
 
     @Column(name = "report_status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
 
     @ManyToOne
