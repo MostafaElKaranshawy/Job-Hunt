@@ -20,7 +20,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,8 +89,10 @@ public class JobService {
     public HomeDto handleHomeJobs(String username, String type, String location, String category,
                                   String salary, String level, String query,
                                   String sort, int page, int offset) {
-        int applicantId = userRepository.findIdByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+
         List<Integer> savedJobsIds = getSavedJobs(applicantId);
         HomeDto filteredJobs = filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
@@ -201,17 +205,23 @@ public class JobService {
         SavedJob savedJob = new SavedJob();
         savedJob.setApplicant(applicant);
         savedJob.setJob(job);
+        savedJob.setCreatedAt(LocalDateTime.now());
 
+        if (savedJobRepository.existsByApplicantIdAndJobId(applicant.getId(), jobId)) {
+            throw new RuntimeException("Job already saved");
+        }
         try {
             savedJobRepository.save(savedJob);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
-    public void unSaveJob(String username, int jobId) {
-        int applicantId = userRepository.findIdByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
 
+    @Transactional
+    public void unSaveJob(String username, int jobId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
         try {
             savedJobRepository.deleteByApplicantIdAndJobId(applicantId, jobId);
         } catch (Exception e) {

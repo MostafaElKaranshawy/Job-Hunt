@@ -32,7 +32,8 @@ public class SavedJob {
 
     @Column(
         name = "created_at",
-        nullable = false
+        nullable = false,
+        columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
     private LocalDateTime createdAt;
 

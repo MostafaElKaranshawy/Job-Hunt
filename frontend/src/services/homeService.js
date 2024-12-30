@@ -29,6 +29,7 @@ export async function fetchJobs(filters, page = 1, offset = 10) {
     if (!response.ok)
         throw new Error('Failed to fetch jobs');
     
+    console.log(data)
     return data; // Assuming the backend returns a JSON object with job data.
 }
 
@@ -39,7 +40,7 @@ export async function toggleSaveJob(job) {
 
     const url = `${backendUrl}/home/${username}/jobs/${job.id}`;
 
-    if (job.isSaved) {
+    if (job.saved) {
 
         const response = await fetch(url + '/unsave', {
             method: 'DELETE',
@@ -54,7 +55,7 @@ export async function toggleSaveJob(job) {
     }
 
     else {
-        const response = await fetch(url + 'save', {
+        const response = await fetch(url + '/save', {
             method: 'POST',
             credentials: 'include',
             headers: {

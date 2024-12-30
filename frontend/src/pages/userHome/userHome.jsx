@@ -34,23 +34,23 @@ function UserHome() {
 
 
     useEffect(() => {
-        const loadJobs = async () => {
-            setLoading(true);
-            try {
-                const { jobs, totalJobs } = await fetchJobs(filters, page, offset);
-                setJobs(jobs);
-                setTotalJobsCount(totalJobs);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
+        
         loadJobs();
     }, [filters, page]);
-
-
+    
+    const loadJobs = async () => {
+        setLoading(true);
+        try {
+            const { jobs, totalJobs } = await fetchJobs(filters, page, offset);
+            setJobs(jobs);
+            setTotalJobsCount(totalJobs);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     const handleSortChange = (value) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
@@ -94,8 +94,9 @@ function UserHome() {
     const handleToggleSave = async (job) => {
         try {
             await toggleSaveJob(job);
-            job.isSaved = !job.isSaved;
+            job.saved = !job.saved;
             setJobs([...jobs]);
+            await loadJobs();
         }
         catch (err) {
             console.error(err);
