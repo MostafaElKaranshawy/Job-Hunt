@@ -3,11 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './CompanyProfilePage.css';
 import Sidebar from '../../components/sideBar/Sidebar';
-import CreateJob from '../../components/CreateJob/createJob';
+const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
 function CompanyProfilePage() {
     const { companyUsername } = useParams();
-    // const history = useHistory();
 
     const [companyInfo, setCompanyInfo] = useState({
         name: "company name",
@@ -24,11 +24,10 @@ function CompanyProfilePage() {
         overview: false,
         photo: false,
     });
-    const [showCreateJob, setShowCreateJob] = useState(false); // New state variable
 
     const fetchCompanyInfo = useCallback(async () => {
         try {
-            const response = await fetch(`http://localhost:8080/company/${companyUsername}`, {
+            const response = await fetch(`${backendURL}/company/${companyUsername}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -60,7 +59,7 @@ function CompanyProfilePage() {
 
     const handleSaveClick = async (field) => {
         try {
-            const response = await fetch(`http://localhost:8080/company/${companyUsername}`, {
+            const response = await fetch(`${backendURL}/company/${companyUsername}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -100,13 +99,7 @@ function CompanyProfilePage() {
         }
     };
 
-    const handleCreateJob = () => {
-        setShowCreateJob(true); // Show the CreateJob component
-    }
-
-    const handleCloseModal = () => {
-        setShowCreateJob(false); // Hide the CreateJob component
-    }
+    
 
     // const logout = () => {
     //     localStorage.removeItem('auth_token');
@@ -261,27 +254,7 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                <button className="btn btn-primary custom-btn" onClick={handleCreateJob}>Create New Job</button>
-
-                {/* Modal */}
-                {showCreateJob && (
-                <div className="modal show d-block" tabIndex="-1">
-                    <div className="modal-dialog custom-modal-size"> {/* Custom class */}
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Create Job</h5>
-                                {/* <button type="button" className="btn-close" onClick={handleCloseModal}></button> */}
-                            </div>
-                            <div className="modal-body">
-                                <CreateJob whenClose={handleCloseModal}/>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+                
             </div>
         </div>
     );

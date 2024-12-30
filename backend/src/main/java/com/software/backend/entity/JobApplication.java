@@ -24,7 +24,6 @@ public class JobApplication {
     )
     private ApplicationStatus applicationStatus;
 
-
     @CreationTimestamp
     @Column(
         name = "application_date",

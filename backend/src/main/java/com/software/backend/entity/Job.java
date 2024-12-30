@@ -1,5 +1,6 @@
 package com.software.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.software.backend.enums.EmploymentType;
 import com.software.backend.enums.JobStatus;
 import com.software.backend.enums.Level;
@@ -52,9 +53,11 @@ public class Job {
         nullable = false,
         name = "posted_at"
     )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime postedAt;
 
     @Column(name = "application_deadline")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime applicationDeadline;
 
     @Enumerated(EnumType.STRING)
