@@ -16,7 +16,7 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
     const [specialFieldsData, setSpecialFieldsData] = useState([]);
     
 
-    const handleLogData = () => {
+    const handleSubmitButton = () => {
         console.log({
             personalData,
             educationData,
@@ -25,7 +25,7 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
             specialSectionsData,
             specialFieldsData,
         });
-        onClose();
+        // onClose();
     };
 
     const handleSpecialSectionChange = (sectionName, data) => {
@@ -80,7 +80,7 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
                     />
                 ))}
 
-                <button type="sumbit" className="form-button" onClick={handleLogData}>Send</button>
+                <button type="sumbit" className="form-button" onClick={handleSubmitButton}>Submit</button>
             </form>
             
         </div>
