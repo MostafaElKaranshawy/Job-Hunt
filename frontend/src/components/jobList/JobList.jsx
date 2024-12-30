@@ -5,10 +5,6 @@ import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../.
 
 function JobList({ jobs, handleExpandJob, handleToggleSave }) {
 
-    const [isSaved, setIsSaved] = useState(false);  // change it to job.isSaved
-
-
-
     return (
         <div className="job-list">
             {jobs.map(job => (
@@ -23,7 +19,7 @@ function JobList({ jobs, handleExpandJob, handleToggleSave }) {
                                 {
                                     <i
                                         className={`fa-bookmark save-icon
-                                                ${isSaved ? 'saved fa-solid' : 'fa-regular'}`
+                                                ${job.saved ? 'saved fa-solid' : 'fa-regular'}`
                                         }
                                         onClick={() => handleToggleSave(job)}
                                     ></i>
