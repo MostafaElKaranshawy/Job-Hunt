@@ -17,14 +17,14 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
     
 
     const handleLogData = () => {
-        // console.log({
-        //     personalData,
-        //     educationData,
-        //     experienceData,
-        //     skillData,
-        //     specialSectionsData,
-        //     specialFieldsData,
-        // });
+        console.log({
+            personalData,
+            educationData,
+            experienceData,
+            skillData,
+            specialSectionsData,
+            specialFieldsData,
+        });
         onClose();
     };
 
