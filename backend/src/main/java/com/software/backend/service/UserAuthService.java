@@ -60,7 +60,7 @@ public class UserAuthService {
         if(userRepository.findByEmail(request.getEmail()).isPresent()){
             throw new EmailAlreadyRegisteredException("User already exists");
         }
-        request.setPassword(passwordService.hashPassword(request.getPassword()));
+//        request.setPassword(passwordService.hashPassword(request.getPassword()));
         var user = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())

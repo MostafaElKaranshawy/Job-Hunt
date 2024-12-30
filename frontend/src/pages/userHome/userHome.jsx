@@ -5,7 +5,7 @@ import Filters from "../../components/filters/Filters";
 import JobList from "../../components/jobList/JobList";
 import './userHome.css'
 
-import { fetchJobs } from "../../services/homeService";
+import { fetchJobs, toggleSaveJob } from "../../services/homeService";
 import Sorting from "../../components/sorting/Sorting.jsx";
 import { calculateRelativeTime } from "../../utils/userHomeUtils";
 import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
@@ -91,6 +91,24 @@ function UserHome() {
     };
 
 
+    const handleToggleSave = async (job) => {
+        try {
+            await toggleSaveJob(job);
+            job.isSaved = !job.isSaved;
+            setJobs([...jobs]);
+        }
+        catch (err) {
+            console.error(err);
+        }
+    }
+
+
+
+
+
+
+
+
     const startIndex = page * offset + 1;
     const endIndex = Math.min((page + 1) * offset, totalJobsCount);
 
@@ -132,7 +150,11 @@ function UserHome() {
                             <p className="loading-text">Loading jobs...</p> :
                             jobs.length === 0 ?
                                 <p className="no-jobs-message">No matching jobs found</p> :
-                                <JobList jobs={jobs} handleExpandJob={handleExpandJob} />
+                                <JobList 
+                                    jobs={jobs} 
+                                    handleExpandJob={handleExpandJob} 
+                                    handleToggleSave={handleToggleSave}
+                                />
                         }
 
                         {/* // Pagination */}
