@@ -1,6 +1,7 @@
 package com.software.backend.service;
 
 import com.software.backend.dto.HomeDto;
+import com.software.backend.repository.SavedJobRepository;
 import com.software.backend.sorting.SortingContext;
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
@@ -40,6 +41,8 @@ public class JobService {
     @Autowired
     private FieldMapper fieldMapper;
 
+    @Autowired
+    private SavedJobRepository savedJobRepository;
 
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
@@ -78,7 +81,21 @@ public class JobService {
             throw e;
         }
     }
+    public HomeDto handleHomeJobs(String username, String type, String location, String category,
+                                  String salary, String level, String query,
+                                  String sort, int page, int offset) {
+        int applicantId = userRepository.findIdByUsername(username).orElse(-1);
+        if (applicantId == -1)
+            return null;
+        List<Integer> savedJobsIds = getSavedJobs(applicantId);
+        HomeDto filteredJobs = filterJobs(type, location, category, salary, level, query, sort, page, offset);
 
+        for (JobDto job:filteredJobs.getJobs()) {
+
+            job.setSaved(savedJobsIds.contains(job.getId()));
+        }
+        return filteredJobs;
+    }
     public HomeDto filterJobs(String type, String location, String category,
                                    String salary, String level, String query,
                                    String sort, int page, int offset
@@ -142,7 +159,7 @@ public class JobService {
         return staticSections;
     }
 
-    private static List<Section> getSections(JobDto jobDto, Job job) {
+    private List<Section> getSections(JobDto jobDto, Job job) {
         List<Section> sections = new ArrayList<>();
         for(SectionDto sectionDto : jobDto.getSections()) {
             Section section = new Section();
@@ -164,5 +181,11 @@ public class JobService {
         }
         return sections;
     }
-}
 
+    private List<Integer> getSavedJobs (int applicantId) {
+        return savedJobRepository.getJobIdByApplicantId(applicantId).orElse(new ArrayList<>());
+    }
+    private List<Integer> getAppliedJobs (String applicantId) {
+        return new ArrayList<>();
+    }
+}

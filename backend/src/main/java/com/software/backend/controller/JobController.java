@@ -23,6 +23,7 @@ public class JobController {
 
     @GetMapping("/home/jobs/filter")
     public ResponseEntity<HomeDto> filterJobs(
+            @RequestParam(name = "username") String username,
             @RequestParam(name = "employmentType", defaultValue = "") String employmentType,
             @RequestParam(name = "workLocation", defaultValue = "") String workLocation,
             @RequestParam(name = "category", defaultValue = "") String category,
@@ -34,7 +35,7 @@ public class JobController {
             @RequestParam(name = "offset", defaultValue = "5") Integer offset){
         try {
 
-            HomeDto homeDto = jobService.filterJobs(employmentType, workLocation, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.handleHomeJobs(username, employmentType, workLocation, category, salary, level, query, sort, page, offset);
 
             return ResponseEntity.ok(homeDto);
         } catch (Exception e) {
