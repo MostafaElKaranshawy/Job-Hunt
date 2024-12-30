@@ -321,6 +321,9 @@ export default function CreateForm({jobDetails,whenSave}) {
                             onChange={() => {}}
                         />
                         <button type="button" className="remove-section-button" onClick={() => removeSection(index)}>X</button>
+                        {/* <button className="close-button-x" onClick={() => removeSection(index)}>
+                            &times;
+                        </button> */}
                     </div>
                 ))}
     
@@ -407,6 +410,9 @@ export default function CreateForm({jobDetails,whenSave}) {
                             onChange={() => {}}
                         />
                         <button type="button" className="remove-field-button" onClick={() => removeStandaloneField(index)}>X</button>
+                        {/* <button className="close-button-x" onClick={() => removeStandaloneField(index)}>
+                            &times;
+                        </button> */}
                     </div>
                 ))}
     

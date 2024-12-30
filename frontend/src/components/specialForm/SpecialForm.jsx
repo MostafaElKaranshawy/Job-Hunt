@@ -44,8 +44,10 @@ export default function SpecialForm({open, onClose, sectionData }) {
 
     return (
         <>
-        {open && <div className="special-form">
-            <button onClick={onClose}>x</button>
+        {open && <div className="special-apply-user">
+            <button className="close-button" onClick={onClose}>
+                        &times;
+            </button>
             <h1 style={{ textAlign: "center" }}>Form</h1>
             <form>
                 {(sectionData.staticSections.includes("Personal Information")) && (<PersonalSection onChange={setPersonalData} />)}

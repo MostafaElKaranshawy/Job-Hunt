@@ -31,7 +31,7 @@ function UserHome() {
             labels: ["f1", "f2"],
             sectionName: "sec1",
             fieldOptions: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
-            fieldType: ["text", "dropdown"]
+            fieldType: ["text", "radio"]
           },
           
         ],
@@ -134,12 +134,11 @@ function UserHome() {
     const endIndex = Math.min((page + 1) * offset, totalJobsCount);
 
     const handleApplyClick = () => {
-        setIsOpen(true); // Set isOpen directly to true
+        setIsOpen(true); 
         setExpandedJob(null);
     };
       
     return (
-        <>
         <div className="home">
             <Header />
             <main className="main-content">
@@ -236,20 +235,15 @@ function UserHome() {
 
                         <p className="job-description">{expandedJob.description}</p>
 
-                        
-
                     </div>
                 </div>
-                
             )}
-        
-        </div>
         <SpecialForm 
             open={isOpen} 
             onClose={() => setIsOpen(false)} 
             sectionData={mockedSectionData}
         />
-    </>
+        </div>
     )
 }
 
