@@ -111,9 +111,9 @@ export default function EducationSection({ onChange }) {
                 </div>}
                 <br /> <br />
                 
-                <DateInput name="Start Year" fullDate={false} value={graduationYear} onChange={setGraduationYear} />
+                <DateInput name="Start Year" fullDate={false} value={startYear} onChange={setStartYear} />
                 <br />
-                <DateInput name="End Year" fullDate={false} value={startYear} onChange={setStartYear} />
+                <DateInput name="End Year" fullDate={false} value={graduationYear} onChange={setGraduationYear} />
             </div>
         </div>
     );
