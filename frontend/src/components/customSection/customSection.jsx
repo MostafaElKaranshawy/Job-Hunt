@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Section from "../section/section";
 import "./customSection.css";
-import ConfirmationBox from "../confirmationBox/confirmationBox.";
+import ConfirmationBox from "../confirmationBox/confirmationBox";
 
 export default function CustomSection({ sectionData, sectionChange, addSection, editSection, removeSection, refreshCustomSections }) {
     const [render, setRender] = useState(false);

@@ -21,7 +21,7 @@ const UserReportCard = ({ report, onIgnore, onBan }) => {
                 <button className="btn-view" onClick={() => setIsModalOpen(true)}>
                     View Details
                 </button>
-                <button className="btn-ignore" onClick={() => onIgnore(report.applicant.id)}>
+                <button className="btn-ignore" onClick={() => onIgnore(report.id)}>
                     Ignore Report
                 </button>
                 <button className="btn-delete" onClick={() => onBan(report.applicant.id)}>
