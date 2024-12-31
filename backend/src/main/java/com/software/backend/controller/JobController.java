@@ -57,5 +57,12 @@ public class JobController {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
+    @GetMapping("/company/{companyUsername}/jobs/{jobId}")
+    public ResponseEntity<?> getJobApplications(@PathVariable String companyUsername, @PathVariable Integer jobId) {
+        System.out.println("Get Job Applications");
+        System.out.println("Company Username: " + companyUsername);
+        System.out.println("jobId: " + jobId);
+        return ResponseEntity.ok("Hello World");
+    }
 }
 
