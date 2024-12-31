@@ -25,7 +25,7 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
   const [specialSectionsData, setSpecialSectionsData] = useState(initialFormState.specialSectionsData);
   const [specialFieldsData, setSpecialFieldsData] = useState(initialFormState.specialFieldsData);
   const [currentJob, setCurrentJob] = useState({});
-  const { userName } = useParams();
+  const userName = document.cookie.split("username=")[1];
   
   // Reset form when sectionData changes or form is closed
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
 
   async function sendResponse(id, data) {
     try {
-      const url = `http://localhost:8080/job/${id}/form/response`;
+      const url = `http://localhost:8080/job/${userName}/${id}/form/response`;
       const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
@@ -87,32 +87,58 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
     }
   };
 
-  const handleSpecialSectionChange = (sectionName, data) => {
+  const handleSpecialSectionChange = (sectionName, data, type, labels) => {
     setSpecialSectionsData((prevData) => {
       const existingIndex = prevData.findIndex(section => section.sectionName === sectionName);
       
       if (existingIndex !== -1) {
         // Update existing section
         const updatedData = [...prevData];
+        const idx = type.indexOf("checkbox");
+        if(idx !== -1) {
+          const temp = data[labels[idx]];
+          const withoutBrackets = typeof temp === "string"? temp.slice(1, -1) : temp;
+          const array = typeof temp === "string"? withoutBrackets.split(",").map(item => item.trim()) : withoutBrackets;
+          console.log(withoutBrackets)
+          console.log(array)
+          data[labels[idx]] = Array.isArray(temp) ? "[" + temp.join(", ") + "]" : array;
+      }
         updatedData[existingIndex] = { sectionName, data };
+        console.log(data);
         return updatedData;
       } else {
         // Add new section
+        const idx = type.indexOf("checkbox");
+        if(idx !== -1) {
+          const temp = data[labels[idx]];
+          const withoutBrackets = typeof temp === "string"? temp.slice(1, -1) : temp;
+          const array = typeof temp === "string"? withoutBrackets.split(",").map(item => item.trim()) : withoutBrackets;
+          console.log(withoutBrackets)
+          console.log(array)
+          data[labels[idx]] = Array.isArray(temp) ? "[" + temp.join(", ") + "]" : array;
+      }
         return [...prevData, { sectionName, data }];
       }
     });
   };
 
-  const handleSpecialFieldChange = (index, value, name) => {
+  const handleSpecialFieldChange = (index, value, name, f) => {
     setSpecialFieldsData((prevData) => {
       const existingIndex = prevData.findIndex(field => field.fieldName === name);
       
       if (existingIndex !== -1) {
         // Update existing field
         const updatedData = [...prevData];
+        if(f.type === "checkbox") {
+            updatedData[existingIndex] = { fieldName: name, data: Array.isArray(value) ? "[" + value.join(", ") + "]" : value };
+          return updatedData;
+        }
         updatedData[existingIndex] = { fieldName: name, data: value };
         return updatedData;
       } else {
+        if(f.type === "checkbox") {
+          return [...prevData, { fieldName: name, data: Array.isArray(value) ? "[" + value.join(", ") + "]" : value }];
+      }
         // Add new field
         return [...prevData, { fieldName: name, data: value }];
       }
@@ -149,7 +175,7 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
                 fieldType={data.type}
                 fieldOptions={data.options}
                 Mandatory={data.isRequired}
-                onChange={(sectionData) => handleSpecialSectionChange(data.name, sectionData)}
+                onChange={(sectionData) => handleSpecialSectionChange(data.name, sectionData, data.type, data.label)}
               />
             ))}
 
@@ -160,7 +186,7 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
                 fieldType={field.type}
                 fieldOptions={field.options}
                 isMandatory={field.isRequired}
-                onChange={(fieldData) => handleSpecialFieldChange(index, fieldData, field.label)}
+                onChange={(fieldData) => handleSpecialFieldChange(index, fieldData, field.label, field)}
               />
             ))}
 
