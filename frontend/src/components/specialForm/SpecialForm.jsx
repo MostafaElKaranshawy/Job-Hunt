@@ -90,33 +90,43 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
   const handleSpecialSectionChange = (sectionName, data, type, labels) => {
     setSpecialSectionsData((prevData) => {
       const existingIndex = prevData.findIndex(section => section.sectionName === sectionName);
-      
+  
       if (existingIndex !== -1) {
         // Update existing section
         const updatedData = [...prevData];
         const idx = type.indexOf("checkbox");
-        if(idx !== -1) {
+        if (idx !== -1) {
           const temp = data[labels[idx]];
-          const withoutBrackets = typeof temp === "string"? temp.slice(1, -1) : temp;
-          const array = typeof temp === "string"? withoutBrackets.split(",").map(item => item.trim()) : withoutBrackets;
-          console.log(withoutBrackets)
-          console.log(array)
-          data[labels[idx]] = Array.isArray(temp) ? "[" + temp.join(", ") + "]" : array;
-      }
-        updatedData[existingIndex] = { sectionName, data };
-        console.log(data);
+          let array;
+          if (Array.isArray(temp)) {
+            array = temp;
+          } else if (typeof temp === "string") {
+            array = temp.slice(1, -1).split(",").map(item => item.trim());
+          } else {
+            array = [];
+          }
+          data[labels[idx]] = array; // Keep as array for frontend
+          updatedData[existingIndex] = { sectionName, data: { ...data, [labels[idx]]: "[" + array.join(", ") + "]" } }; // Convert to string for backend
+        } else {
+          updatedData[existingIndex] = { sectionName, data };
+        }
         return updatedData;
       } else {
         // Add new section
         const idx = type.indexOf("checkbox");
-        if(idx !== -1) {
+        if (idx !== -1) {
           const temp = data[labels[idx]];
-          const withoutBrackets = typeof temp === "string"? temp.slice(1, -1) : temp;
-          const array = typeof temp === "string"? withoutBrackets.split(",").map(item => item.trim()) : withoutBrackets;
-          console.log(withoutBrackets)
-          console.log(array)
-          data[labels[idx]] = Array.isArray(temp) ? "[" + temp.join(", ") + "]" : array;
-      }
+          let array;
+          if (Array.isArray(temp)) {
+            array = temp;
+          } else if (typeof temp === "string") {
+            array = temp.slice(1, -1).split(",").map(item => item.trim());
+          } else {
+            array = [];
+          }
+          data[labels[idx]] = array; // Keep as array for frontend
+          return [...prevData, { sectionName, data: { ...data, [labels[idx]]: "[" + array.join(", ") + "]" } }]; // Convert to string for backend
+        }
         return [...prevData, { sectionName, data }];
       }
     });
