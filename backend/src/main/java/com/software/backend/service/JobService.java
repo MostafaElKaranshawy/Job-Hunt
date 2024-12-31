@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -271,206 +269,19 @@ public class JobService {
         }
 
         if (dto.getPersonalData() != null) {
-            ApplicationResponse response = new ApplicationResponse();
-            Field field = fieldRepository.findBySectionIdAndLabel(personalData.getId(), "Full Name");
-            if (field != null) {
-                response.setField(field);
-                response.setSection(personalData);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getPersonalData().getFullName());
-                responses.add(response);
-            }else {
-                System.out.println("Full name Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field1 = fieldRepository.findBySectionIdAndLabel(personalData.getId(), "Address");
-            if(field1 != null) {
-                response.setField(field1);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getPersonalData().getAddress());
-                responses.add(response);
-            }else {
-                System.out.println("Address Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field2 = fieldRepository.findBySectionIdAndLabel(personalData.getId(), "Phone Number");
-            if(field2 != null) {
-                response.setField(field2);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getPersonalData().getPhoneNumber());
-                responses.add(response);
-            }else {
-                System.out.println("Phone Number Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field3 = fieldRepository.findBySectionIdAndLabel(personalData.getId(), "Personal Email");
-            if(field3 != null) {
-                response.setField(field3);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getPersonalData().getPersonalEmail());
-                responses.add(response);
-            }else {
-                System.out.println("Personal Email Field is null");
-            }
-
-
-            response = new ApplicationResponse();
-            Field field4 = fieldRepository.findBySectionIdAndLabel(personalData.getId(), "Portfolio");
-            if (field4 != null) {
-                response.setField(field4);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getPersonalData().getPortfolioURL());
-                responses.add(response);
-            }else {
-                System.out.println("Portfolio URL Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field5 = fieldRepository.findBySectionIdAndLabel(personalData.getId(), "LinkedIn URL");
-            if(field5 != null) {
-                response.setField(field5);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getPersonalData().getLinkedInURL());
-                responses.add(response);
-            }else {
-                System.out.println("LinkedIn URL Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field6 = fieldRepository.findBySectionIdAndLabel(personalData.getId(), "Date of Birth");
-            if(field6 != null) {
-                response.setField(field6);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getPersonalData().getDateOfBirth());
-                responses.add(response);
-                System.out.println("Personal Done");
-            }else {
-                System.out.println("Date of Birth Field is null");
-            }
+            getPersonalSectionResponses(dto, personalData, jobApplication, responses);
         }
-
-
-
         if (dto.getEducationData() != null) {
-            ApplicationResponse response = new ApplicationResponse();
-            Field field = fieldRepository.findBySectionIdAndLabel(educationData.getId(), "Field of Study");
-            if(field != null) {
-                System.out.println(dto.getEducationData().getFieldOfStudy());
-                response.setField(field);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getEducationData().getFieldOfStudy());
-                responses.add(response);
-            }else {
-                System.out.println("Field of Study Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field1 = fieldRepository.findBySectionIdAndLabel(educationData.getId(), "End Date");
-            if(field1 != null) {
-                System.out.println(dto.getEducationData().getGraduationYear());
-                response.setField(field1);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getEducationData().getGraduationYear());
-                responses.add(response);
-            }
-            else {
-                System.out.println("End Date Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field2 = fieldRepository.findBySectionIdAndLabel(educationData.getId(), "Degree");
-            if(field2 != null) {
-                System.out.println(dto.getEducationData().getHighestDegree());
-                response.setField(field2);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getEducationData().getHighestDegree());
-                responses.add(response);
-            }
-            else {
-                System.out.println("Degree Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field3 = fieldRepository.findBySectionIdAndLabel(educationData.getId(), "Start Date");
-            if(field3 != null) {
-                System.out.println(dto.getEducationData().getStartYear());
-                response.setField(field3);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getEducationData().getStartYear());
-                responses.add(response);
-            }
-            else {
-                System.out.println("Start Date Field is null");
-            }
-
-            response = new ApplicationResponse();
-            Field field4 = fieldRepository.findBySectionIdAndLabel(educationData.getId(), "University/Institution Name");
-            if(field4 != null) {
-                System.out.println(dto.getEducationData().getUniversity());
-                response.setField(field4);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getEducationData().getUniversity());
-                responses.add(response);
-            }
-            else {
-                System.out.println("University Field is null");
-            }
-            System.out.println("Education Done");
+            getEducationSectionResponses(dto, educationData, jobApplication, responses);
         }
-
         if (dto.getExperienceData() != null) {
-            ApplicationResponse response = new ApplicationResponse();
-            response.setField(fieldRepository.findBySectionIdAndLabel(experienceData.getId(), "Company Name"));
-            response.setJobApplication(jobApplication);
-            response.setResponseData(dto.getExperienceData().getCompanyName());
-            responses.add(response);
-
-            response = new ApplicationResponse();
-            response.setField(fieldRepository.findBySectionIdAndLabel(experienceData.getId(), "Job Title"));
-            response.setJobApplication(jobApplication);
-            response.setResponseData(dto.getExperienceData().getJobTitle());
-            responses.add(response);
-
-            response = new ApplicationResponse();
-            response.setField(fieldRepository.findBySectionIdAndLabel(experienceData.getId(), "Location"));
-            response.setJobApplication(jobApplication);
-            response.setResponseData(dto.getExperienceData().getJobLocation());
-            responses.add(response);
-
-            response = new ApplicationResponse();
-            response.setField(fieldRepository.findBySectionIdAndLabel(experienceData.getId(), "Job Description"));
-            response.setJobApplication(jobApplication);
-            response.setResponseData(dto.getExperienceData().getJobDescription());
-            responses.add(response);
-
-            response = new ApplicationResponse();
-            response.setField(fieldRepository.findBySectionIdAndLabel(experienceData.getId(), "Start Date"));
-            response.setJobApplication(jobApplication);
-            response.setResponseData(dto.getExperienceData().getStartDate());
-            responses.add(response);
-
-            if (!dto.getExperienceData().isCurrentRule()) {
-                response = new ApplicationResponse();
-                response.setField(fieldRepository.findBySectionIdAndLabel(experienceData.getId(), "End Date"));
-                response.setJobApplication(jobApplication);
-                response.setResponseData(dto.getExperienceData().getEndDate());
-                responses.add(response);
-            }
-
-            response = new ApplicationResponse();
-            response.setField(fieldRepository.findBySectionIdAndLabel(experienceData.getId(), "Current Role"));
-            response.setJobApplication(jobApplication);
-            response.setResponseData(String.valueOf(dto.getExperienceData().isCurrentRule()));
-            responses.add(response);
-            System.out.println("Experience Done");
+            getExperienceSectionResponses(dto, experienceData, jobApplication, responses);
         }
 
         if (!dto.getSkillData().isEmpty()) {
             ApplicationResponse response = new ApplicationResponse();
             response.setField(fieldRepository.findBySectionIdAndLabel(skillData.getId(), "Skill"));
+            response.setSection(skillData);
             response.setJobApplication(jobApplication);
             response.setResponseData(dto.getSkillData().toString());
             responses.add(response);
@@ -479,6 +290,33 @@ public class JobService {
 
 
         List<Field> fields = fieldRepository.findAllByJobId(jobId);
+        getSpecialFieldsResponses(dto, fields, jobApplication, responses);
+
+        getSpecialSectionsResponses(jobId, dto, jobApplication, responses);
+
+        jobApplication.setApplicationResponsesList(responses);
+        jobApplicationRepository.save(jobApplication);
+    }
+
+
+
+    private void getSpecialSectionsResponses(int jobId, ApplicationResponseDTO dto, JobApplication jobApplication, List<ApplicationResponse> responses) {
+        for (ApplicationResponseDTO.SpecialSectionDTO specialSectionDTO : dto.getSpecialSectionsData()) {
+            Section section = sectionRepository.findByJobIdAndName(jobId, specialSectionDTO.getSectionName());
+            for (String key : specialSectionDTO.getData().keySet()) {
+                ApplicationResponse response = new ApplicationResponse();
+                Field field = fieldRepository.findBySectionIdAndLabel(section.getId(), key);
+                response.setField(field);
+                response.setSection(section);
+                response.setJobApplication(jobApplication);
+                response.setResponseData(specialSectionDTO.getData().get(key));
+                responses.add(response);
+            }
+        }
+        System.out.println("Special Sections Done");
+    }
+
+    private static void getSpecialFieldsResponses(ApplicationResponseDTO dto, List<Field> fields, JobApplication jobApplication, List<ApplicationResponse> responses) {
         for (ApplicationResponseDTO.SpecialFieldDTO specialFieldDTO : dto.getSpecialFieldsData()) {
             ApplicationResponse response = new ApplicationResponse();
             Field field = fields.stream().filter(f -> f.getLabel().equalsIgnoreCase(specialFieldDTO.getFieldName()))
@@ -495,23 +333,105 @@ public class JobService {
             responses.add(response);
         }
         System.out.println("Special Fields Done");
-
-        for (ApplicationResponseDTO.SpecialSectionDTO specialSectionDTO : dto.getSpecialSectionsData()) {
-            Section section = sectionRepository.findByJobIdAndName(jobId, specialSectionDTO.getSectionName());
-            for (String key : specialSectionDTO.getData().keySet()) {
-                ApplicationResponse response = new ApplicationResponse();
-                Field field = fieldRepository.findBySectionIdAndLabel(section.getId(), key);
-                response.setField(field);
-                response.setJobApplication(jobApplication);
-                response.setResponseData(specialSectionDTO.getData().get(key));
-                responses.add(response);
-            }
-
-        }
-        System.out.println("Special Sections Done");
-
-        jobApplication.setApplicationResponsesList(responses);
-        jobApplicationRepository.save(jobApplication);
     }
+
+    private void processSectionResponses(
+            ApplicationResponseDTO dto,
+            Section section,
+            JobApplication jobApplication,
+            List<ApplicationResponse> responses,
+            Map<String, String> fieldDataMap) {
+
+        fieldDataMap.forEach((label, responseData) -> {
+            Field field = fieldRepository.findBySectionIdAndLabel(section.getId(), label);
+            if (field != null) {
+                addResponse(responses, section, jobApplication, field, responseData);
+            } else {
+                System.out.println(label + " Field is null");
+            }
+        });
+
+        System.out.println(section.getName() + " Done");
+    }
+
+    private void addResponse(
+            List<ApplicationResponse> responses,
+            Section section,
+            JobApplication jobApplication,
+            Field field,
+            String responseData) {
+
+        ApplicationResponse response = new ApplicationResponse();
+        response.setField(field);
+        response.setSection(section);
+        response.setJobApplication(jobApplication);
+        response.setResponseData(responseData);
+        responses.add(response);
+    }
+
+
+    private void getExperienceSectionResponses(
+            ApplicationResponseDTO dto,
+            Section experienceData,
+            JobApplication jobApplication,
+            List<ApplicationResponse> responses) {
+
+        ApplicationResponseDTO.ExperienceDataDTO experience = dto.getExperienceData();
+
+        Map<String, String> fieldDataMap = new LinkedHashMap<>();
+        fieldDataMap.put("Company Name", experience.getCompanyName());
+        fieldDataMap.put("Job Title", experience.getJobTitle());
+        fieldDataMap.put("Location", experience.getJobLocation());
+        fieldDataMap.put("Job Description", experience.getJobDescription());
+        fieldDataMap.put("Start Date", experience.getStartDate());
+        if (!experience.isCurrentRule()) {
+            fieldDataMap.put("End Date", experience.getEndDate());
+        }
+        fieldDataMap.put("Current Role", String.valueOf(experience.isCurrentRule()));
+
+        processSectionResponses(dto, experienceData, jobApplication, responses, fieldDataMap);
+    }
+
+    private void getEducationSectionResponses(
+            ApplicationResponseDTO dto,
+            Section educationData,
+            JobApplication jobApplication,
+            List<ApplicationResponse> responses) {
+
+        ApplicationResponseDTO.EducationDataDTO education = dto.getEducationData();
+
+        Map<String, String> fieldDataMap = Map.of(
+                "Field of Study", education.getFieldOfStudy(),
+                "End Date", education.getGraduationYear(),
+                "Degree", education.getHighestDegree(),
+                "Start Date", education.getStartYear(),
+                "University/Institution Name", education.getUniversity()
+        );
+
+        processSectionResponses(dto, educationData, jobApplication, responses, fieldDataMap);
+    }
+
+
+    private void getPersonalSectionResponses(
+            ApplicationResponseDTO dto,
+            Section personalData,
+            JobApplication jobApplication,
+            List<ApplicationResponse> responses) {
+
+        ApplicationResponseDTO.PersonalDataDTO personal = dto.getPersonalData();
+
+        Map<String, String> fieldDataMap = Map.of(
+                "Full Name", personal.getFullName(),
+                "Address", personal.getAddress(),
+                "Phone Number", personal.getPhoneNumber(),
+                "Personal Email", personal.getPersonalEmail(),
+                "Portfolio", personal.getPortfolioURL(),
+                "LinkedIn URL", personal.getLinkedInURL(),
+                "Date of Birth", personal.getDateOfBirth()
+        );
+
+        processSectionResponses(dto, personalData, jobApplication, responses, fieldDataMap);
+    }
+
 }
 
