@@ -1,11 +1,22 @@
 import { Link, useParams } from 'react-router-dom';
 import { Nav, NavItem } from 'react-bootstrap';
+import { logout } from '../../services/authServices';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Sidebar.css';
 
 function Sidebar() {
   const { companyUsername } = useParams();
+
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response.success) {
+      console.log('Logged out successfully!');
+      window.location.href = '/';
+    } else {
+      console.error('Logout failed:', response.message);
+    }
+  };
 
   return (
     <div className="text-white sidebar">
@@ -30,18 +41,13 @@ function Sidebar() {
           </Link>
         </NavItem>
       <div
-        className="navItem logout py-2 d-block company-link"
-        onClick={() => {
-          console.log("Logout");
-          document.cookie = ";";
-          window.location.href = "/";
-        }}
-      >
-        <i className="bi bi-box-arrow-right me-2"></i>
-          Log out
-    </div>
-</Nav>
-
+          className="navItem logout py-2 d-block company-link-2"
+            onClick={handleLogout}
+          >
+          <i className="bi bi-box-arrow-right me-2"></i>
+            Log out
+      </div>
+      </Nav>
     </div>
   );
 };

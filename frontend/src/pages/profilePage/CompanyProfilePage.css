@@ -45,12 +45,35 @@ label {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.btn-primary {
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ensure spacing between input and button */
+  width: 100%;
+  position: relative; /* Establish relative positioning for child elements */
+}
+
+.edit-btn-primary {
+  position: absolute; /* Make the button position absolute */
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: #326740f0;
   color: white;
-  /* margin-left: 1300px;
-  margin-right: -75px; */
+  padding: 8px 16px;
+  border-radius: 60px;
+  font-size: 14px;
 }
+
+.edit-btn-primary:hover {
+  background-color: #254d30f0;
+}
+
+.form-control {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
 
 .btn-primary:hover {
   background-color: #254d30f0;

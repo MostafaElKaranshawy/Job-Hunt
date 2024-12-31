@@ -99,14 +99,6 @@ function CompanyProfilePage() {
         }
     };
 
-    
-
-    // const logout = () => {
-    //     localStorage.removeItem('auth_token');
-    //     // redirect to the login page
-    //     history.push('/login');
-    // };
-
     return (
         <div className="d-flex">
             <Sidebar />
@@ -186,7 +178,7 @@ function CompanyProfilePage() {
                         <div className="d-flex align-items-center">
                             <h3 className="me-2">{companyInfo.website}</h3>
                             <button
-                                className="btn btn-primary"
+                                className="btn edit-btn-primary"
                                 onClick={() => handleEditClick('website')}
                             >
                                 Edit
@@ -216,7 +208,7 @@ function CompanyProfilePage() {
                         <div className="d-flex align-items-center">
                             <h3 className="me-2">{companyInfo.location}</h3>
                             <button
-                                className="btn btn-primary"
+                                className="btn edit-btn-primary"
                                 onClick={() => handleEditClick('location')}
                             >
                                 Edit
@@ -245,7 +237,7 @@ function CompanyProfilePage() {
                         <div className="d-flex align-items-center">
                             <h3 className="me-2">{companyInfo.overview}</h3>
                             <button
-                                className="btn btn-primary"
+                                className="btn edit-btn-primary"
                                 onClick={() => handleEditClick('overview')}
                             >
                                 Edit
