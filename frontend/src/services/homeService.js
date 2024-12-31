@@ -33,14 +33,14 @@ export async function fetchJobs(filters, page = 1, offset = 10) {
     return data; // Assuming the backend returns a JSON object with job data.
 }
 
-export async function toggleSaveJob(job) {
+export async function toggleSaveJob(job, saved) {
     const username = document.cookie.split('; ')[1].split('=')[1];
     // console.log(username);  //username is correct using this method
 
 
     const url = `${backendUrl}/home/${username}/jobs/${job.id}`;
 
-    if (job.saved) {
+    if (saved) {
 
         const response = await fetch(url + '/unsave', {
             method: 'DELETE',

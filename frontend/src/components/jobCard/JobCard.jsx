@@ -17,7 +17,7 @@ function JobCard({ job, handleExpandJob, handleToggleSave }) {
         e.stopPropagation();
 
         setSaveLoading(true);
-        await handleToggleSave(job, setSaved);
+        await handleToggleSave(job, saved, setSaved);
         console.log(job)
 
         setSaveLoading(false);

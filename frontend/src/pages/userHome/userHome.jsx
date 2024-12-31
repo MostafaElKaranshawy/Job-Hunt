@@ -16,7 +16,7 @@ function UserHome() {
 
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
-    const [expandedJobSaved, setExpandedJobSaved] = useState(false);
+    const [expandedJobState, setExpandedJobState] = useState(null); // Store both saved state and setSaved function
 
 
     const [page, setPage] = useState(0);
@@ -67,12 +67,12 @@ function UserHome() {
 
     const handleExpandJob = (job, saved, setSaved) => {
         setExpandedJob(job);
-        setExpandedJobSaved(saved);
+        setExpandedJobState({ saved: saved, setSaved }); // Store saved state and setSaved function
     };
+
 
     const handleCloseExpandedJob = () => {
         setExpandedJob(null);
-        setExpandedJobSaved(false);
     };
 
 
@@ -96,34 +96,24 @@ function UserHome() {
     };
 
 
-    const handleToggleSave = async (job, setSaved) => {
+    const handleToggleSave = async (job, saved, setSaved) => {
         if (loading)
             return;
 
         try {
-            await toggleSaveJob(job);
-            // job.saved = !job.saved;
-            // setJobs([
-            //     ...jobs.slice(0, jobs.findIndex((j) => j.id === job.id)),
-            //     job,
-            //     ...jobs.slice(jobs.findIndex((j) => j.id === job.id) + 1),
-            // ]);
+            await toggleSaveJob(job, saved);
 
-            setSaved((prevSaved) => !prevSaved);
+            if (expandedJob){
+                // console.log("expanded job")
+                expandedJobState.setSaved((prevSaved) => !prevSaved);
+                setExpandedJobState((prevExpandedJobState) => ({
+                    ...prevExpandedJobState,
+                    saved: !prevExpandedJobState.saved,
+                }));
+            }
+            else
+                setSaved((prevSaved) => !prevSaved);        
 
-            console.log("job saved")
-            // if (expandedJob && expandedJob.id === job.id) {
-            //     console.log("opened ")
-            //     setExpandedJob({
-            //         ...expandedJob,
-            //         saved: job.saved,
-            //     });
-            // }
-
-            // if (expandedJob && expandedJob.id === job.id) {
-            //     console.log("opened ")
-            //     setSaved((prevSaved) => !prevSaved);
-            // }
 
         }
         catch (err) {
@@ -236,9 +226,9 @@ function UserHome() {
 
                                     <i
                                         className={`fa-bookmark save-icon expanded-save-icon
-                                                    ${expandedJobSaved ? 'saved fa-solid' : 'fa-regular'}`
+                                                    ${expandedJobState.saved ? 'saved fa-solid' : 'fa-regular'}`
                                         }
-                                        onClick={() => handleToggleSave(expandedJob, setExpandedJobSaved)}
+                                        onClick={() => handleToggleSave(expandedJob, expandedJobState.saved, expandedJobState.setSaved)}
 
                                     ></i>
                                 </div>
