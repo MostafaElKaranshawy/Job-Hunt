@@ -100,37 +100,12 @@ function UserHome() {
     async function handleApplyClick (){
         navigate(`/user/apply/job/${expandedJob.id}/form`);
         setExpandedJob(null);
-        
-        // try {
-        //     const form = await getJobForm(expandedJob.id);
-        //     // console.log(form);
-        //     setFormData(form);
-        // } catch (error) {
-        //     console.error(error.message);
-        // }
-        
     };
-    // async function getJobForm(id) {
-    //     try{
-    //         const url = `http://localhost:8080/job/${id}/form`;
-    //         const response = await fetch(url, {
-    //             method: 'GET',
-    //             credentials: 'include',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         });
-    
-    //         if (!response.ok) {
-    //             throw new Error(`Response status: ${response.status}`);
-    //         }
-    
-    //         const form = await response.json();
-    //         return form;
-    //     } catch (error) {
-    //         console.error(error.message);
-    //     }
-    // }
+
+    function handleReportClick(){
+        navigate(`/user/job/${expandedJob.id}/report`);
+    }
+
       
     return (
         <div className="home">
@@ -226,6 +201,8 @@ function UserHome() {
 
                         {/* Apply button */}
                         <button className="apply-button" onClick={handleApplyClick}>Apply Now</button>
+                        <br/>
+                        <button className="apply-button" onClick={handleReportClick}>Report</button>
 
                         <p className="job-description">{expandedJob.description}</p>
 
