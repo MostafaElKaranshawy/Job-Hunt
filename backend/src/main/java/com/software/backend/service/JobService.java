@@ -1,8 +1,7 @@
 package com.software.backend.service;
 
 import com.software.backend.dto.HomeDto;
-import com.software.backend.repository.ApplicantRepository;
-import com.software.backend.repository.SavedJobRepository;
+import com.software.backend.repository.*;
 import com.software.backend.sorting.SortingContext;
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
@@ -13,8 +12,6 @@ import com.software.backend.dto.SectionDto;
 import com.software.backend.entity.*;
 import com.software.backend.mapper.FieldMapper;
 import com.software.backend.mapper.JobMapper;
-import com.software.backend.repository.JobRepository;
-import com.software.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -48,6 +45,8 @@ public class JobService {
     private SavedJobRepository savedJobRepository;
     @Autowired
     private ApplicantRepository applicantRepository;
+    @Autowired
+    private JobApplicationRepository jobApplicationRepository;
 
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
@@ -93,15 +92,21 @@ public class JobService {
                 .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
         int applicantId = user.getId();
 
-        List<Integer> savedJobsIds = getSavedJobs(applicantId);
         HomeDto filteredJobs = filterJobs(type, location, category, salary, level, query, sort, page, offset);
+        List<Integer> savedJobsIds = getSavedJobs(applicantId);
+        List<Integer> jobIds = filteredJobs.getJobs().stream().map(JobDto::getId).toList();
+        List<Integer> appliedJobsIds = jobApplicationRepository.getJobIdByApplicantIdAndJobIds(applicantId, jobIds)
+                .orElse(new ArrayList<>());
 
         for (JobDto job:filteredJobs.getJobs()) {
 
             job.setSaved(savedJobsIds.contains(job.getId()));
+
+            job.setApplied(appliedJobsIds.contains(job.getId()));
         }
         return filteredJobs;
     }
+
     public HomeDto filterJobs(String type, String location, String category,
                                    String salary, String level, String query,
                                    String sort, int page, int offset
@@ -191,9 +196,7 @@ public class JobService {
     private List<Integer> getSavedJobs (int applicantId) {
         return savedJobRepository.getJobIdByApplicantId(applicantId).orElse(new ArrayList<>());
     }
-    private List<Integer> getAppliedJobs (String applicantId) {
-        return new ArrayList<>();
-    }
+
 
     public void saveJob(String username, int jobId) {
         Applicant applicant = applicantRepository.findByUser_username(username)

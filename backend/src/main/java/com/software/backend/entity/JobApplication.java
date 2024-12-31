@@ -18,6 +18,7 @@ public class JobApplication {
     @Column(name = "application_id")
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
     @Column(
         name = "application_status",
         nullable = false
