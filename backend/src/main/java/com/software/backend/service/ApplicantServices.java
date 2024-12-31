@@ -94,32 +94,32 @@ public class ApplicantServices {
     public HomeDto getSavedJobs(String username, int page, int offset) {
         User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
-        if(user != null){
-            Applicant applicant = repo.findById(user.getId()).orElse(null);
-            Pageable pageable = PageRequest.of(page, offset);
-            if(applicant != null) {
-                List<SavedJob> savedJobs = savedJobRepository.getSavedJobsByApplicantId(applicant.getId(), pageable)
-                        .orElseGet(Collections::emptyList);
+        if (user == null)
+            return null;
+        Applicant applicant = repo.findById(user.getId()).orElse(null);
+        Pageable pageable = PageRequest.of(page, offset);
+        if(applicant == null)
+            return null;
+        List<SavedJob> savedJobs = savedJobRepository.getSavedJobsByApplicantId(applicant.getId(), pageable)
+                .orElseGet(Collections::emptyList);
 
-                List<Integer> appliedJobsIds = jobApplicationRepository
-                        .getJobIdByApplicantIdAndJobIds(applicant.getId(),
-                                savedJobs.stream().map(savedJob -> savedJob.getJob().getId()).toList())
-                        .orElseGet(Collections::emptyList);
+        List<Integer> appliedJobsIds = jobApplicationRepository
+                .getJobIdByApplicantIdAndJobIds(applicant.getId(),
+                        savedJobs.stream().map(savedJob -> savedJob.getJob().getId()).toList())
+                .orElseGet(Collections::emptyList);
 
-                HomeDto homeDto = new HomeDto();
-                List<JobDto> jobs = savedJobs.stream()
-                        .map(savedJob -> {
-                            JobDto jobDto = jobMapper.jobToJobDto(savedJob.getJob());
-                            jobDto.setSaved(true);
-                            jobDto.setApplied(appliedJobsIds.contains(jobDto.getId()));
-                            return jobDto;
-                        })
-                        .toList();
-                homeDto.setJobs(jobs);
-                homeDto.setTotalJobs(savedJobRepository.countByApplicantId(applicant.getId()));
-                return homeDto;
-            }
-        }
-        return null;
+        HomeDto homeDto = new HomeDto();
+        List<JobDto> jobs = savedJobs.stream()
+                .map(savedJob -> {
+                    JobDto jobDto = jobMapper.jobToJobDto(savedJob.getJob());
+                    jobDto.setSaved(true);
+                    jobDto.setApplied(appliedJobsIds.contains(jobDto.getId()));
+                    return jobDto;
+                })
+                .toList();
+        homeDto.setJobs(jobs);
+        homeDto.setTotalJobs(savedJobRepository.countByApplicantId(applicant.getId()));
+        return homeDto;
+
     }
 }
