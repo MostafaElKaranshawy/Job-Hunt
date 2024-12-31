@@ -9,6 +9,7 @@ function JobCard({ job, handleExpandJob, handleToggleSave }) {
     const [saveLoading, setSaveLoading] = useState(false);
 
 
+
     const handleSaveClick = async (e) => {
         if (saveLoading) return;
 
@@ -52,7 +53,7 @@ function JobCard({ job, handleExpandJob, handleToggleSave }) {
 
             {/* add the apply and don't apply when already applied */}
             <button
-                onClick={() => handleExpandJob(job)}
+                onClick={() => handleExpandJob(job, saved, setSaved)}
                 className="learn-more-button"
             >
                 Learn More

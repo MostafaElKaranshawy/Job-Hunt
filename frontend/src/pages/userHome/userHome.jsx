@@ -16,6 +16,8 @@ function UserHome() {
 
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
+    const [expandedJobSaved, setExpandedJobSaved] = useState(false);
+
 
     const [page, setPage] = useState(0);
     const [totalJobsCount, setTotalJobsCount] = useState(0); // New state for total jobs count
@@ -32,6 +34,8 @@ function UserHome() {
         searchQuery: "",
         sortBy: "DateDesc",
     });
+
+
 
 
     useEffect(() => {
@@ -61,12 +65,14 @@ function UserHome() {
         setPage(0);
     };
 
-    const handleExpandJob = (job) => {
+    const handleExpandJob = (job, saved, setSaved) => {
         setExpandedJob(job);
+        setExpandedJobSaved(saved);
     };
 
     const handleCloseExpandedJob = () => {
         setExpandedJob(null);
+        setExpandedJobSaved(false);
     };
 
 
@@ -106,18 +112,23 @@ function UserHome() {
             setSaved((prevSaved) => !prevSaved);
 
             console.log("job saved")
-            if (expandedJob && expandedJob.id === job.id) {
-                console.log("opened ")
-                setExpandedJob({
-                    ...expandedJob,
-                    saved: job.saved,
-                });
-            }
+            // if (expandedJob && expandedJob.id === job.id) {
+            //     console.log("opened ")
+            //     setExpandedJob({
+            //         ...expandedJob,
+            //         saved: job.saved,
+            //     });
+            // }
+
+            // if (expandedJob && expandedJob.id === job.id) {
+            //     console.log("opened ")
+            //     setSaved((prevSaved) => !prevSaved);
+            // }
 
         }
         catch (err) {
             console.error(err);
-        
+
         }
 
 
@@ -225,9 +236,9 @@ function UserHome() {
 
                                     <i
                                         className={`fa-bookmark save-icon expanded-save-icon
-                                                ${expandedJob.saved ? 'saved fa-solid' : 'fa-regular'}`
+                                                    ${expandedJobSaved ? 'saved fa-solid' : 'fa-regular'}`
                                         }
-                                        onClick={() => handleToggleSave(expandedJob)}
+                                        onClick={() => handleToggleSave(expandedJob, setExpandedJobSaved)}
 
                                     ></i>
                                 </div>
