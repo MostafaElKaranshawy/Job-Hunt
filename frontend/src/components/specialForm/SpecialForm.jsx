@@ -5,127 +5,171 @@ import PersonalSection from "../primarySections/PersonalSection.jsx";
 import SkillSection from "../primarySections/skillSection";
 import SpecialSection from "../specialSection/SpecialSection.jsx";
 import SpecialField from "../specialSection/SpecialField.jsx";
+import { useParams } from "react-router-dom";
 import "./specialForm.css";
 
-export default function SpecialForm({open, onClose, sectionData, job }) {
-    const [personalData, setPersonalData] = useState({});
-    const [educationData, setEducationData] = useState({});
-    const [experienceData, setExperienceData] = useState({});
-    const [skillData, setSkillData] = useState([]);
-    const [specialSectionsData, setSpecialSectionsData] = useState([]);
-    const [specialFieldsData, setSpecialFieldsData] = useState([]);
-    const [currentJob, setCurrentJob] = useState({});
-    
-    useEffect(() => {
-        setCurrentJob(job);
-    },[job])
-    
-    async function sendResponse(id,data) {
-        try{
-            const url = `http://localhost:8080/job/${id}/form/response`;
-            const response = await fetch(url, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-    
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
-    
-            const res = await response.json();
-            return res;
-        } catch (error) {
-            console.error(error.message);
-        }
+const initialFormState = {
+  personalData: null,
+  educationData: null,
+  experienceData: null,
+  skillData: [],
+  specialSectionsData: [],
+  specialFieldsData: [],
+};
+
+export default function SpecialForm({ open, onClose, sectionData, job }) {
+  const [personalData, setPersonalData] = useState(initialFormState.personalData);
+  const [educationData, setEducationData] = useState(initialFormState.educationData);
+  const [experienceData, setExperienceData] = useState(initialFormState.experienceData);
+  const [skillData, setSkillData] = useState(initialFormState.skillData);
+  const [specialSectionsData, setSpecialSectionsData] = useState(initialFormState.specialSectionsData);
+  const [specialFieldsData, setSpecialFieldsData] = useState(initialFormState.specialFieldsData);
+  const [currentJob, setCurrentJob] = useState({});
+  const { userName } = useParams();
+  
+  // Reset form when sectionData changes or form is closed
+  useEffect(() => {
+    resetForm();
+  }, [sectionData, open]);
+
+  useEffect(() => {
+    setCurrentJob(job);
+  }, [job]);
+
+  const resetForm = () => {
+    setPersonalData(initialFormState.personalData);
+    setEducationData(initialFormState.educationData);
+    setExperienceData(initialFormState.experienceData);
+    setSkillData(initialFormState.skillData);
+    setSpecialSectionsData(initialFormState.specialSectionsData);
+    setSpecialFieldsData(initialFormState.specialFieldsData);
+  };
+
+  async function sendResponse(id, data) {
+    try {
+      const url = `http://localhost:8080/job/${id}/form/response`;
+      const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const res = await response.json();
+      return res;
+    } catch (error) {
+      console.error(error.message);
     }
+  }
 
-    const handleSubmitButton = () => {
-        const data = {
-            personalData,
-            educationData,
-            experienceData,
-            skillData,
-            specialSectionsData,
-            specialFieldsData,
-        }
-        console.log(data);
-        sendResponse(currentJob.id,data);
-        onClose();
+  const handleSubmitButton = async () => {
+    const data = {
+      personalData,
+      educationData,
+      experienceData,
+      skillData,
+      specialSectionsData,
+      specialFieldsData,
     };
+    console.log(data);
+    try {
+      await sendResponse(currentJob.id, data);
+      resetForm();
+      onClose();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
 
-    const handleSpecialSectionChange = (sectionName, data) => {
-        setSpecialSectionsData((prevData) => {
-            const updatedData = prevData.map((section) =>
-                section.sectionName === sectionName ? { sectionName, data } : section
-            );
-            // Check if the sectionName doesn't already exist in the state
-            const isNewSection = !prevData.some(section => section.sectionName === sectionName);
-            if (isNewSection) {
-                updatedData.push({ sectionName, data });
-            }
-            return updatedData;
-        });
-    };
+  const handleSpecialSectionChange = (sectionName, data) => {
+    setSpecialSectionsData((prevData) => {
+      const existingIndex = prevData.findIndex(section => section.sectionName === sectionName);
+      
+      if (existingIndex !== -1) {
+        // Update existing section
+        const updatedData = [...prevData];
+        updatedData[existingIndex] = { sectionName, data };
+        return updatedData;
+      } else {
+        // Add new section
+        return [...prevData, { sectionName, data }];
+      }
+    });
+  };
 
-    const handleSpecialFieldChange = (index, value) => {
-        setSpecialFieldsData((prevData) => {
-            const updatedData = [...prevData];
-            // Update the specific field object with both fieldName and value
-            updatedData[index] = {
-                fieldName: sectionData.fields[index].label, // Or field.name if it exists
-                data: value,
-            };
-            return updatedData;
-        });
-    };
-    
+  const handleSpecialFieldChange = (index, value, name) => {
+    setSpecialFieldsData((prevData) => {
+      const existingIndex = prevData.findIndex(field => field.fieldName === name);
+      
+      if (existingIndex !== -1) {
+        // Update existing field
+        const updatedData = [...prevData];
+        updatedData[existingIndex] = { fieldName: name, data: value };
+        return updatedData;
+      } else {
+        // Add new field
+        return [...prevData, { fieldName: name, data: value }];
+      }
+    });
+  };
 
-    return (
-        <>
-        {open && <div className="special-apply-user">
-            <button className="close-button" onClick={onClose}>
-                        &times;
+  return (
+    <>
+      {open && (
+        <div className="special-apply-user">
+          <button className="close-button" onClick={onClose}>
+            &times;
+          </button>
+          <h1 style={{ textAlign: "center" }}>Form</h1>
+          <form onSubmit={(e) => e.preventDefault()}>
+            {sectionData?.staticSections?.includes("Personal Information") && (
+              <PersonalSection onChange={setPersonalData} value={personalData} />
+            )}
+            {sectionData?.staticSections?.includes("Education") && (
+              <EducationSection onChange={setEducationData} value={educationData} />
+            )}
+            {sectionData?.staticSections?.includes("Experience") && (
+              <ExperienceSection onChange={setExperienceData} value={experienceData} />
+            )}
+            {sectionData?.staticSections?.includes("Skills") && (
+              <SkillSection onChange={setSkillData} value={skillData} />
+            )}
+
+            {sectionData?.sections?.map((data, index) => (
+              <SpecialSection
+                key={`${data.name}-${index}`}
+                sectionName={data.name}
+                labels={data.label}
+                fieldType={data.type}
+                fieldOptions={data.options}
+                Mandatory={data.isRequired}
+                onChange={(sectionData) => handleSpecialSectionChange(data.name, sectionData)}
+              />
+            ))}
+
+            {sectionData.fields?.map((field, index) => (
+              <SpecialField
+                key={`${field.label}-${index}`}
+                label={field.label}
+                fieldType={field.type}
+                fieldOptions={field.options}
+                isMandatory={field.isRequired}
+                onChange={(fieldData) => handleSpecialFieldChange(index, fieldData, field.label)}
+              />
+            ))}
+
+            <button type="button" className="form-button" onClick={handleSubmitButton}>
+              Submit
             </button>
-            <h1 style={{ textAlign: "center" }}>Form</h1>
-            <form>
-                {sectionData?.staticSections?.includes("Personal Information") && (<PersonalSection onChange={setPersonalData} />)}
-                {sectionData?.staticSections?.includes("Education") && (<EducationSection onChange={setEducationData} />)}
-                {sectionData?.staticSections?.includes("Experience") && (<ExperienceSection onChange={setExperienceData} />)}
-                {sectionData?.staticSections?.includes("Skills") && (<SkillSection onChange={setSkillData} />)}
-
-
-                {sectionData?.sections?.map((data, index) => (
-                    <SpecialSection
-                        key={index}
-                        sectionName={data.name}
-                        labels={data.label}
-                        fieldType={data.type}
-                        fieldOptions={data.options}
-                        Mandatory={data.isRequired}
-                        onChange={(sectionData) => handleSpecialSectionChange(data.name, sectionData)}
-                    />
-                ))}
-
-                {sectionData.fields?.map((field, index) => (
-                    <SpecialField
-                        key={index}
-                        label={field.label}
-                        fieldType={field.type}
-                        fieldOptions={field.options}
-                        isMandatory={field.isRequired}
-                        onChange={(fieldData) => handleSpecialFieldChange(index, fieldData)}
-                    />
-                ))}
-
-                <button type="" className="form-button" onClick={handleSubmitButton}>Submit</button>
-            </form>
-            
+          </form>
         </div>
-        }
-        </>
-    );
+      )}
+    </>
+  );
 }
