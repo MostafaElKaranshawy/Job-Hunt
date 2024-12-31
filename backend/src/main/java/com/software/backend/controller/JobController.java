@@ -1,5 +1,6 @@
 package com.software.backend.controller;
 
+import com.software.backend.dto.ApplicationResponseDTO;
 import com.software.backend.dto.FormDTO;
 import com.software.backend.dto.HomeDto;
 import com.software.backend.dto.JobDto;
@@ -63,6 +64,19 @@ public class JobController {
         try {
             FormDTO jobForm = jobService.getJobForm(jobId);
             return ResponseEntity.ok(jobForm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/job/{userName}/{jobId}/form/response")
+    public ResponseEntity<?> submitJobForm(@PathVariable String userName, @PathVariable int jobId, @RequestBody ApplicationResponseDTO dto){
+
+        try {
+            jobService.submitJobForm(userName, jobId, dto);
+            return ResponseEntity.ok("Form submitted successfully");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());

@@ -12,4 +12,6 @@ public interface FieldRepository extends JpaRepository<Field, Integer> {
     List<Field> findAllBySectionId(Integer id);
 
     List<Field> findAllByJobId(int jobId);
+
+    Field findBySectionIdAndLabel(Integer section_id, String label);
 }

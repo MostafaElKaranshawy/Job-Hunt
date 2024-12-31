@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import EducationSection from "../primarySections/EducationSection";
 import ExperienceSection from "../primarySections/ExperienceSection";
 import PersonalSection from "../primarySections/PersonalSection.jsx";
@@ -8,21 +9,36 @@ import SpecialField from "../specialSection/SpecialField.jsx";
 import "./specialForm.css";
 
 export default function SpecialForm({open, onClose, sectionData, job }) {
-    const [personalData, setPersonalData] = useState({});
-    const [educationData, setEducationData] = useState({});
-    const [experienceData, setExperienceData] = useState({});
+    const { userName } = useParams();
+    const [personalData, setPersonalData] = useState(null);
+    const [educationData, setEducationData] = useState(null);
+    const [experienceData, setExperienceData] = useState(null);
     const [skillData, setSkillData] = useState([]);
     const [specialSectionsData, setSpecialSectionsData] = useState([]);
     const [specialFieldsData, setSpecialFieldsData] = useState([]);
     const [currentJob, setCurrentJob] = useState({});
+    const [isSubmitted, setIsSubmitted] = useState(false);
     
     useEffect(() => {
         setCurrentJob(job);
     },[job])
+
+    useEffect(() => {
+        if (isSubmitted) {
+            setPersonalData(null);
+            setEducationData(null);
+            setExperienceData(null);
+            setSkillData([]);
+            setSpecialSectionsData([]);
+            setSpecialFieldsData([]);
+            setIsSubmitted(false); // Reset the submission status
+        }
+    }, [isSubmitted]);
     
-    async function sendResponse(id,data) {
+    async function sendResponse(userName, id, data, callback) {
+        userName = "jesselingard253";
         try{
-            const url = `http://localhost:8080/job/${id}/form/response`;
+            const url = `http://localhost:8080/job/${userName}/${id}/form/response`;
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include',
@@ -31,12 +47,16 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
                 },
                 body: JSON.stringify(data)
             });
+
+            if (callback) callback();
+
     
             if (!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
             }
     
             const res = await response.json();
+            console.log("Application saved successfully", res);
             return res;
         } catch (error) {
             console.error(error.message);
@@ -53,7 +73,10 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
             specialFieldsData,
         }
         console.log(data);
-        sendResponse(currentJob.id,data);
+        //sendResponse(userName, currentJob.id,data);
+        sendResponse(userName, currentJob.id, data, () => {
+            setIsSubmitted(true);
+        });
         onClose();
     };
 
@@ -121,7 +144,7 @@ export default function SpecialForm({open, onClose, sectionData, job }) {
                     />
                 ))}
 
-                <button type="" className="form-button" onClick={handleSubmitButton}>Submit</button>
+                <button type="submit" className="form-button" onClick={handleSubmitButton}>Submit</button>
             </form>
             
         </div>

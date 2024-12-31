@@ -10,4 +10,6 @@ import java.util.List;
 public interface SectionRepository extends JpaRepository<Section, Integer> {
 
     List<Section> findAllByJobId(int jobId);
+
+    Section findByJobIdAndName(int jobId, String name);
 }
