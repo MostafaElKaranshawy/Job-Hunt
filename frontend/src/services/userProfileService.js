@@ -149,11 +149,35 @@ async function changePassword(userName, passwordData) {
   }
 
 }
+
+async function getSavedJobs(username, page, offset) {
+    const url = `${backendURL}/users/${username}/profile/savedJobs?page=${page}&offset=${offset}`;
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+
+        console.log(json);
+        return json;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 export{
     getUserProfile,
     editUserProfile,
     handleCustomSectionOperation,
     getUserSkills,
     editUserSkills,
-    changePassword
+    changePassword,
+    getSavedJobs
 }

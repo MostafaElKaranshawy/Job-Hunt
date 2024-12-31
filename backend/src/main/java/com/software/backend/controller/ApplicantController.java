@@ -1,6 +1,7 @@
 package com.software.backend.controller;
 
 import com.software.backend.dto.ApplicantDTO;
+import com.software.backend.dto.JobDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,5 +53,25 @@ public class ApplicantController {
             return ResponseEntity.ok("Skills updated successfully");
         else
             return new ResponseEntity<>("User has Empty skills List or the User not found", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/{username}/profile/savedJobs")
+    public ResponseEntity<List<JobDto>> getSavedJobs(@PathVariable String username,
+                                                     @RequestParam(name =  "page", defaultValue = "0") int page,
+                                                     @RequestParam(name = "offset", defaultValue = "5") int offset){
+        try {
+            System.out.println(username);
+            System.out.println(page);
+            System.out.println(offset);
+            List<JobDto> jobs = service.getSavedJobs(username, page, offset);
+            if(jobs != null)
+                return new ResponseEntity<>(jobs, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch (EntityNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 }
