@@ -49,6 +49,7 @@ public class AdminService {
 
         user.setIsBanned(true);
         userRepository.save(user);
+        reportedApplicantRepository.deleteAllByApplicantId(applicantId);
         return true;
     }
 

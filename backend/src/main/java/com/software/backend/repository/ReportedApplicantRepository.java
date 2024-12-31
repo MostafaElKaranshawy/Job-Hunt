@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReportedApplicantRepository extends JpaRepository<ReportedApplicant, Integer> {
+    void deleteAllByApplicantId(Integer applicantId);
 }

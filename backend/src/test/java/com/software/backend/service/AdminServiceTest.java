@@ -67,13 +67,20 @@ class AdminServiceTest {
         // Mock the behavior of the userRepository
         when(userRepository.findById(1)).thenReturn(Optional.of(testUser));
 
-
+        // Call the method under test
         boolean result = adminService.banUser(1);
 
+        // Assertions to verify the user is banned
         assertTrue(result);
         assertTrue(testUser.getIsBanned());
+
+        // Verify that the user was saved
         verify(userRepository, times(1)).save(testUser);
+
+        // Verify that deleteAllByApplicantId was called with the correct applicantId
+        verify(reportedApplicantRepository, times(1)).deleteAllByApplicantId(1);
     }
+
 
     @Test
     void testBanUser_UserNotFound() {
@@ -236,6 +243,8 @@ class AdminServiceTest {
         // Mock ReportedApplicantDto mapping
         ReportedApplicantDto reportedApplicantDto = new ReportedApplicantDto();
         reportedApplicantDto.setId(1);
+        reportedApplicantDto.setEmail("email.com");
+        reportedApplicantDto.setUsername("john_doe");
         reportedApplicantDto.setApplicantReportReason(ApplicantReportReason.SPAM);
         reportedApplicantDto.setReportDescription("Scam job posting");
         reportedApplicantDto.setCreatedAt(LocalDateTime.of(2024, 12, 31, 11, 0));
@@ -261,6 +270,8 @@ class AdminServiceTest {
         assertEquals(reportedApplicantDto.getApplicantReportReason(), resultDto.getApplicantReportReason());
         assertEquals(reportedApplicantDto.getReportDescription(), resultDto.getReportDescription());
         assertEquals(reportedApplicantDto.getCreatedAt(), resultDto.getCreatedAt());
+        assertEquals(reportedApplicantDto.getEmail(), resultDto.getEmail());
+        assertEquals(reportedApplicantDto.getUsername(), resultDto.getUsername());
 
         // assert applicant fields
         assertEquals(reportedApplicantDto.getApplicant().getId(), resultDto.getApplicant().getId());

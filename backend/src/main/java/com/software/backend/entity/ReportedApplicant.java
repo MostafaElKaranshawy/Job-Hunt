@@ -30,7 +30,6 @@ public class ReportedApplicant {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-
     @ManyToOne
     @JoinColumn(name = "applicant_id", nullable = false)
     private Applicant applicant;
