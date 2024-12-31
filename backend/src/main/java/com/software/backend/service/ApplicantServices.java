@@ -116,7 +116,7 @@ public class ApplicantServices {
                         })
                         .toList();
                 homeDto.setJobs(jobs);
-                homeDto.setTotalJobs(savedJobRepository.getSavedJobsCountByApplicantId(applicant.getId()));
+                homeDto.setTotalJobs(savedJobRepository.countByApplicantId(applicant.getId()));
                 return homeDto;
             }
         }

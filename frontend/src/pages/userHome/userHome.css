@@ -221,8 +221,3 @@
     outline: none;
     box-shadow: none;
 }
-
-.saved-jobs-section.home {
-    height: auto;
-    overflow: hidden;
-}

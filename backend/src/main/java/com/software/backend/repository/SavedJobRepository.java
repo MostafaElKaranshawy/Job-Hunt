@@ -20,8 +20,7 @@ public interface SavedJobRepository extends JpaRepository<SavedJob, Integer> {
 
     Optional<List<SavedJob>> getSavedJobsByApplicantId(Integer applicantId, Pageable pageable);
 
-    @Query("SELECT COUNT(s) FROM SavedJob s WHERE s.applicant.id = :applicantId")
-    Integer getSavedJobsCountByApplicantId(@Param("applicantId") Integer applicantId);
+    Integer countByApplicantId(Integer applicantId);
 
     boolean existsByApplicantIdAndJobId(Integer applicantId, Integer jobId);
     void deleteByApplicantIdAndJobId(Integer applicantId, Integer jobId);

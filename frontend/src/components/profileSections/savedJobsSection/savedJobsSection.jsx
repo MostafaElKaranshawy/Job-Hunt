@@ -4,7 +4,7 @@ import { getSavedJobs } from "../../../services/userProfileService";
 import JobCard from "../../jobCard/JobCard";
 import { calculateRelativeTime } from "../../../utils/userHomeUtils";
 import { locationOptions, employmentTypes, jobLevels } from '../../../constants/filterOptions';
-
+import './savedJobsSection.css';
 
 export default function SavedJobsSection() {
     const [jobs, setJobs] = useState([]);
@@ -16,7 +16,7 @@ export default function SavedJobsSection() {
     const [totalJobsCount, setTotalJobsCount] = useState(0); // New state for total jobs count
 
     const [loading, setLoading] = useState(false);
-    const offset = 2;
+    const offset = 5;
     const username = document.cookie.split("username=")[1];
     
 
@@ -69,6 +69,7 @@ export default function SavedJobsSection() {
 
     return (
         <div className="saved-jobs-section home">
+            
             <div className="job-content">
                 <div className="jobs-header">
                     <div className="job-range">
