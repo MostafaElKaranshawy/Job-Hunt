@@ -47,7 +47,8 @@ function AdminLoginPage() {
             if (response.success === true) {
                 setErrors({});
                 console.log(response);
-                window.location.href = '/home'; 
+                
+                window.location.href = '/admin/dashboard'; 
                 //change the path to the admin home page
             } else {
                 setErrors((prevErrors) => ({
@@ -65,42 +66,44 @@ function AdminLoginPage() {
     };
 
     return (
-        <div className="login-page">
-            <div className="login-container">
-                <h1>Admin Login Page</h1>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="username">Username</label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            placeholder="ex.Mohamed"
-                            className={errors.username ? "error-input" : ""}
-                        />
-                        {errors.username && <p className="error">{errors.username}</p>}
-                    </div>
+        <div className="admin-login-page">
+            <div className="admin-login-page-container">
+                <div className="login-container">
+                    <h1>Admin Login Page</h1>
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label htmlFor="username">Username</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                placeholder="ex.Mohamed"
+                                className={errors.username ? "error-input" : ""}
+                            />
+                            {errors.username && <p className="error">{errors.username}</p>}
+                        </div>
 
-                    <div>
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            className={errors.password ? "error-input" : ""}
-                        />
-                        {errors.password && <p className="error">{errors.password}</p>}
-                    </div>
+                        <div>
+                            <label htmlFor="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                className={errors.password ? "error-input" : ""}
+                            />
+                            {errors.password && <p className="error">{errors.password}</p>}
+                        </div>
 
-                    <button type="submit" className="send-button">
-                        Log In
-                    </button>
-                </form>
-                {errors.failureMessage && <p className="error-message">{errors.failureMessage}</p>}
+                        <button type="submit" className="send-button">
+                            Log In
+                        </button>
+                    </form>
+                    {errors.failureMessage && <p className="error-message">{errors.failureMessage}</p>}
+                </div>
             </div>
         </div>
     );
