@@ -10,6 +10,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -74,5 +75,9 @@ public class Job {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Field> fields;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavedJob> savedJobs;
+
 }
 
