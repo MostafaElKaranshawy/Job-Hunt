@@ -80,7 +80,7 @@ export default function SavedJobsSection() {
                 {loading ?
                     <p className="loading-text">Loading jobs...</p> :
                     jobs.length === 0 ?
-                        <p className="no-jobs-message">No matching jobs found</p> :
+                        <p className="no-jobs-message">No Saved jobs found</p> :
                         (
                             <div className="job-list">
                                 {jobs.map((job) => (
