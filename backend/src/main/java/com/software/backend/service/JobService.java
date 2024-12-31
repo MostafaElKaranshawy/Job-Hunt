@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +35,14 @@ public class JobService {
     @Autowired
     private JobRepository jobRepository;
     @Autowired
+    private SectionRepository sectionRepository;
+    @Autowired
+    private FieldRepository fieldRepository;
+    @Autowired
+    private ApplicantRepository applicantRepository;
+    @Autowired
+    private JobApplicationRepository jobApplicationRepository;
+    @Autowired
     private JobMapper jobMapper;
     @Autowired
     private JobCriteriaRunner jobCriteriaRunner;
@@ -42,7 +51,6 @@ public class JobService {
     private StaticSectionService staticSectionService;
     @Autowired
     private FieldMapper fieldMapper;
-
 
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
@@ -511,11 +519,162 @@ public class JobService {
         jobApplicationRepository.save(jobApplication);
     }
 
-    public void getJobApplications(String companyUsername, Integer jobId) {
-        System.out.println("Get Job Applications");
-        System.out.println("Company Username: " + companyUsername);
-        System.out.println("jobId: " + jobId);
+    public List<ApplicationResponseDTO> getJobApplications(Integer jobId) {
+        List<JobApplication> jobApplications = jobApplicationRepository.findAllByJobId(jobId);
+        List<ApplicationResponseDTO> responseDTOs = new ArrayList<>();
+
+        for (JobApplication jobApplication : jobApplications) {
+            ApplicationResponseDTO dto = new ApplicationResponseDTO();
+            List<ApplicationResponse> responses = jobApplication.getApplicationResponsesList();
+
+            ApplicationResponseDTO.PersonalDataDTO personalData = new ApplicationResponseDTO.PersonalDataDTO();
+            ApplicationResponseDTO.EducationDataDTO educationData = new ApplicationResponseDTO.EducationDataDTO();
+            ApplicationResponseDTO.ExperienceDataDTO experienceData = new ApplicationResponseDTO.ExperienceDataDTO();
+            List<String> skills = new ArrayList<>();
+
+            List<ApplicationResponseDTO.SpecialFieldDTO> specialFields = new ArrayList<>();
+            List<ApplicationResponseDTO.SpecialSectionDTO> specialSections = new ArrayList<>();
+
+            for (ApplicationResponse response : responses) {
+                if (response.getSection() != null) {
+                    String sectionName = response.getSection().getName();
+                    String fieldName = response.getField().getLabel();
+                    String responseData = response.getResponseData();
+
+                    // Map to one of the static sections
+                    switch (sectionName) {
+                        case "Personal Information":
+                            mapToPersonalData(personalData, fieldName, responseData);
+                            break;
+                        case "Education":
+                            mapToEducationData(educationData, fieldName, responseData);
+                            break;
+                        case "Experience":
+                            mapToExperienceData(experienceData, fieldName, responseData);
+                            break;
+                        case "Skills":
+                            skills.add(responseData);
+                            break;
+                        default:
+                            // Map Section data to SpecialSectionDTO
+                            mapToSpecialSection(specialSections, sectionName, fieldName, responseData);
+                            break;
+                    }
+                } else {
+                    // Map Field data to SpecialFieldDTO
+                    ApplicationResponseDTO.SpecialFieldDTO specialFieldDTO = new ApplicationResponseDTO.SpecialFieldDTO();
+                    specialFieldDTO.setFieldName(response.getField().getLabel());
+                    specialFieldDTO.setData(response.getResponseData());
+                    specialFields.add(specialFieldDTO);
+                }
+            }
+
+            // Set data in the DTO
+            dto.setPersonalData(personalData);
+            dto.setEducationData(educationData);
+            dto.setExperienceData(experienceData);
+            dto.setSkillData(skills);
+            dto.setSpecialFieldsData(specialFields);
+            dto.setSpecialSectionsData(specialSections);
+
+            responseDTOs.add(dto);
+        }
+
+        return responseDTOs;
     }
+
+    private void mapToPersonalData(ApplicationResponseDTO.PersonalDataDTO personalData, String fieldName, String responseData) {
+        switch (fieldName) {
+            case "Full Name":
+                personalData.setFullName(responseData);
+                break;
+            case "Address":
+                personalData.setAddress(responseData);
+                break;
+            case "Phone Number":
+                personalData.setPhoneNumber(responseData);
+                break;
+            case "Personal Email":
+                personalData.setPersonalEmail(responseData);
+                break;
+            case "Portfolio URL":
+                personalData.setPortfolioURL(responseData);
+                break;
+            case "LinkedIn URL":
+                personalData.setLinkedInURL(responseData);
+                break;
+            case "Date of Birth":
+                personalData.setDateOfBirth(responseData);
+                break;
+        }
+    }
+
+    private void mapToEducationData(ApplicationResponseDTO.EducationDataDTO educationData, String fieldName, String responseData) {
+        switch (fieldName) {
+            case "Field of Study":
+                educationData.setFieldOfStudy(responseData);
+                break;
+            case "Graduation Year":
+                educationData.setGraduationYear(responseData);
+                break;
+            case "Highest Degree":
+                educationData.setHighestDegree(responseData);
+                break;
+            case "Start Year":
+                educationData.setStartYear(responseData);
+                break;
+            case "University":
+                educationData.setUniversity(responseData);
+                break;
+        }
+    }
+
+    private void mapToExperienceData(ApplicationResponseDTO.ExperienceDataDTO experienceData, String fieldName, String responseData) {
+        switch (fieldName) {
+            case "Company Name":
+                experienceData.setCompanyName(responseData);
+                break;
+            case "Job Title":
+                experienceData.setJobTitle(responseData);
+                break;
+            case "Job Location":
+                experienceData.setJobLocation(responseData);
+                break;
+            case "Job Description":
+                experienceData.setJobDescription(responseData);
+                break;
+            case "Start Date":
+                experienceData.setStartDate(responseData);
+                break;
+            case "End Date":
+                experienceData.setEndDate(responseData);
+                break;
+            case "Current Role":
+                experienceData.setCurrentRule(Boolean.parseBoolean(responseData));
+                break;
+        }
+    }
+
+    private void mapToSpecialSection(List<ApplicationResponseDTO.SpecialSectionDTO> specialSections, String sectionName, String fieldName, String responseData) {
+        boolean sectionExists = false;
+        for (ApplicationResponseDTO.SpecialSectionDTO sectionDTO : specialSections) {
+            if (sectionDTO.getSectionName().equals(sectionName)) {
+                sectionDTO.getData().put(fieldName, responseData);
+                sectionExists = true;
+                break;
+            }
+        }
+        if (!sectionExists) {
+            ApplicationResponseDTO.SpecialSectionDTO specialSectionDTO = new ApplicationResponseDTO.SpecialSectionDTO();
+            specialSectionDTO.setSectionName(sectionName);
+            Map<String, String> sectionData = new HashMap<>();
+            sectionData.put(fieldName, responseData);
+            specialSectionDTO.setData(sectionData);
+            specialSections.add(specialSectionDTO);
+        }
+    }
+
+
 
 
 }
