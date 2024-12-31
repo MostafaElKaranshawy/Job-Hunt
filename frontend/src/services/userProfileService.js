@@ -140,6 +140,7 @@ async function changePassword(userName, passwordData) {
         });
         console.log(response)
         if (!response.ok) {
+            console.log(response)
             throw new Error(`Response status: ${response.status}`);
         }
         return "ok";

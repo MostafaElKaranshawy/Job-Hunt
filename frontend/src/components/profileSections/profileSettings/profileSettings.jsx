@@ -53,7 +53,7 @@ export default function ProfileSetting() {
     const saveChanges = async () => {
         let isValid = validatePassword();
         if(!isValid) return;
-        const res = changePassword(userName, {oldPassword, newPassword});
+        const res = await changePassword(userName, {oldPassword, newPassword});
         if (res === "ok") {
             setOldPassword('');
             setNewPassword('');
@@ -61,7 +61,7 @@ export default function ProfileSetting() {
             setShowMessaegBox(true);
         }
         else {
-            setMessage(res);
+            setMessage("Old password is incorrect.");
             setErrors({ "oldPassword": "Old password is incorrect." });
             setShowMessaegBox(true);
             console.log(res);
