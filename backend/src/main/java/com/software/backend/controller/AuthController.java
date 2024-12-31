@@ -4,15 +4,12 @@ import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.dto.ResetPasswordRequest;
 import com.software.backend.dto.LogInRequest;
 import com.software.backend.dto.ResponseMessage;
-import com.software.backend.service.TokenService;
-import com.software.backend.service.UserAuthService;
+import com.software.backend.service.*;
 import com.software.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.service.ApplicantAuthService;
-import com.software.backend.service.CompanyAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +33,12 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @PostMapping("/hash-password")
+    public ResponseEntity<?> hashPassword(@RequestBody String password) {
+        String hashedPassword = PasswordService.hashPassword(password);
+        System.out.println("Hashed password: " + hashedPassword);
+        return ResponseEntity.ok().body(hashedPassword);
+    }
 
     // Google Sign-Up Endpoint
     @PostMapping("/signup/applicant/google")

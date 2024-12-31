@@ -141,6 +141,8 @@ export const adminLogin = async (formData) => {
         });
         const data = await response.json();
         if (response.ok) {
+            document.cookie = `username=${data.username};`;
+            //and i return the userType also if you need it
             console.log(data.message);
             return { success: true, message: data.message };
         } else {

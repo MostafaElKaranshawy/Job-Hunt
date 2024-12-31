@@ -10,6 +10,7 @@ import com.software.backend.enums.UserType;
 import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.exception.UserNotFoundException;
+import com.software.backend.repository.AdminRepository;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
@@ -30,6 +31,7 @@ public class UserAuthService {
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
     private final PasswordService passwordService;
+    private final AdminRepository adminRepository;
 
     public AuthenticationResponse login(LogInRequest request) {
         var user = userRepository.findByEmail(request.getEmail())
@@ -55,8 +57,22 @@ public class UserAuthService {
     }
 
     public AuthenticationResponse adminLogin(LogInRequest request) {
-
-        return null;
+        var admin = adminRepository.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new InvalidCredentialsException("username or password is incorrect"));
+        System.out.println("Admin found");
+        if (!passwordService.verifyPassword(request.getPassword(), admin.getPassword())) {
+                throw new InvalidCredentialsException("username or password is incorrect");
+        }
+        String username = request.getUsername();
+        String userType = "ADMIN";
+        String accessToken = jwtUtil.generateAccessToken(username);
+        String refreshToken = jwtUtil.generateRefreshToken(username);
+        return AuthenticationResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .username(username)
+                .userType(userType)
+                .build();
     }
 
     public void createNewUser(SignUpRequest request) {

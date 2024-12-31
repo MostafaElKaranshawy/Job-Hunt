@@ -48,6 +48,7 @@ function AdminLoginPage() {
                 setErrors({});
                 console.log(response);
                 window.location.href = '/home'; 
+                //change the path to the admin home page
             } else {
                 setErrors((prevErrors) => ({
                     ...prevErrors,
