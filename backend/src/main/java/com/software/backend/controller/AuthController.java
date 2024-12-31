@@ -118,5 +118,11 @@ public class AuthController {
         return  ResponseEntity.ok().body(responseMessage);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        tokenService.deleteCookies(response);
+        ResponseMessage responseMessage = new ResponseMessage("Logged out successfully.");
+        return ResponseEntity.ok().body(responseMessage);
+    }
 }
 

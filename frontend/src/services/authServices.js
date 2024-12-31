@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_BACKEND_URL;
+const apiUrl = 'http://localhost:8080';
 const ERROR_MESSAGE = "Sign-up failed. Please try again.";
 
 export const employerSignUp = async (formData) => {
@@ -23,7 +23,6 @@ export const employerSignUp = async (formData) => {
         return { success: false, message: ERROR_MESSAGE };
     }
 };
-
 export const employeeSignUp = async (formData) => {
     try {
         const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
@@ -100,7 +99,7 @@ export const googleLogIn = async (credentialResponse) => {
 };
 
 export const logIn = async (formData) => {
-  
+
     console.log(formData);
     try {
         const response = await fetch(`${apiUrl}/auth/login`, {
@@ -163,3 +162,27 @@ export const resetPassword = async (resetToken, newPassword) => {
         return { success: false, message: data.message };
     }
 };
+
+export const logout = async ()=>{
+    try{
+        const response = await fetch(`${apiUrl}/auth/logout`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data.message);
+            return { success: true, message: data.message };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+    }catch(error){
+        console.error(error);
+        return { success: false, message: ERROR_MESSAGE };
+    }
+
+}
