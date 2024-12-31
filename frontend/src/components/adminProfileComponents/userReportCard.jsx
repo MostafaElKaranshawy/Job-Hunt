@@ -5,12 +5,21 @@ import './styles/reportCard.css';
 
 const UserReportCard = ({ report, onIgnore, onBan }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const formattedDate = (date)=> { 
+        return new Date(date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+    }
     return (
         <div className="report-card">
             <div className="report-header">
                 <h3>{report.applicant.firstName} {report.applicant.lastName || "Unknown User"}</h3>
-                <span className="report-date">{new Date(report.applicant.createdAt).toLocaleDateString()}</span>
+                <span className="report-date">{formattedDate(report.createdAt)}</span>
             </div>
             <div className="report-content">
                 <p><strong>Reason:</strong> {report.applicantReportReason}</p>
@@ -30,7 +39,7 @@ const UserReportCard = ({ report, onIgnore, onBan }) => {
             </div>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <UserDetails user={report.applicant} />
+                <UserDetails user={{...report.applicant, username:report.username, email:report.email, joinedAt: report.createdAt}} />
             </Modal>
         </div>
     );

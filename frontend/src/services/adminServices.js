@@ -25,7 +25,7 @@ async function getReportedUsers(page, offset) {
 
     });
     const data = await response.json();
-    console.log(data);
+    console.log(data.content);
 
     return {response: data.content, totalPages: data.totalPages};
 }

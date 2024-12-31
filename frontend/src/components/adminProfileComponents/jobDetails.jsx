@@ -16,7 +16,7 @@ const JobDetails = ({ job }) => {
         <div className="job-details">
             <h2>{job.jobTitle}</h2>
             <div className="job-info">
-                <p><strong>Job ID:</strong> Job-{job.jobId}</p>
+                <p><strong>Job ID:</strong> Job-{job.id}</p>
                 <p><strong>Company:</strong> {job.company.name}</p>
                 <p><strong>Job Title:</strong> {job.title}</p>
                 <p><strong>Posted on:</strong> {formattedDate(job.postedAt)}</p>

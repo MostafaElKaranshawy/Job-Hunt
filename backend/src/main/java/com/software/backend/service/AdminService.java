@@ -13,6 +13,7 @@ import com.software.backend.repository.JobRepository;
 import com.software.backend.repository.ReportedApplicantRepository;
 import com.software.backend.repository.ReportedJobRepository;
 import com.software.backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,7 @@ public class AdminService {
     @Autowired
     private JobRepository jobRepository;
 
+    @Transactional
     public boolean banUser(Integer applicantId) {
 
         User user =  userRepository.findById(applicantId).orElseThrow(

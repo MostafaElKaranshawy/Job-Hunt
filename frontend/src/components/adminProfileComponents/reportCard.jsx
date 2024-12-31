@@ -6,11 +6,21 @@ import './styles/reportCard.css';
 const ReportCard = ({ report, onIgnore, onDelete }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const formattedDate = (date)=> { 
+        return new Date(date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+    }
     return (
         <div className="report-card">
             <div className="report-header">
                 <h3>{report.job.title}</h3>
-                <span className="report-date">{new Date(report.createdAt).toLocaleDateString()}</span>
+                <span className="report-date">{formattedDate(report.createdAt)}</span>
             </div>
             <div className="report-content">
                 <p><strong>Reported by:</strong> {report.applicant.firstName} {report.applicant.lastName}</p>
