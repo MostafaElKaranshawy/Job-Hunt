@@ -9,14 +9,14 @@
     overflow: scroll;
 }
 
-.main-content {
+.home .main-content {
     /* max-width: 1200px; */
     width: 80%;
     margin: 1em auto;
     padding: 2rem;
 }
 
-.hero-section {
+.home .hero-section {
     width: 100%;
     text-align: center;
     margin-bottom: 2rem;
@@ -25,27 +25,27 @@
     flex-direction: column;
 }
 
-.hero-section h1 {
+.home .hero-section h1 {
     font-size: 2.5rem;
     color: var(--text-primary);
     margin-bottom: 1rem;
 }
 
-.highlight {
+.home .highlight {
     color: var(--primary);
 }
 
-.hero-section p {
+.home .hero-section p {
     color: var(--text-secondary);
     margin-bottom: 1rem;
 }
 
-.content-layout {
+.home .content-layout {
     display: flex;
     gap: 3rem;
 }
 
-.filters-sidebar {
+.home .filters-sidebar {
     position: sticky;
     top: 2rem;
     height: fit-content;
@@ -53,23 +53,23 @@
 }
 
 @media (max-width: 768px) {
-    .content-layout {
+    .home .content-layout {
         grid-template-columns: 1fr;
     }
 
-    .sidebar {
+    .home .sidebar {
         position: static;
     }
 }
 
-.job-content {
+.home .job-content {
     display: flex;
     flex-direction: column;
     width: 100%;
 
 }
 
-.jobs-header {
+.home .jobs-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -77,7 +77,7 @@
 }
 
 
-.no-jobs-message {
+.home .no-jobs-message {
     text-align: center; 
     margin: 2rem auto;
     font-size: 1.2rem;
@@ -92,7 +92,7 @@
 }
 
 
-.loading-text {
+.home .loading-text {
     text-align: center;
     margin-top: 2rem;
     font-size: 1.2rem;
@@ -103,7 +103,7 @@
 /* pagination */
 
 
-.pagination {
+.home .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -111,7 +111,7 @@
     margin-top: 2rem;
 }
 
-.custom-pagination-button {
+.home .custom-pagination-button {
     padding: 10px 20px;
     background-color: transparent;
     /* border: 1px solid #007bff; */
@@ -121,21 +121,21 @@
     /* transition: background-color 0.2s; */
 }
 
-.custom-pagination-button:hover {
+.home .custom-pagination-button:hover {
     background-color: transparent;
     outline: none;
     border-color: transparent;
 }
 
 
-.custom-pagination-button:disabled {
+.home .custom-pagination-button:disabled {
     cursor: auto;
 }
 
 
 /* expanded jobs */
 
-.expanded-job-overlay {
+.home .expanded-job-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -148,7 +148,7 @@
     z-index: 1000;
 }
 
-.expanded-job-container {
+.home .expanded-job-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -159,7 +159,7 @@
     position: relative;
 }
 
-.close-button {
+.home .close-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -170,12 +170,12 @@
     padding: 10px;
 }
 
-.close-button:hover {
+.home .close-button:hover {
     color: rgb(104, 103, 103);
 }
 
 
-.apply-button {
+.home .apply-button {
     background-color: #4caf50;
     color: #fff;
     padding: 10px 20px;
@@ -187,23 +187,23 @@
     transition: background-color 0.2s;
 }
 
-.apply-button:hover {
+.home .apply-button:hover {
     background-color: #45a049;
     /* Darker green on hover */
 }
 
-.apply-button:focus {
+.home .apply-button:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.5);
 }
 
 
-.expanded-job-container .applied {
+.home .expanded-job-container .applied {
     background-color: #878787;
     cursor: default;
 }
 
-.expanded-job-container .applied:focus {
+.home .expanded-job-container .applied:focus {
     outline: none;
     box-shadow: none;
 }
