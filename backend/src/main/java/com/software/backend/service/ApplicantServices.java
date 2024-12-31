@@ -1,6 +1,7 @@
 package com.software.backend.service;
 
 import com.software.backend.dto.ApplicantDTO;
+import com.software.backend.dto.HomeDto;
 import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Applicant;
 import com.software.backend.entity.Job;
@@ -9,6 +10,7 @@ import com.software.backend.entity.User;
 import com.software.backend.mapper.ApplicantMapper;
 import com.software.backend.mapper.JobMapper;
 import com.software.backend.repository.ApplicantRepository;
+import com.software.backend.repository.JobApplicationRepository;
 import com.software.backend.repository.SavedJobRepository;
 import com.software.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,9 @@ public class ApplicantServices {
     ApplicantMapper mapper;
     @Autowired
     JobMapper jobMapper;
+    @Autowired
+    JobApplicationRepository jobApplicationRepository;
+
     private ApplicantRepository applicantRepository;
 
     public ApplicantDTO getApplicant(String username) {
@@ -85,16 +91,33 @@ public class ApplicantServices {
         return false;
     }
 
-    public List<JobDto> getSavedJobs(String username, int page, int offset) {
+    public HomeDto getSavedJobs(String username, int page, int offset) {
         User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
         if(user != null){
             Applicant applicant = repo.findById(user.getId()).orElse(null);
             Pageable pageable = PageRequest.of(page, offset);
             if(applicant != null) {
-                List<SavedJob> savedJobs = savedJobRepository.getSavedJobsByApplicantId(applicant.getId(), pageable).orElse(new ArrayList<>());
-                List<Job> jobs = savedJobs.stream().map(SavedJob::getJob).toList();
-                return jobs.stream().map(jobMapper::jobToJobDto).collect(Collectors.toList());
+                List<SavedJob> savedJobs = savedJobRepository.getSavedJobsByApplicantId(applicant.getId(), pageable)
+                        .orElseGet(Collections::emptyList);
+
+                List<Integer> appliedJobsIds = jobApplicationRepository
+                        .getJobIdByApplicantIdAndJobIds(applicant.getId(),
+                                savedJobs.stream().map(savedJob -> savedJob.getJob().getId()).toList())
+                        .orElseGet(Collections::emptyList);
+
+                HomeDto homeDto = new HomeDto();
+                List<JobDto> jobs = savedJobs.stream()
+                        .map(savedJob -> {
+                            JobDto jobDto = jobMapper.jobToJobDto(savedJob.getJob());
+                            jobDto.setSaved(true);
+                            jobDto.setApplied(appliedJobsIds.contains(jobDto.getId()));
+                            return jobDto;
+                        })
+                        .toList();
+                homeDto.setJobs(jobs);
+                homeDto.setTotalJobs(savedJobRepository.getSavedJobsCountByApplicantId(applicant.getId()));
+                return homeDto;
             }
         }
         return null;

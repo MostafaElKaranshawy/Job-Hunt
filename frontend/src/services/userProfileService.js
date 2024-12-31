@@ -131,7 +131,7 @@ async function changePassword(userName, passwordData) {
     const url = `${backendURL}/user/${userName}/profile/password`;
     try {
         const response = await fetch(url, {
-            method: 'PUT', // Specify the method here
+            method: 'PUT', 
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
@@ -164,10 +164,10 @@ async function getSavedJobs(username, page, offset) {
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-        const json = await response.json();
+        const data = await response.json();
 
-        console.log(json);
-        return json;
+        console.log(data);
+        return data;
   } catch (error) {
     console.error(error.message);
   }
