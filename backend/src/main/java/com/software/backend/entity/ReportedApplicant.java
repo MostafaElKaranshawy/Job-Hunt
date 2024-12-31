@@ -36,6 +36,6 @@ public class ReportedApplicant {
     private Applicant applicant;
 
     @ManyToOne
-    @JoinColumn(name = "job_id", nullable = false)
-    private Job job;
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 }

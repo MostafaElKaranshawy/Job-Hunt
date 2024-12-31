@@ -1,9 +1,6 @@
 package com.software.backend.service;
 
-import com.software.backend.dto.ApplicantDTO;
-import com.software.backend.dto.JobDto;
-import com.software.backend.dto.ReportedApplicantDto;
-import com.software.backend.dto.ReportedJobDto;
+import com.software.backend.dto.*;
 import com.software.backend.entity.Job;
 import com.software.backend.entity.ReportedApplicant;
 import com.software.backend.entity.ReportedJob;
@@ -226,6 +223,16 @@ class AdminServiceTest {
         applicantDto.setState("NY");
         applicantDto.setCountry("USA");
 
+        // Mock CompanyDto
+        CompanyDto companyDto = new CompanyDto();
+        companyDto.setId(1001);
+        companyDto.setUsername("company");
+        companyDto.setName("Company Inc.");
+        companyDto.setLocation("New York");
+        companyDto.setEmail("email.com");
+        companyDto.setOverview("Company overview");
+        companyDto.setWebsite("company.com");
+
         // Mock ReportedApplicantDto mapping
         ReportedApplicantDto reportedApplicantDto = new ReportedApplicantDto();
         reportedApplicantDto.setId(1);
@@ -233,6 +240,7 @@ class AdminServiceTest {
         reportedApplicantDto.setReportDescription("Scam job posting");
         reportedApplicantDto.setCreatedAt(LocalDateTime.of(2024, 12, 31, 11, 0));
         reportedApplicantDto.setApplicant(applicantDto);
+        reportedApplicantDto.setCompany(companyDto);
 
         // Mock behavior of the repository and mapper
         Page<ReportedApplicant> page = new PageImpl<>(List.of(reportedApplicant));
@@ -254,6 +262,7 @@ class AdminServiceTest {
         assertEquals(reportedApplicantDto.getReportDescription(), resultDto.getReportDescription());
         assertEquals(reportedApplicantDto.getCreatedAt(), resultDto.getCreatedAt());
 
+        // assert applicant fields
         assertEquals(reportedApplicantDto.getApplicant().getId(), resultDto.getApplicant().getId());
         assertEquals(reportedApplicantDto.getApplicant().getUsername(), resultDto.getApplicant().getUsername());
         assertEquals(reportedApplicantDto.getApplicant().getFirstName(), resultDto.getApplicant().getFirstName());
@@ -263,8 +272,16 @@ class AdminServiceTest {
         assertEquals(reportedApplicantDto.getApplicant().getCity(), resultDto.getApplicant().getCity());
         assertEquals(reportedApplicantDto.getApplicant().getState(), resultDto.getApplicant().getState());
         assertEquals(reportedApplicantDto.getApplicant().getCountry(), resultDto.getApplicant().getCountry());
-    }
 
+        // assert company fields
+        assertEquals(reportedApplicantDto.getCompany().getId(), resultDto.getCompany().getId());
+        assertEquals(reportedApplicantDto.getCompany().getUsername(), resultDto.getCompany().getUsername());
+        assertEquals(reportedApplicantDto.getCompany().getName(), resultDto.getCompany().getName());
+        assertEquals(reportedApplicantDto.getCompany().getLocation(), resultDto.getCompany().getLocation());
+        assertEquals(reportedApplicantDto.getCompany().getEmail(), resultDto.getCompany().getEmail());
+        assertEquals(reportedApplicantDto.getCompany().getOverview(), resultDto.getCompany().getOverview());
+        assertEquals(reportedApplicantDto.getCompany().getWebsite(), resultDto.getCompany().getWebsite());
+    }
 
     @Test
     void testDeleteReportedJob_Exists() {

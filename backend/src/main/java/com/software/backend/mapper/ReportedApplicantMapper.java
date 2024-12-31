@@ -10,8 +10,11 @@ import org.mapstruct.Mapping;
 public interface ReportedApplicantMapper {
 
     @Mapping(source = "applicant", target = "applicant")
-    @Mapping(source = "job", target = "job")
+    @Mapping(source = "company", target = "company")
     @Mapping(source = "applicantReportReason", target = "applicantReportReason")
+    @Mapping(source = "applicant.user.email", target = "email")
+    @Mapping(source = "applicant.user.phoneNumber", target = "phoneNumber")
+    @Mapping(source = "applicant.user.username", target = "username")
     ReportedApplicantDto toDto(ReportedApplicant reportedApplicant);
 
 

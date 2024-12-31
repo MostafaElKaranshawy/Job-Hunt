@@ -12,5 +12,9 @@ public class ReportedApplicantDto {
     private ApplicantReportReason applicantReportReason;
     private LocalDateTime createdAt;
     private ApplicantDTO applicant;
-    private JobDto job;
+    private CompanyDto company;
+
+    private String email;
+    private String username;
+    private String phoneNumber;
 }
