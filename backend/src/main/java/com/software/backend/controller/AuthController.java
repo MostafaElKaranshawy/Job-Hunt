@@ -76,6 +76,21 @@ public class AuthController {
             return ResponseEntity.ok().body(usernameObject);
     }
 
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> adminLogin(
+            @RequestBody LogInRequest request,
+            HttpServletResponse response
+    ) {
+            System.out.println("Admin Login Endpoint ");
+            AuthenticationResponse authenticationResponse = userAuthService.adminLogin(request);
+            tokenService.storeTokens(authenticationResponse, response);
+            AuthenticationResponse usernameObject = new AuthenticationResponse();
+            usernameObject.setUsername(authenticationResponse.getUsername());
+            usernameObject.setUserType(authenticationResponse.getUserType());
+            System.out.println("Username: " + usernameObject.getUsername());
+            return ResponseEntity.ok().body(usernameObject);
+    }
+
     // normal sign up
     @CrossOrigin(origins = "*")
     @PostMapping("/signup/applicant")

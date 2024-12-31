@@ -54,6 +54,11 @@ public class UserAuthService {
                 .build();
     }
 
+    public AuthenticationResponse adminLogin(LogInRequest request) {
+
+        return null;
+    }
+
     public void createNewUser(SignUpRequest request) {
         String username = request.getEmail().split("@")[0];
 
