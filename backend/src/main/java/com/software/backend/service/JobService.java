@@ -164,5 +164,13 @@ public class JobService {
         }
         return sections;
     }
+
+    public void getJobApplications(String companyUsername, Integer jobId) {
+        System.out.println("Get Job Applications");
+        System.out.println("Company Username: " + companyUsername);
+        System.out.println("jobId: " + jobId);
+    }
+
+
 }
 
