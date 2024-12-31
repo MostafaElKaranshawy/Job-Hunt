@@ -1,0 +1,54 @@
+.job-applications-section {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.application-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.responses-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.responses-table th, .responses-table td {
+    border: 1px solid #ffffff;
+    padding: 10px;
+    text-align: left;
+    border-radius: 50px;
+}
+
+.responses-table th {
+    background-color: #2f603cf0;
+    color: white;
+    border: none;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination button {
+    padding: 10px;
+    margin: 0 10px;
+    background-color: #2f603cf0;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #c0c0c0;
+}
+
+.pagination span {
+    font-size: 16px;
+    margin: 0 10px;
+}
