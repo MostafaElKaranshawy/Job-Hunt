@@ -92,14 +92,25 @@ function UserHome() {
 
 
     const handleToggleSave = async (job) => {
+        if (loading)
+            return;
+        
+
         try {
+            setLoading(true);
             await toggleSaveJob(job);
             job.saved = !job.saved;
-            setJobs([...jobs]);
-            await loadJobs();
+            setJobs([
+                ...jobs.slice(0, jobs.findIndex((j) => j.id === job.id)),
+                job,
+                ...jobs.slice(jobs.findIndex((j) => j.id === job.id) + 1),
+            ]);
+
         }
         catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -155,6 +166,7 @@ function UserHome() {
                                     jobs={jobs} 
                                     handleExpandJob={handleExpandJob} 
                                     handleToggleSave={handleToggleSave}
+                                    loading={loading}
                                 />
                         }
 
@@ -193,7 +205,31 @@ function UserHome() {
                         <div className="job-card-header">
                             <div className="company-logo"></div>
                             <div className="job-info">
+                            <div className="name-and-save">
                                 <h3>{expandedJob.company.name}</h3>
+
+
+                                <i
+                                    className={`fa-bookmark save-icon
+                                                ${expandedJob.saved ? 'saved fa-solid' : 'fa-regular'}`
+                                    }
+
+                                    style={{
+                                        marginRight: '30px',
+                                        marginTop: '10px',
+
+
+                                    }}
+                                    
+                                    onClick={(e) => handleSaveClick(e, job)}
+
+                                ></i>
+
+
+                            </div>
+
+
+
                                 <div className="job-title">
                                     {expandedJob.title}
                                     {expandedJob.isNew && <span className="new-badge">New post</span>}
@@ -211,7 +247,13 @@ function UserHome() {
                         </div>
 
                         {/* Apply button */}
-                        <button className="apply-button">Apply Now</button>
+                        <button 
+                            className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`}
+                        >
+                            {   expandedJob.applied ?
+                                "Already Applied" : "Apply Now"
+                            }
+                        </button>
 
                         <p className="job-description">{expandedJob.description}</p>
 

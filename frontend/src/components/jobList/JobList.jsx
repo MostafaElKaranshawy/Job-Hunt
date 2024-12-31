@@ -5,6 +5,13 @@ import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../.
 
 function JobList({ jobs, handleExpandJob, handleToggleSave }) {
 
+    const handleSaveClick = async (e, job) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        await handleToggleSave(job);
+    }
+
     return (
         <div className="job-list">
             {jobs.map(job => (
@@ -15,16 +22,13 @@ function JobList({ jobs, handleExpandJob, handleToggleSave }) {
 
                             <div className="name-and-save">
                                 <h3>{job.company.name}</h3>
-
-                                {
-                                    <i
-                                        className={`fa-bookmark save-icon
+                                <i
+                                    className={`fa-bookmark save-icon
                                                 ${job.saved ? 'saved fa-solid' : 'fa-regular'}`
-                                        }
-                                        onClick={() => handleToggleSave(job)}
-                                    ></i>
-                                }
+                                    }
+                                    onClick={(e) => handleSaveClick(e, job)}
 
+                                ></i>
                             </div>
 
 

@@ -196,3 +196,14 @@
     outline: none;
     box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.5);
 }
+
+
+.expanded-job-container .applied {
+    background-color: #878787;
+    cursor: default;
+}
+
+.expanded-job-container .applied:focus {
+    outline: none;
+    box-shadow: none;
+}
