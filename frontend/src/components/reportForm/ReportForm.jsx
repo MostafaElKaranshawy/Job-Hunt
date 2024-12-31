@@ -5,6 +5,7 @@ import './reportForm.css';
 const ReportForm = () => {
     const [reason, setReason] = useState("");
     const [description, setDescription] = useState("");
+    const userName = document.cookie.split("username=")[1];
 
     const { jobId } = useParams();
     const navigate = useNavigate();
@@ -23,8 +24,9 @@ const ReportForm = () => {
             reason,
             description,
         };
-        const url = `http://localhost:8080/job/${jobId}/report`;
+        const url = `http://localhost:8080/job/${userName}/${jobId}/report`;
         try {
+            console.log(reportData)
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include',

@@ -1,7 +1,9 @@
 package com.software.backend.service;
 
+import com.google.api.client.util.store.AbstractMemoryDataStore;
 import com.software.backend.dto.*;
 import com.software.backend.enums.ApplicationStatus;
+import com.software.backend.enums.JobReportReason;
 import com.software.backend.repository.*;
 import com.software.backend.sorting.SortingContext;
 import com.software.backend.entity.Job;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +31,8 @@ public class JobService {
     private ApplicantRepository applicantRepository;
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private ReportedJobRepository reportedJobRepository;
     @Autowired
     private SectionRepository sectionRepository;
     @Autowired
@@ -433,5 +438,15 @@ public class JobService {
         processSectionResponses(dto, personalData, jobApplication, responses, fieldDataMap);
     }
 
+    public void reportJob(int jobId, String userName, JobReportDTO jobReportDTO) {
+        ReportedJob reportedJob = new ReportedJob();
+        reportedJob.setJob(jobRepository.findById(jobId).orElse(null));
+        reportedJob.setApplicant(applicantRepository.findById(
+                userRepository.findByUsername(userName).orElse(null).getId()).orElse(null));
+        reportedJob.setJobReportReason(JobReportReason.valueOf(jobReportDTO.getReason()));
+        reportedJob.setReportDescription(jobReportDTO.getDescription());
+
+        reportedJobRepository.save(reportedJob);
+    }
 }
 
