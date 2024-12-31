@@ -36,8 +36,14 @@ public class UserController {
             @RequestBody ChangePasswordDto changePasswordDto
             ){
         changePasswordDto.setUserName(userName);
-        userServices.changePassword(changePasswordDto);
-        return ResponseEntity.ok().body("Password changed successfully");
+        try {
+            userServices.changePassword(changePasswordDto);
+            return ResponseEntity.ok().body("Password changed successfully");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
 
