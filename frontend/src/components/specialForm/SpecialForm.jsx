@@ -5,7 +5,7 @@ import PersonalSection from "../primarySections/PersonalSection.jsx";
 import SkillSection from "../primarySections/skillSection";
 import SpecialSection from "../specialSection/SpecialSection.jsx";
 import SpecialField from "../specialSection/SpecialField.jsx";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./specialForm.css";
 
 const initialFormState = {
@@ -17,24 +17,43 @@ const initialFormState = {
   specialFieldsData: [],
 };
 
-export default function SpecialForm({ open, onClose, sectionData, job }) {
+export default function SpecialForm() {
+  const { jobId } = useParams();
+  const navigate = useNavigate();
   const [personalData, setPersonalData] = useState(initialFormState.personalData);
   const [educationData, setEducationData] = useState(initialFormState.educationData);
   const [experienceData, setExperienceData] = useState(initialFormState.experienceData);
   const [skillData, setSkillData] = useState(initialFormState.skillData);
   const [specialSectionsData, setSpecialSectionsData] = useState(initialFormState.specialSectionsData);
   const [specialFieldsData, setSpecialFieldsData] = useState(initialFormState.specialFieldsData);
-  const [currentJob, setCurrentJob] = useState({});
+  const [sectionData, setSectionData] = useState({});
   const userName = document.cookie.split("username=")[1];
-  
-  // Reset form when sectionData changes or form is closed
-  useEffect(() => {
-    resetForm();
-  }, [sectionData, open]);
 
   useEffect(() => {
-    setCurrentJob(job);
-  }, [job]);
+    const fetchJobForm = async () => {
+      try {
+        const url = `http://localhost:8080/job/${jobId}/form`;
+        const response = await fetch(url, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        const form = await response.json();
+        setSectionData(form);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchJobForm();
+  }, [jobId]);
 
   const resetForm = () => {
     setPersonalData(initialFormState.personalData);
@@ -79,9 +98,9 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
     };
     console.log(data);
     try {
-      await sendResponse(currentJob.id, data);
+      await sendResponse(jobId, data);
       resetForm();
-      onClose();
+      navigate(-1);
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -90,7 +109,7 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
   const handleSpecialSectionChange = (sectionName, data, type, labels) => {
     setSpecialSectionsData((prevData) => {
       const existingIndex = prevData.findIndex(section => section.sectionName === sectionName);
-  
+
       if (existingIndex !== -1) {
         // Update existing section
         const updatedData = [...prevData];
@@ -135,7 +154,7 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
   const handleSpecialFieldChange = (index, value, name, f) => {
     setSpecialFieldsData((prevData) => {
       const existingIndex = prevData.findIndex(field => field.fieldName === name);
-      
+
       if (existingIndex !== -1) {
         // Update existing field
         const updatedData = [...prevData];
@@ -156,56 +175,52 @@ export default function SpecialForm({ open, onClose, sectionData, job }) {
   };
 
   return (
-    <>
-      {open && (
-        <div className="special-apply-user">
-          <button className="close-button" onClick={onClose}>
-            &times;
-          </button>
-          <h1 style={{ textAlign: "center" }}>Form</h1>
-          <form onSubmit={(e) => e.preventDefault()}>
-            {sectionData?.staticSections?.includes("Personal Information") && (
-              <PersonalSection onChange={setPersonalData} value={personalData} />
-            )}
-            {sectionData?.staticSections?.includes("Education") && (
-              <EducationSection onChange={setEducationData} value={educationData} />
-            )}
-            {sectionData?.staticSections?.includes("Experience") && (
-              <ExperienceSection onChange={setExperienceData} value={experienceData} />
-            )}
-            {sectionData?.staticSections?.includes("Skills") && (
-              <SkillSection onChange={setSkillData} value={skillData} />
-            )}
+    <div className="special-apply-user">
+      <button className="close-button" onClick={() => navigate(-1)}>
+        &times;
+      </button>
+      <h1 style={{ textAlign: "center" }}>Form</h1>
+      <form onSubmit={(e) => e.preventDefault()}>
+        {sectionData?.staticSections?.includes("Personal Information") && (
+          <PersonalSection onChange={setPersonalData} value={personalData} />
+        )}
+        {sectionData?.staticSections?.includes("Education") && (
+          <EducationSection onChange={setEducationData} value={educationData} />
+        )}
+        {sectionData?.staticSections?.includes("Experience") && (
+          <ExperienceSection onChange={setExperienceData} value={experienceData} />
+        )}
+        {sectionData?.staticSections?.includes("Skills") && (
+          <SkillSection onChange={setSkillData} value={skillData} />
+        )}
 
-            {sectionData?.sections?.map((data, index) => (
-              <SpecialSection
-                key={`${data.name}-${index}`}
-                sectionName={data.name}
-                labels={data.label}
-                fieldType={data.type}
-                fieldOptions={data.options}
-                Mandatory={data.isRequired}
-                onChange={(sectionData) => handleSpecialSectionChange(data.name, sectionData, data.type, data.label)}
-              />
-            ))}
+        {sectionData?.sections?.map((data, index) => (
+          <SpecialSection
+            key={`${data.name}-${index}`}
+            sectionName={data.name}
+            labels={data.label}
+            fieldType={data.type}
+            fieldOptions={data.options}
+            Mandatory={data.isRequired}
+            onChange={(sectionData) => handleSpecialSectionChange(data.name, sectionData, data.type, data.label)}
+          />
+        ))}
 
-            {sectionData.fields?.map((field, index) => (
-              <SpecialField
-                key={`${field.label}-${index}`}
-                label={field.label}
-                fieldType={field.type}
-                fieldOptions={field.options}
-                isMandatory={field.isRequired}
-                onChange={(fieldData) => handleSpecialFieldChange(index, fieldData, field.label, field)}
-              />
-            ))}
+        {sectionData.fields?.map((field, index) => (
+          <SpecialField
+            key={`${field.label}-${index}`}
+            label={field.label}
+            fieldType={field.type}
+            fieldOptions={field.options}
+            isMandatory={field.isRequired}
+            onChange={(fieldData) => handleSpecialFieldChange(index, fieldData, field.label, field)}
+          />
+        ))}
 
-            <button type="button" className="form-button" onClick={handleSubmitButton}>
-              Submit
-            </button>
-          </form>
-        </div>
-      )}
-    </>
+        <button type="button" className="form-button" onClick={handleSubmitButton}>
+          Submit
+        </button>
+      </form>
+    </div>
   );
 }

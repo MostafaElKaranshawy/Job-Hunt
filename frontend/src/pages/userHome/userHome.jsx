@@ -9,53 +9,15 @@ import { fetchJobs } from "../../services/homeService";
 import Sorting from "../../components/sorting/Sorting.jsx";
 import { calculateRelativeTime } from "../../utils/userHomeUtils";
 import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
-import SpecialForm from "../../components/specialForm/SpecialForm.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 function UserHome() {
 
-    const SectionData = {
-        staticSections: [
-            "Personal Information","Education","skills",
-        ],
-        sections: [
-          {
-            isRequired: [false, true],
-            label: ["f1", "f2"],
-            name: "sec1",
-            options: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
-            type: ["text", "dropdown"]
-          },
-          {
-            isRequired: [false, true],
-            label: ["f1", "f2"],
-            name: "sec1",
-            options: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
-            type: ["text", "radio"]
-          },
-          
-        ],
-        fields: [
-            {
-                isRequired: true,
-                label: "ff1",
-                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-                type: "dropdown"
-            },
-            {
-                isRequired: false,
-                label: "ff2",
-                options: [],
-                type: "text"
-            },
-        ]
-      }
-    const [isOpen, setIsOpen] = useState(false);
-    const [formData, setFormData] = useState({});
+    const navigate = useNavigate();
 
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
-    const [currentJob, setCurrentJob] = useState({});
 
     const [page, setPage] = useState(0);
     const [totalJobsCount, setTotalJobsCount] = useState(0); // New state for total jobs count
@@ -136,39 +98,39 @@ function UserHome() {
     const endIndex = Math.min((page + 1) * offset, totalJobsCount);
 
     async function handleApplyClick (){
-        setIsOpen(true); 
-        setCurrentJob(structuredClone(expandedJob));
+        navigate(`/user/apply/job/${expandedJob.id}/form`);
         setExpandedJob(null);
-        try {
-            const form = await getJobForm(expandedJob.id);
-            // console.log(form);
-            setFormData(form);
-        } catch (error) {
-            console.error(error.message);
-        }
+        
+        // try {
+        //     const form = await getJobForm(expandedJob.id);
+        //     // console.log(form);
+        //     setFormData(form);
+        // } catch (error) {
+        //     console.error(error.message);
+        // }
         
     };
-    async function getJobForm(id) {
-        try{
-            const url = `http://localhost:8080/job/${id}/form`;
-            const response = await fetch(url, {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+    // async function getJobForm(id) {
+    //     try{
+    //         const url = `http://localhost:8080/job/${id}/form`;
+    //         const response = await fetch(url, {
+    //             method: 'GET',
+    //             credentials: 'include',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         });
     
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
+    //         if (!response.ok) {
+    //             throw new Error(`Response status: ${response.status}`);
+    //         }
     
-            const form = await response.json();
-            return form;
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
+    //         const form = await response.json();
+    //         return form;
+    //     } catch (error) {
+    //         console.error(error.message);
+    //     }
+    // }
       
     return (
         <div className="home">
@@ -270,12 +232,7 @@ function UserHome() {
                     </div>
                 </div>
             )}
-        <SpecialForm 
-            open={isOpen} 
-            onClose={() => setIsOpen(false)} 
-            sectionData={formData}
-            job={currentJob}
-        />
+       
         </div>
     )
 }

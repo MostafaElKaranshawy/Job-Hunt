@@ -7,6 +7,7 @@ import SignUpPage from './pages/signupPage/SignUpPage'
 import LogInPage from './pages/logInPage/LogInPage'
 import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPasswordRequestPage'
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage'
+import SpecialForm from './components/specialForm/SpecialForm'
 function App() {
     return (
         <div className='app'>
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/home" element={<UserHome/>}></Route>
                     <Route path="/reset-password" element={< ResetPasswordPage/>} />
                     <Route path="/reset-password-request" element={< ResetPasswordRequestPage/>} />
+                    <Route path="/user/apply/job/:jobId/form" element={<SpecialForm/>} />
                 </Routes>
             </Router>
         </div>
