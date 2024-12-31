@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './CompanyProfilePage.css';
 import Sidebar from '../../components/sideBar/Sidebar';
+import ProfileSetting from '../../components/profileSections/profileSettings/profileSettings';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 
@@ -246,7 +247,10 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                
+                {/* Change Password Section */}
+                <div className="mb-3 box">
+                    <ProfileSetting />
+                </div>
             </div>
         </div>
     );
