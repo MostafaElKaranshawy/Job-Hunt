@@ -24,7 +24,7 @@ function App() {
                     <Route path="/reset-password" element={< ResetPasswordPage/>} />
                     <Route path="/reset-password-request" element={< ResetPasswordRequestPage/>} />
                     <Route path="/admin/login" element={<AdminLogin/>}/>
-                    <Route path="/admin" element={<AdminDashboard/>} />
+                    <Route path="/admin/dashboard" element={<AdminDashboard/>} />
                 </Routes>
             </Router>
         </div>

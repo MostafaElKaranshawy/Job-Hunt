@@ -2,25 +2,31 @@ import React from 'react';
 import './styles/userDetails.css';
 
 const UserDetails = ({ user }) => {
-  return (
-    <div className="user-details">
-      <h2>{user.username}</h2>
-      <div className="user-info">
-        <p><strong>User ID:</strong> {user.userId}</p>
-        <p><strong>Email:</strong> {user.email}</p>
-        <p><strong>Join Date:</strong> {new Date(user.joinDate).toLocaleDateString()}</p>
-        <p><strong>Reports History:</strong></p>
-        <ul className="reports-history">
-          {user.reportsHistory?.map((report, index) => (
-            <li key={index}>
-              <span className="report-date">{new Date(report.date).toLocaleDateString()}</span>
-              <span className="report-reason">{report.reason}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+    const formattedDate = (date)=> { 
+        return new Date(date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+    }
+    return (
+        <div className="user-details">
+            <h2>{user.firstName} {user.lastName}</h2>
+            <div className="user-info">
+                <p><strong>User ID:</strong> {user.id}</p>
+                <p><strong>Username:</strong> {user.username || 'N/A'}</p>
+                <p><strong>Address:</strong> {user.address || 'N/A'}</p>
+                <p><strong>City:</strong> {user.city || 'N/A'}</p>
+                <p><strong>State:</strong> {user.state || 'N/A'}</p>
+                <p><strong>Country:</strong> {user.country || 'N/A'}</p>
+                <p><strong>Phone Number:</strong> {user.phoneNumber || 'N/A'}</p>
+                <p><strong>Join Date:</strong> {formattedDate(user.createdAt)}</p>
+            </div>
+        </div>
+    );
 };
 
 export default UserDetails;
