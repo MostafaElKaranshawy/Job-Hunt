@@ -67,12 +67,10 @@ export default function JobsApplicationSection() {
             <p><strong>Date:</strong> {new Date(currentApplication.applicationDate).toLocaleString()}</p>
             
             {/* Display company info */}
-            <h3>Company Information:</h3>
             <p><strong>Company Name:</strong> {currentApplication.companyName}</p>
-            <p><strong>Location:</strong> {currentApplication.companyAddress}</p>
-            <p><strong>Website:</strong> {currentApplication.companyWebsite}</p>
+            <p><strong>Company Location:</strong> {currentApplication.companyAddress}</p>
+            <p><strong>Company Website:</strong> {currentApplication.companyWebsite}</p>
 
-            <h3>Responses:</h3>
             <table className="responses-table">
                 <thead>
                     <tr>
