@@ -9,7 +9,7 @@ export async function fetchJobs(filters, page = 1, offset = 10) {
     const employmentType = `employmentType=${filters.employmentType}`
     const salary = `salary=${filters.salary}`
     const sortBy = `sort=${filters.sortBy}`   // what is its order in the query
-    console.log(`${url}?${query}&${level}&${workLocation}&${employmentType}&${salary}&${sortBy}&page=${page}&offset=${offset}`);
+    // console.log(`${url}?${query}&${level}&${workLocation}&${employmentType}&${salary}&${sortBy}&page=${page}&offset=${offset}`);
     const response = await fetch(`${url}?${query}&${level}&${workLocation}&${employmentType}&${salary}&${sortBy}&page=${page}&offset=${offset}`,
         {
             method: 'GET',
@@ -21,7 +21,7 @@ export async function fetchJobs(filters, page = 1, offset = 10) {
     );
     
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 
     if (!response.ok)
         throw new Error('Failed to fetch jobs');
