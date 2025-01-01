@@ -28,6 +28,7 @@ export default function SpecialForm() {
   const [specialSectionsData, setSpecialSectionsData] = useState(initialFormState.specialSectionsData);
   const [specialFieldsData, setSpecialFieldsData] = useState(initialFormState.specialFieldsData);
   const [sectionData, setSectionData] = useState({});
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
   const userName = document.cookie.split("username=")[1];
 
   useEffect(() => {
@@ -63,6 +64,7 @@ export default function SpecialForm() {
     setSkillData(initialFormState.skillData);
     setSpecialSectionsData(initialFormState.specialSectionsData);
     setSpecialFieldsData(initialFormState.specialFieldsData);
+    setErrorMessage(""); // Reset error message
   };
 
   async function sendResponse(id, data) {
@@ -89,6 +91,11 @@ export default function SpecialForm() {
   }
 
   const handleSubmitButton = async () => {
+    if (skillData.length === 0) {
+      setErrorMessage("Please enter at least one skill.");
+      return;
+    }
+
     const data = {
       personalData,
       educationData,
@@ -100,7 +107,7 @@ export default function SpecialForm() {
     console.log(data);
     try {
       await sendResponse(jobId, data);
-      alert("Your job application saved succeffuly")
+      alert("Your job application saved successfully");
       resetForm();
       navigate(-1);
     } catch (error) {
@@ -195,6 +202,7 @@ export default function SpecialForm() {
         {sectionData?.staticSections?.includes("Skills") && (
           <SkillSection onChange={setSkillData} value={skillData} />
         )}
+        {errorMessage && <h className="error-message">{errorMessage}</h>}
 
         {sectionData?.sections?.map((data, index) => (
           <SpecialSection
@@ -219,7 +227,7 @@ export default function SpecialForm() {
           />
         ))}
 
-        <button type="button" className="form-button" onClick={handleSubmitButton}>
+        <button type="submit" className="form-button" onClick={handleSubmitButton}>
           Submit
         </button>
       </form>

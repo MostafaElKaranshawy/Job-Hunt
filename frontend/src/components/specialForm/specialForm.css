@@ -168,4 +168,8 @@ form {
   color: rgb(104, 103, 103);
 }
 
+.special-apply-user .error-message {
+  color: red;
+  font-size: 1.5rem;
+}
 
