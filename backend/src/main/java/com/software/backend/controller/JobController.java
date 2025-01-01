@@ -81,5 +81,15 @@ public class JobController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+
+    @GetMapping("/home/{username}/applications")
+    public ResponseEntity<?> getApplications(@PathVariable(name = "username") String username) {
+        try {
+            return ResponseEntity.ok(jobService.getApplicationsByApplicant(username));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 }
 
