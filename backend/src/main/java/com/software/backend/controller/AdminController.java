@@ -24,6 +24,7 @@ public class AdminController {
     public ResponseEntity<?> banUser(
             @PathVariable Integer applicantId
     ){
+        System.out.println("Applicant ID: " + applicantId);
         return ResponseEntity.ok(adminService.banUser(applicantId));
     }
 

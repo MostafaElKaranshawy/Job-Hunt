@@ -65,6 +65,7 @@ const UserReports = () => {
 
     const handleBan = async (reportId) => {
         try {
+            console.log(reportId)
             await banApplicant(reportId);
             await handleUserReports();
         } catch (e) {
@@ -86,7 +87,7 @@ const UserReports = () => {
                     key={report.id}
                     report={report}
                     onIgnore={() => handleConfirmIgnore(report.id)}
-                    onBan={() => handleConfirmBan(report.id)}
+                    onBan={() => handleConfirmBan(report.applicant.id)}
                 />
             ))}
             <Pagination
