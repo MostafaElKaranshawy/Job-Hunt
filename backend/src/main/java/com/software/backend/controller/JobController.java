@@ -20,8 +20,9 @@ public class JobController {
     private StaticSectionService staticSectionService;
 
 
-    @GetMapping("/home/jobs/filter")
+    @GetMapping("/home/{username}/jobs/filter")
     public ResponseEntity<HomeDto> filterJobs(
+            @PathVariable(name = "username") String username,
             @RequestParam(name = "employmentType", defaultValue = "") String employmentType,
             @RequestParam(name = "workLocation", defaultValue = "") String workLocation,
             @RequestParam(name = "category", defaultValue = "") String category,
@@ -33,7 +34,7 @@ public class JobController {
             @RequestParam(name = "offset", defaultValue = "5") Integer offset){
         try {
 
-            HomeDto homeDto = jobService.filterJobs(employmentType, workLocation, category, salary, level, query, sort, page, offset);
+            HomeDto homeDto = jobService.handleHomeJobs(username, employmentType, workLocation, category, salary, level, query, sort, page, offset);
 
             return ResponseEntity.ok(homeDto);
         } catch (Exception e) {
@@ -56,6 +57,7 @@ public class JobController {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
+
     @GetMapping("/job/{jobId}/form")
     public ResponseEntity<?> getJobForm(@PathVariable int jobId){
         try {
@@ -108,6 +110,37 @@ public class JobController {
             return ResponseEntity.ok().body(responseMessage);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+
+    @PostMapping("/home/{username}/jobs/{jobId}/save")
+    public ResponseEntity<?> saveJob(@PathVariable(name = "username") String username,
+                                     @PathVariable(name = "jobId") Integer jobId) {
+        try {
+            jobService.saveJob(username, jobId);
+            return ResponseEntity.ok("Saved Successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/home/{username}/jobs/{jobId}/unsave")
+    public ResponseEntity<?> unSaveJob(@PathVariable(name = "username") String username,
+                                     @PathVariable(name = "jobId") Integer jobId) {
+        try {
+            jobService.unSaveJob(username, jobId);
+            return ResponseEntity.ok("Unsaved Successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/home/{username}/applications")
+    public ResponseEntity<?> getApplications(@PathVariable(name = "username") String username) {
+        try {
+            return ResponseEntity.ok(jobService.getApplicationsByApplicant(username));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 }

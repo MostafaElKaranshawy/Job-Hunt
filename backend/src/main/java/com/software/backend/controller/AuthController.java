@@ -33,6 +33,12 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @PostMapping("/hash-password")
+    public ResponseEntity<?> hashPassword(@RequestBody String password) {
+        String hashedPassword = PasswordService.hashPassword(password);
+        System.out.println("Hashed password: " + hashedPassword);
+        return ResponseEntity.ok().body(hashedPassword);
+    }
 
     // Google Sign-Up Endpoint
     @PostMapping("/signup/applicant/google")
@@ -65,6 +71,21 @@ public class AuthController {
             System.out.println("Login Endpoint ");
 
             AuthenticationResponse authenticationResponse = userAuthService.login(request);
+            tokenService.storeTokens(authenticationResponse, response);
+            AuthenticationResponse usernameObject = new AuthenticationResponse();
+            usernameObject.setUsername(authenticationResponse.getUsername());
+            usernameObject.setUserType(authenticationResponse.getUserType());
+            System.out.println("Username: " + usernameObject.getUsername());
+            return ResponseEntity.ok().body(usernameObject);
+    }
+
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> adminLogin(
+            @RequestBody LogInRequest request,
+            HttpServletResponse response
+    ) {
+            System.out.println("Admin Login Endpoint ");
+            AuthenticationResponse authenticationResponse = userAuthService.adminLogin(request);
             tokenService.storeTokens(authenticationResponse, response);
             AuthenticationResponse usernameObject = new AuthenticationResponse();
             usernameObject.setUsername(authenticationResponse.getUsername());

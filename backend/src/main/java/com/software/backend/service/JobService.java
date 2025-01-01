@@ -2,24 +2,21 @@ package com.software.backend.service;
 
 import com.software.backend.dto.*;
 import com.software.backend.enums.ApplicationStatus;
+import com.software.backend.mapper.JobApplicationMapper;
 import com.software.backend.repository.*;
 import com.software.backend.sorting.SortingContext;
-import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
 import com.software.backend.enums.JobStatus;
 import com.software.backend.filter.JobCriteriaRunner;
-import com.software.backend.dto.FieldDto;
-import com.software.backend.dto.SectionDto;
 import com.software.backend.entity.*;
 import com.software.backend.mapper.FieldMapper;
 import com.software.backend.mapper.JobMapper;
-import com.software.backend.repository.JobRepository;
-import com.software.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,6 +50,12 @@ public class JobService {
     private FieldMapper fieldMapper;
     @Autowired
     private EmailService emailService;
+  
+    @Autowired
+    private SavedJobRepository savedJobRepository
+
+    @Autowired
+    private JobApplicationMapper JobApplicationMapper;
 
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
@@ -90,6 +93,27 @@ public class JobService {
             e.printStackTrace();
             throw e;
         }
+    }
+    public HomeDto handleHomeJobs(String username, String type, String location, String category,
+                                  String salary, String level, String query,
+                                  String sort, int page, int offset) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+
+        HomeDto filteredJobs = filterJobs(type, location, category, salary, level, query, sort, page, offset);
+        List<Integer> savedJobsIds = getSavedJobs(applicantId);
+        List<Integer> jobIds = filteredJobs.getJobs().stream().map(JobDto::getId).toList();
+        List<Integer> appliedJobsIds = jobApplicationRepository.getJobIdByApplicantIdAndJobIds(applicantId, jobIds)
+                .orElse(new ArrayList<>());
+
+        for (JobDto job:filteredJobs.getJobs()) {
+
+            job.setSaved(savedJobsIds.contains(job.getId()));
+
+            job.setApplied(appliedJobsIds.contains(job.getId()));
+        }
+        return filteredJobs;
     }
 
     public HomeDto filterJobs(String type, String location, String category,
@@ -155,7 +179,7 @@ public class JobService {
         return staticSections;
     }
 
-    private static List<Section> getSections(JobDto jobDto, Job job) {
+    private List<Section> getSections(JobDto jobDto, Job job) {
         List<Section> sections = new ArrayList<>();
         for(SectionDto sectionDto : jobDto.getSections()) {
             Section section = new Section();
@@ -723,3 +747,62 @@ public class JobService {
 
 }
 
+    private List<Integer> getSavedJobs (int applicantId) {
+        return savedJobRepository.getJobIdByApplicantId(applicantId).orElse(new ArrayList<>());
+    }
+
+
+    public void saveJob(String username, int jobId) {
+        Applicant applicant = applicantRepository.findByUser_username(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+
+        SavedJob savedJob = new SavedJob();
+        savedJob.setApplicant(applicant);
+        savedJob.setJob(job);
+        savedJob.setCreatedAt(LocalDateTime.now());
+
+        if (savedJobRepository.existsByApplicantIdAndJobId(applicant.getId(), jobId)) {
+            throw new RuntimeException("Job already saved");
+        }
+        try {
+            savedJobRepository.save(savedJob);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void unSaveJob(String username, int jobId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+        try {
+            savedJobRepository.deleteByApplicantIdAndJobId(applicantId, jobId);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+    public List<ApplicantApplicationsResponseDto> getApplicationsByApplicant(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+        List<JobApplication> applications = jobApplicationRepository.findApplicationsByApplicantId(applicantId).orElse(new ArrayList<>());
+
+        return applications.stream().map(application -> {
+            ApplicantApplicationsResponseDto response = JobApplicationMapper.toApplicantApplicationsResponseDto(application);
+
+            response.setResponses(application.getApplicationResponsesList().stream()
+                    .map(JobApplicationMapper::toApplicationResponseDTO)
+                    .collect(Collectors.toList()));
+
+            return response;
+        }).collect(Collectors.toList());
+    }
+
+
+}

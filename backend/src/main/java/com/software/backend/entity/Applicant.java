@@ -38,6 +38,7 @@ public class Applicant{
 
     private String country;
 
+    private List<String> skills;
 
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Education> educationList;
@@ -45,10 +46,12 @@ public class Applicant{
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Experience> experienceList;
 
-    private List<String> skills;
 
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobApplication> jobApplicationsList;
+
+    @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavedJob> savedJobs;
 
     @Override
     public String toString() {
@@ -64,15 +67,3 @@ public class Applicant{
                 '}';
     }
 }
-
-
-/*
-* address   (done)
-* city   (done)
-* state   (done)
-* country   (done)
-* resume  (to be put after specifying how exactly will it be dealt with in java)
-*
-*
-*
-* */

@@ -18,6 +18,8 @@ public class ApplicationResponseDTO {
     private List<SpecialSectionDTO> specialSectionsData;
     private int applicationStatus;
     private int applicationId;
+    private String fieldName;
+    private String responseData;
 
     @Data
     public static class PersonalDataDTO {
@@ -61,4 +63,12 @@ public class ApplicationResponseDTO {
         private String sectionName;
         private Map<String, String> data;       // FieldName, Data
     }
+
+// import lombok.Data;
+
+// @Data
+// public class ApplicationResponseDTO {
+//     private String fieldName;
+//     private String responseData;
+
 }

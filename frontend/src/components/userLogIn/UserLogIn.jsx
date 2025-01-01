@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { logIn } from "../../services/authServices";
 import { Link } from "react-router-dom";
 import "./UserLogIn.css";
-
 function UserLogIn() {
     const [formData, setFormData] = useState({
         email: "",
@@ -118,7 +117,6 @@ function UserLogIn() {
             {errors.failureMessage && <p className="error-message">{errors.failureMessage}</p>}
             <p className="login">Don't have an account? <Link to="/" className="link">Sign up</Link></p>
             <p className="login">Forgot your password? <Link to="/reset-password-request" className="link">Reset it</Link></p>
-
         </div>
     );
 }

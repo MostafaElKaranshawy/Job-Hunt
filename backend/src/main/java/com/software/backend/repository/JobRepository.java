@@ -31,5 +31,4 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     Optional<List<Job>> findAllBySalaryGreaterThanEqual(Integer salary);
     Optional<List<Job>> findAllByLevelEquals(Level level);
 
-
 }

@@ -1,5 +1,6 @@
 package com.software.backend.service;
 
+import com.software.backend.dto.ChangePasswordDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
@@ -23,4 +24,5 @@ public class PasswordService {
         System.out.println(hashPassword(rawPassword).equals(hashedPassword));
         return hashPassword(rawPassword).equals(hashedPassword);
     }
+
 }
