@@ -74,6 +74,11 @@ label {
   margin-right: 10px;
 }
 
+.btn-primary {
+  background-color: #2f603cf0;
+  color: white;
+}
+
 
 .btn-primary:hover {
   background-color: #254d30f0;
