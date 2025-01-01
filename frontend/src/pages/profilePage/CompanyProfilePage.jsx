@@ -8,7 +8,7 @@ const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 
 function CompanyProfilePage() {
-    const { companyUsername } = useParams();
+    const { userName } = useParams();
 
     const [companyInfo, setCompanyInfo] = useState({
         name: "company name",
@@ -28,7 +28,7 @@ function CompanyProfilePage() {
 
     const fetchCompanyInfo = useCallback(async () => {
         try {
-            const response = await fetch(`${backendURL}/company/${companyUsername}`, {
+            const response = await fetch(`${backendURL}/company/${userName}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -45,7 +45,7 @@ function CompanyProfilePage() {
         } catch (error) {
             console.error("Error fetching company info", error);
         }
-    }, [companyUsername]);
+    }, [userName]);
 
     useEffect(() => {
         fetchCompanyInfo();
@@ -60,7 +60,7 @@ function CompanyProfilePage() {
 
     const handleSaveClick = async (field) => {
         try {
-            const response = await fetch(`${backendURL}/company/${companyUsername}`, {
+            const response = await fetch(`${backendURL}/company/${userName}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

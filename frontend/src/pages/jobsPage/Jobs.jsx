@@ -9,7 +9,7 @@ import CreateJob from '../../components/CreateJob/createJob';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 function Jobs() {
-  const { companyUsername } = useParams();
+  const { userName } = useParams();
   const [activeJobs, setActiveJobs] = useState([]);
   const [expiredJobs, setExpiredJobs] = useState([]);
   const [menuVisible, setMenuVisible] = useState(null);
@@ -20,7 +20,7 @@ function Jobs() {
 
   const fetchJobs = useCallback(async () => {
     try {
-      const response = await fetch(`${backendURL}/company/${companyUsername}/jobs`, {
+      const response = await fetch(`${backendURL}/company/${userName}/jobs`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -38,15 +38,15 @@ function Jobs() {
     } catch (error) {
       console.log('Failed to fetch active jobs', error);
     }
-  }, [companyUsername]);
+  }, [userName]);
 
   useEffect(() => {
     fetchJobs();
-  }, [fetchJobs, companyUsername]);
+  }, [fetchJobs, userName]);
 
   const deleteJob = async (jobID) => {
     try {
-      const response = await fetch(`${backendURL}/company/${companyUsername}/jobs/${jobID}`, {
+      const response = await fetch(`${backendURL}/company/${userName}/jobs/${jobID}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {

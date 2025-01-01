@@ -6,7 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Sidebar.css';
 
 function Sidebar() {
-  const { companyUsername } = useParams();
+  const { userName } = useParams();
 
   const handleLogout = async () => {
     const response = await logout();
@@ -29,13 +29,13 @@ function Sidebar() {
       </div>
       <Nav className="flex-column px-3">
         <NavItem className="navItem">
-          <Link to={`/company/${companyUsername}`} className="text-decoration-none py-2 d-block company-link">
+          <Link to={`/company/${userName}`} className="text-decoration-none py-2 d-block company-link">
             <i className="bi bi-person me-2"></i>
             Profile
           </Link>
         </NavItem>
         <NavItem className="navItem">
-          <Link to={`/company/${companyUsername}/jobs`} className="text-decoration-none py-2 d-block company-link">
+          <Link to={`/company/${userName}/jobs`} className="text-decoration-none py-2 d-block company-link">
             <i className="bi bi-briefcase me-2"></i>
             Jobs
           </Link>

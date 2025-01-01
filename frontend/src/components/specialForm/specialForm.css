@@ -57,18 +57,21 @@
   align-self: flex-start;
 }
 
-.special-form .form-button:hover {
+.form-button:hover {
   background-color: #af0000;
   transform: scale(1.05);
 }
 
-.special-form .form-button:active {
+ .form-button:active {
   background-color: #8b0000;
   transform: scale(0.95);
 }
 
-.special-form .special-apply-user {
+.special-apply-user {
   /* Positioning */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: fixed;
   top: 50%;
   left: 50%;

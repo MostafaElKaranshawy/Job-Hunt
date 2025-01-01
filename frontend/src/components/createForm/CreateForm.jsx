@@ -39,7 +39,7 @@ export default function CreateForm({jobDetails,whenSave}) {
     const [showCreateJob, setShowCreateJob] = useState(false);
 
     const mainSections = ["Personal Information", "Education", "Experience", "Skills"];
-    const { companyUsername } = useParams();
+    const { userName } = useParams();
 
     const handleLogData = () => {
         const formattedSections = specialSections.map(section => ({
@@ -73,8 +73,8 @@ export default function CreateForm({jobDetails,whenSave}) {
             fields: formattedStandaloneFields
         });
     
-        // const companyUsername = "temp name";
-        const url = `http://localhost:8080/company/${companyUsername}/jobs/create`;
+        // const userName = "temp name";
+        const url = `http://localhost:8080/company/${userName}/jobs/create`;
     
         axios.post(url, { 
             title: jobDetails.title,
