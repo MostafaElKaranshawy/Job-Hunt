@@ -7,6 +7,7 @@ import SpecialSection from "../specialSection/SpecialSection.jsx";
 import SpecialField from "../specialSection/SpecialField.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import "./specialForm.css";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const initialFormState = {
   personalData: null,
@@ -32,7 +33,7 @@ export default function SpecialForm() {
   useEffect(() => {
     const fetchJobForm = async () => {
       try {
-        const url = `http://localhost:8080/job/${jobId}/form`;
+        const url = `${backendURL}/job/${jobId}/form`;
         const response = await fetch(url, {
           method: 'GET',
           credentials: 'include',
@@ -66,7 +67,7 @@ export default function SpecialForm() {
 
   async function sendResponse(id, data) {
     try {
-      const url = `http://localhost:8080/job/${userName}/${id}/form/response`;
+      const url = `${backendURL}/job/${userName}/${id}/form/response`;
       const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
@@ -99,6 +100,7 @@ export default function SpecialForm() {
     console.log(data);
     try {
       await sendResponse(jobId, data);
+      alert("Your job application saved succeffuly")
       resetForm();
       navigate(-1);
     } catch (error) {

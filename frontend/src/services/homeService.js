@@ -1,4 +1,4 @@
-const backendUrl = 'http://localhost:8080';
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 export async function fetchJobs(filters, page = 1, offset = 10) {
