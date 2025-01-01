@@ -528,8 +528,7 @@ public class JobService {
         for (JobApplication jobApplication : jobApplications) {
             ApplicationResponseDTO dto = new ApplicationResponseDTO();
             dto.setApplicationStatus(jobApplication.getApplicationStatus().ordinal());
-            System.out.println("application-id"+ jobApplication.getId());
-            System.out.println("Application Status: " + jobApplication.getApplicationStatus().ordinal());
+            dto.setApplicationId(jobApplication.getId());
             List<ApplicationResponse> responses = jobApplication.getApplicationResponsesList();
 
             ApplicationResponseDTO.PersonalDataDTO personalData = new ApplicationResponseDTO.PersonalDataDTO();
@@ -683,23 +682,44 @@ public class JobService {
     }
 
     public void acceptApplication(Integer applicationId) {
-        System.out.println("acceptApplication");
-        JobApplication jobApplication = jobApplicationRepository.findById(applicationId).orElse(null);
-        if (jobApplication == null) throw new IllegalArgumentException("Application not found for id: " + applicationId);
-        System.out.println("Application found");
-        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("ACCEPTED"));
+        System.out.println("Accepting application...");
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found for id: " + applicationId));
+
+        System.out.println("Application found.");
+        System.out.println("application id" + jobApplication.getId());
+        System.out.println("jobApllication status: " + jobApplication.getApplicationStatus());
+
+        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("ACCEPTED")); // Enum value should match defined constants
         jobApplicationRepository.save(jobApplication);
-        emailService.sendApplicationAcceptanceEmail(jobApplication.getApplicant().getUser().getEmail(), jobApplication.getJob().getTitle(), jobApplication.getJob().getCompany().getName());
-        System.out.println("Email sent");
+        System.out.println("jobApllication status: " + jobApplication.getApplicationStatus());
+        emailService.sendApplicationAcceptanceEmail(
+                jobApplication.getApplicant().getUser().getEmail(),
+                jobApplication.getJob().getTitle(),
+                jobApplication.getJob().getCompany().getName()
+        );
+        System.out.println("Acceptance email sent.");
     }
 
     public void rejectApplication(Integer applicationId) {
-        JobApplication jobApplication = jobApplicationRepository.findById(applicationId).orElse(null);
-        if (jobApplication == null) throw new IllegalArgumentException("Application not found for id: " + applicationId);
-        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("Rejected"));
+        System.out.println("Rejecting application...");
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found for id: " + applicationId));
+        System.out.println("Application found.");
+        System.out.println("application id" + jobApplication.getId());
+        System.out.println("jobApllication status: " + jobApplication.getApplicationStatus());
+        System.out.println(ApplicationStatus.REJECTED);
+        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("REJECTED")); // Enum value should match defined constants
         jobApplicationRepository.save(jobApplication);
-        emailService.sendApplicationRejectionEmail(jobApplication.getApplicant().getUser().getEmail(), jobApplication.getJob().getTitle(), jobApplication.getJob().getCompany().getName());
-        System.out.println("Email sent");
+        System.out.println("jobApplication status: " + jobApplication.getApplicationStatus());
+        emailService.sendApplicationRejectionEmail(
+                jobApplication.getApplicant().getUser().getEmail(),
+                jobApplication.getJob().getTitle(),
+                jobApplication.getJob().getCompany().getName()
+        );
+        System.out.println("Acceptance email sent.");
     }
+
+
 }
 

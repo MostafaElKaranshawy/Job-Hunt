@@ -31,7 +31,7 @@ export const rejectApplication = async (applicationId) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ applicationId }), 
+            body: JSON.stringify({ applicationId }),
         });
         const data = await response.json();
         if (response.ok) {
@@ -43,26 +43,26 @@ export const rejectApplication = async (applicationId) => {
         }
     } catch (error) {
         console.error(error);
-        return { success: false, message: 'An error occurred while rejecting the application.' }; 
+        return { success: false, message: 'An error occurred while rejecting the application.' };
     }
 };
 export const getApplications = async (jobId) => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/company/jobs/${jobId}`,
-        {
-          credentials: "include", // Include credentials for cookies/auth
+        const response = await fetch(
+            `http://localhost:8080/company/jobs/${jobId}`,
+            {
+                credentials: "include", // Include credentials for cookies/auth
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-      );
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      console.log("Job applications data:", data);
-      return data;
+
+        const data = await response.json();
+        console.log("Job applications data:", data);
+        return data;
     } catch (error) {
-      console.error("Error fetching job applications:", error);
+        console.error("Error fetching job applications:", error);
     }
-  };
+};
