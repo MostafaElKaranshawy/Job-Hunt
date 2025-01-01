@@ -1,5 +1,6 @@
 package com.software.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.software.backend.enums.EmploymentType;
 import com.software.backend.enums.JobStatus;
 import com.software.backend.enums.Level;
@@ -10,6 +11,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -52,9 +54,11 @@ public class Job {
         nullable = false,
         name = "posted_at"
     )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime postedAt;
 
     @Column(name = "application_deadline")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime applicationDeadline;
 
     @Enumerated(EnumType.STRING)
@@ -74,5 +78,11 @@ public class Job {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Field> fields;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavedJob> savedJobs;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobApplication> jobApplications;
 }
 

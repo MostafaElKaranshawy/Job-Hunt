@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react"
 import Header from "../../components/header/header";
 import SearchBar from "../../components/searchBar/SearchBar";
 import Filters from "../../components/filters/Filters";
-import JobList from "../../components/jobList/JobList";
+// import JobList from "../../components/jobList/JobList";
+import JobCard from "../../components/jobCard/JobCard";
 import './userHome.css'
 
-import { fetchJobs } from "../../services/homeService";
+import { fetchJobs, toggleSaveJob } from "../../services/homeService";
 import Sorting from "../../components/sorting/Sorting.jsx";
 import { calculateRelativeTime } from "../../utils/userHomeUtils";
 import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
@@ -18,6 +19,8 @@ function UserHome() {
 
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
+    const [currentJob, setCurrentJob] = useState({});
+    const [expandedJobState, setExpandedJobState] = useState(null); // Store both saved state and setSaved function
 
     const [page, setPage] = useState(0);
     const [totalJobsCount, setTotalJobsCount] = useState(0); // New state for total jobs count
@@ -36,23 +39,25 @@ function UserHome() {
     });
 
 
+
+
     useEffect(() => {
-        const loadJobs = async () => {
-            setLoading(true);
-            try {
-                const { jobs, totalJobs } = await fetchJobs(filters, page, offset);
-                setJobs(jobs);
-                setTotalJobsCount(totalJobs);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
 
         loadJobs();
     }, [filters, page]);
 
+    const loadJobs = async () => {
+        setLoading(true);
+        try {
+            const { jobs, totalJobs } = await fetchJobs(filters, page, offset);
+            setJobs(jobs);
+            setTotalJobsCount(totalJobs);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSortChange = (value) => {
         setFilters((prevFilters) => ({
@@ -63,11 +68,11 @@ function UserHome() {
         setPage(0);
     };
 
-
-
-    const handleExpandJob = (job) => {
+    const handleExpandJob = (job, saved, setSaved) => {
         setExpandedJob(job);
+        setExpandedJobState({ saved: saved, setSaved }); // Store saved state and setSaved function
     };
+
 
     const handleCloseExpandedJob = () => {
         setExpandedJob(null);
@@ -93,6 +98,34 @@ function UserHome() {
         setPage(0);
     };
 
+
+    const handleToggleSave = async (job, saved, setSaved) => {
+        if (loading)
+            return;
+
+        try {
+            await toggleSaveJob(job, saved);
+
+            if (expandedJob){
+                // console.log("expanded job")
+                expandedJobState.setSaved((prevSaved) => !prevSaved);
+                setExpandedJobState((prevExpandedJobState) => ({
+                    ...prevExpandedJobState,
+                    saved: !prevExpandedJobState.saved,
+                }));
+            }
+            else
+                setSaved((prevSaved) => !prevSaved);        
+
+
+        }
+        catch (err) {
+            console.error(err);
+
+        }
+
+
+    }
 
     const startIndex = page * offset + 1;
     const endIndex = Math.min((page + 1) * offset, totalJobsCount);
@@ -144,7 +177,25 @@ function UserHome() {
                             <p className="loading-text">Loading jobs...</p> :
                             jobs.length === 0 ?
                                 <p className="no-jobs-message">No matching jobs found</p> :
-                                <JobList jobs={jobs} handleExpandJob={handleExpandJob} />
+                                // <JobList 
+                                //     jobs={jobs} 
+                                //     handleExpandJob={handleExpandJob} 
+                                //     handleToggleSave={handleToggleSave}
+                                //     loading={loading}
+                                // />
+
+                                (
+                                    <div className="job-list">
+                                        {jobs.map((job) => (
+                                            <JobCard
+                                                key={job.id}
+                                                job={job}
+                                                handleExpandJob={handleExpandJob}
+                                                handleToggleSave={handleToggleSave}
+                                            />
+                                        ))}
+                                    </div>
+                                )
                         }
 
                         {/* // Pagination */}
@@ -182,7 +233,17 @@ function UserHome() {
                         <div className="job-card-header">
                             <div className="company-logo"></div>
                             <div className="job-info">
-                                <h3>{expandedJob.company.name}</h3>
+                                <div className="name-and-save">
+                                    <h3>{expandedJob.company.name}</h3>
+
+                                    <i
+                                        className={`fa-bookmark save-icon expanded-save-icon
+                                                    ${expandedJobState.saved ? 'saved fa-solid' : 'fa-regular'}`
+                                        }
+                                        onClick={() => handleToggleSave(expandedJob, expandedJobState.saved, expandedJobState.setSaved)}
+
+                                    ></i>
+                                </div>
                                 <div className="job-title">
                                     {expandedJob.title}
                                     {expandedJob.isNew && <span className="new-badge">New post</span>}
@@ -198,9 +259,17 @@ function UserHome() {
                             </div>
 
                         </div>
+                        <button
+                            className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`}
+                            onClick={handleApplyClick}
+                            disabled={expandedJob.applied}
+                        >
+                            {expandedJob.applied ?
+                                "Already Applied" : "Apply Now"
+                            }
 
-                        {/* Apply button */}
-                        <button className="apply-button" onClick={handleApplyClick}>Apply Now</button>
+                            {/* add the apply and don't apply when already applied */}
+                        </button>
                         <br/>
                         <button className="apply-button" onClick={handleReportClick}>Report</button>
 

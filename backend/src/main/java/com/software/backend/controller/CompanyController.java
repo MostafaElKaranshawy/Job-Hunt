@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/company")
 @CrossOrigin
 public class CompanyController {
+
     @Autowired
     CompanyService companyService;
 
@@ -22,6 +23,7 @@ public class CompanyController {
         return ResponseEntity.status(404).body("Company not found");
     }
 
+
     @PatchMapping("/{companyUsername}")
     public ResponseEntity<?> updateCompanyInfo(@PathVariable String companyUsername, @RequestBody CompanyDto companyDto) {
         CompanyDto updatedCompanyDto = companyService.updateCompanyInfo(companyUsername, companyDto);
@@ -30,4 +32,20 @@ public class CompanyController {
         }
         return ResponseEntity.status(404).body("Company not found or update failed");
     }
+
+
+    @GetMapping("/{companyUsername}/jobs")
+    public ResponseEntity<?> getCompanyJobs(@PathVariable String companyUsername) {
+        return ResponseEntity.ok(companyService.getCompanyJobs(companyUsername));
+    }
+
+    @DeleteMapping("/{companyUsername}/jobs/{jobId}")
+    public ResponseEntity<?> deleteJob(@PathVariable String companyUsername, @PathVariable Integer jobId) {
+        if(companyService.deleteJob(companyUsername, jobId)) {
+            return ResponseEntity.ok("Job deleted successfully");
+        }
+        return ResponseEntity.status(404).body("Job not found or delete failed");
+    }
+
+
 }

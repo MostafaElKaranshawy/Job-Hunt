@@ -4,6 +4,7 @@ import com.google.api.client.util.store.AbstractMemoryDataStore;
 import com.software.backend.dto.*;
 import com.software.backend.enums.ApplicationStatus;
 import com.software.backend.enums.JobReportReason;
+import com.software.backend.mapper.JobApplicationMapper;
 import com.software.backend.repository.*;
 import com.software.backend.sorting.SortingContext;
 import com.software.backend.entity.Job;
@@ -17,18 +18,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class JobService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private ApplicantRepository applicantRepository;
     @Autowired
     private JobRepository jobRepository;
     @Autowired
@@ -37,6 +41,8 @@ public class JobService {
     private SectionRepository sectionRepository;
     @Autowired
     private FieldRepository fieldRepository;
+    @Autowired
+    private ApplicantRepository applicantRepository;
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
     @Autowired
@@ -48,9 +54,16 @@ public class JobService {
     private StaticSectionService staticSectionService;
     @Autowired
     private FieldMapper fieldMapper;
+    @Autowired
+    private EmailService emailService;
+  
+    @Autowired
+    private SavedJobRepository savedJobRepository;
 
+    @Autowired
+    private JobApplicationMapper JobApplicationMapper;
 
-    public List<JobDto> getHomeActiveJobs(int page, int offset) {
+    public List<JobDto> getHomeActiveJobs(int page, int offset){
 
         Pageable pageable = PageRequest.of(page, offset);
 
@@ -87,11 +100,32 @@ public class JobService {
             throw e;
         }
     }
+    public HomeDto handleHomeJobs(String username, String type, String location, String category,
+                                  String salary, String level, String query,
+                                  String sort, int page, int offset) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+
+        HomeDto filteredJobs = filterJobs(type, location, category, salary, level, query, sort, page, offset);
+        List<Integer> savedJobsIds = getSavedJobs(applicantId);
+        List<Integer> jobIds = filteredJobs.getJobs().stream().map(JobDto::getId).toList();
+        List<Integer> appliedJobsIds = jobApplicationRepository.getJobIdByApplicantIdAndJobIds(applicantId, jobIds)
+                .orElse(new ArrayList<>());
+
+        for (JobDto job:filteredJobs.getJobs()) {
+
+            job.setSaved(savedJobsIds.contains(job.getId()));
+
+            job.setApplied(appliedJobsIds.contains(job.getId()));
+        }
+        return filteredJobs;
+    }
 
     public HomeDto filterJobs(String type, String location, String category,
-                              String salary, String level, String query,
-                              String sort, int page, int offset
-    ) {
+                                   String salary, String level, String query,
+                                   String sort, int page, int offset
+                                   ){
 
         HashMap<String, String> filterCriteria = new HashMap<>();
 
@@ -151,9 +185,9 @@ public class JobService {
         return staticSections;
     }
 
-    private static List<Section> getSections(JobDto jobDto, Job job) {
+    private List<Section> getSections(JobDto jobDto, Job job) {
         List<Section> sections = new ArrayList<>();
-        for (SectionDto sectionDto : jobDto.getSections()) {
+        for(SectionDto sectionDto : jobDto.getSections()) {
             Section section = new Section();
             section.setName(sectionDto.getName());
             section.setJob(job);
@@ -448,5 +482,264 @@ public class JobService {
 
         reportedJobRepository.save(reportedJob);
     }
-}
 
+    public List<ApplicationResponseDTO> getJobApplications(Integer jobId) {
+        List<JobApplication> jobApplications = jobApplicationRepository.findAllByJobId(jobId);
+        List<ApplicationResponseDTO> responseDTOs = new ArrayList<>();
+
+        for (JobApplication jobApplication : jobApplications) {
+            ApplicationResponseDTO dto = new ApplicationResponseDTO();
+            dto.setApplicationStatus(jobApplication.getApplicationStatus().ordinal());
+            dto.setApplicationId(jobApplication.getId());
+            List<ApplicationResponse> responses = jobApplication.getApplicationResponsesList();
+
+            ApplicationResponseDTO.PersonalDataDTO personalData = new ApplicationResponseDTO.PersonalDataDTO();
+            ApplicationResponseDTO.EducationDataDTO educationData = new ApplicationResponseDTO.EducationDataDTO();
+            ApplicationResponseDTO.ExperienceDataDTO experienceData = new ApplicationResponseDTO.ExperienceDataDTO();
+            List<String> skills = new ArrayList<>();
+
+            List<ApplicationResponseDTO.SpecialFieldDTO> specialFields = new ArrayList<>();
+            List<ApplicationResponseDTO.SpecialSectionDTO> specialSections = new ArrayList<>();
+
+            for (ApplicationResponse response : responses) {
+                if (response.getSection() != null) {
+                    String sectionName = response.getSection().getName();
+                    String fieldName = response.getField().getLabel();
+                    String responseData = response.getResponseData();
+
+                    // Map to one of the static sections
+                    switch (sectionName) {
+                        case "Personal Information":
+                            mapToPersonalData(personalData, fieldName, responseData);
+                            break;
+                        case "Education":
+                            mapToEducationData(educationData, fieldName, responseData);
+                            break;
+                        case "Experience":
+                            mapToExperienceData(experienceData, fieldName, responseData);
+                            break;
+                        case "Skills":
+                            skills.add(responseData);
+                            break;
+                        default:
+                            // Map Section data to SpecialSectionDTO
+                            mapToSpecialSection(specialSections, sectionName, fieldName, responseData);
+                            break;
+                    }
+                } else {
+                    // Map Field data to SpecialFieldDTO
+                    ApplicationResponseDTO.SpecialFieldDTO specialFieldDTO = new ApplicationResponseDTO.SpecialFieldDTO();
+                    specialFieldDTO.setFieldName(response.getField().getLabel());
+                    specialFieldDTO.setData(response.getResponseData());
+                    specialFields.add(specialFieldDTO);
+                }
+            }
+
+            // Set data in the DTO
+            dto.setPersonalData(personalData);
+            dto.setEducationData(educationData);
+            dto.setExperienceData(experienceData);
+            dto.setSkillData(skills);
+            dto.setSpecialFieldsData(specialFields);
+            dto.setSpecialSectionsData(specialSections);
+
+            responseDTOs.add(dto);
+        }
+        for (ApplicationResponseDTO dto : responseDTOs) {
+            System.out.println(dto);
+        }
+
+        return responseDTOs;
+    }
+
+    private void mapToPersonalData(ApplicationResponseDTO.PersonalDataDTO personalData, String fieldName, String responseData) {
+        switch (fieldName) {
+            case "Full Name":
+                personalData.setFullName(responseData);
+                break;
+            case "Address":
+                personalData.setAddress(responseData);
+                break;
+            case "Phone Number":
+                personalData.setPhoneNumber(responseData);
+                break;
+            case "Personal Email":
+                personalData.setPersonalEmail(responseData);
+                break;
+            case "Portfolio URL":
+                personalData.setPortfolioURL(responseData);
+                break;
+            case "LinkedIn URL":
+                personalData.setLinkedInURL(responseData);
+                break;
+            case "Date of Birth":
+                personalData.setDateOfBirth(responseData);
+                break;
+        }
+    }
+
+    private void mapToEducationData(ApplicationResponseDTO.EducationDataDTO educationData, String fieldName, String responseData) {
+        switch (fieldName) {
+            case "Field of Study":
+                educationData.setFieldOfStudy(responseData);
+                break;
+            case "Graduation Year":
+                educationData.setGraduationYear(responseData);
+                break;
+            case "Highest Degree":
+                educationData.setHighestDegree(responseData);
+                break;
+            case "Start Year":
+                educationData.setStartYear(responseData);
+                break;
+            case "University":
+                educationData.setUniversity(responseData);
+                break;
+        }
+    }
+
+    private void mapToExperienceData(ApplicationResponseDTO.ExperienceDataDTO experienceData, String fieldName, String responseData) {
+        switch (fieldName) {
+            case "Company Name":
+                experienceData.setCompanyName(responseData);
+                break;
+            case "Job Title":
+                experienceData.setJobTitle(responseData);
+                break;
+            case "Job Location":
+                experienceData.setJobLocation(responseData);
+                break;
+            case "Job Description":
+                experienceData.setJobDescription(responseData);
+                break;
+            case "Start Date":
+                experienceData.setStartDate(responseData);
+                break;
+            case "End Date":
+                experienceData.setEndDate(responseData);
+                break;
+            case "Current Role":
+                experienceData.setCurrentRule(Boolean.parseBoolean(responseData));
+                break;
+        }
+    }
+
+    private void mapToSpecialSection(List<ApplicationResponseDTO.SpecialSectionDTO> specialSections, String sectionName, String fieldName, String responseData) {
+        boolean sectionExists = false;
+        for (ApplicationResponseDTO.SpecialSectionDTO sectionDTO : specialSections) {
+            if (sectionDTO.getSectionName().equals(sectionName)) {
+                sectionDTO.getData().put(fieldName, responseData);
+                sectionExists = true;
+                break;
+            }
+        }
+        if (!sectionExists) {
+            ApplicationResponseDTO.SpecialSectionDTO specialSectionDTO = new ApplicationResponseDTO.SpecialSectionDTO();
+            specialSectionDTO.setSectionName(sectionName);
+            Map<String, String> sectionData = new HashMap<>();
+            sectionData.put(fieldName, responseData);
+            specialSectionDTO.setData(sectionData);
+            specialSections.add(specialSectionDTO);
+        }
+    }
+
+    public void acceptApplication(Integer applicationId) {
+        System.out.println("Accepting application...");
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found for id: " + applicationId));
+
+        System.out.println("Application found.");
+        System.out.println("application id" + jobApplication.getId());
+        System.out.println("jobApllication status: " + jobApplication.getApplicationStatus());
+
+        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("ACCEPTED")); // Enum value should match defined constants
+        jobApplicationRepository.save(jobApplication);
+        System.out.println("jobApllication status: " + jobApplication.getApplicationStatus());
+        emailService.sendApplicationAcceptanceEmail(
+                jobApplication.getApplicant().getUser().getEmail(),
+                jobApplication.getJob().getTitle(),
+                jobApplication.getJob().getCompany().getName()
+        );
+        System.out.println("Acceptance email sent.");
+    }
+
+    public void rejectApplication(Integer applicationId) {
+        System.out.println("Rejecting application...");
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found for id: " + applicationId));
+        System.out.println("Application found.");
+        System.out.println("application id" + jobApplication.getId());
+        System.out.println("jobApllication status: " + jobApplication.getApplicationStatus());
+        System.out.println(ApplicationStatus.REJECTED);
+        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("REJECTED")); // Enum value should match defined constants
+        jobApplicationRepository.save(jobApplication);
+        System.out.println("jobApplication status: " + jobApplication.getApplicationStatus());
+        emailService.sendApplicationRejectionEmail(
+                jobApplication.getApplicant().getUser().getEmail(),
+                jobApplication.getJob().getTitle(),
+                jobApplication.getJob().getCompany().getName()
+        );
+        System.out.println("Acceptance email sent.");
+    }
+
+
+
+    private List<Integer> getSavedJobs (int applicantId) {
+        return savedJobRepository.getJobIdByApplicantId(applicantId).orElse(new ArrayList<>());
+    }
+
+
+    public void saveJob(String username, int jobId) {
+        Applicant applicant = applicantRepository.findByUser_username(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+
+        SavedJob savedJob = new SavedJob();
+        savedJob.setApplicant(applicant);
+        savedJob.setJob(job);
+        savedJob.setCreatedAt(LocalDateTime.now());
+
+        if (savedJobRepository.existsByApplicantIdAndJobId(applicant.getId(), jobId)) {
+            throw new RuntimeException("Job already saved");
+        }
+        try {
+            savedJobRepository.save(savedJob);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void unSaveJob(String username, int jobId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+        try {
+            savedJobRepository.deleteByApplicantIdAndJobId(applicantId, jobId);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+    public List<ApplicantApplicationsResponseDto> getApplicationsByApplicant(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+        List<JobApplication> applications = jobApplicationRepository.findApplicationsByApplicantId(applicantId).orElse(new ArrayList<>());
+
+        return applications.stream().map(application -> {
+            ApplicantApplicationsResponseDto response = JobApplicationMapper.toApplicantApplicationsResponseDto(application);
+
+            response.setResponses(application.getApplicationResponsesList().stream()
+                    .map(JobApplicationMapper::toBriefApplicationResponseDto)
+                    .collect(Collectors.toList()));
+
+            return response;
+        }).collect(Collectors.toList());
+    }
+
+
+}

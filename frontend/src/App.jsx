@@ -9,6 +9,9 @@ import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPass
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage'
 import SpecialForm from './components/specialForm/SpecialForm'
 import ReportForm from './components/reportForm/ReportForm'
+import JobApplications from './pages/jobApplicationsPage/JobApplicationsPage'
+import AdminDashboard from './pages/adminProfile/adminDashboard'
+import AdminLogin from './pages/adminLoginPage/AdminLoginPage'
 function App() {
     return (
         <div className='app'>
@@ -25,6 +28,9 @@ function App() {
                     <Route path="/reset-password-request" element={< ResetPasswordRequestPage/>} />
                     <Route path="/user/apply/job/:jobId/form" element={<SpecialForm/>} />
                     <Route path="/user/job/:jobId/report" element={<ReportForm/>} />
+                    <Route path="/jobs/:jobId/applications" element={<JobApplications/>}/>
+                    <Route path="/admin/login" element={<AdminLogin/>}/>
+                    <Route path="/admin/dashboard" element={<AdminDashboard/>} />
                 </Routes>
             </Router>
         </div>

@@ -126,10 +126,58 @@ async function editUserSkills(userName, skills){
   }
 }
 
+async function changePassword(userName, passwordData) {
+    console.log("passwordData", passwordData);
+    const url = `${backendURL}/user/${userName}/profile/password`;
+    try {
+        const response = await fetch(url, {
+            method: 'PUT', 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(passwordData)
+        });
+        console.log(response)
+        if (!response.ok) {
+            console.log(response)
+            throw new Error(`Response status: ${response.status}`);
+        }
+        return "ok";
+  } catch (error) {
+    return error.message;
+  }
+
+}
+
+async function getSavedJobs(username, page, offset) {
+    const url = `${backendURL}/users/${username}/profile/savedJobs?page=${page}&offset=${offset}`;
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        console.log(data);
+        return data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 export{
     getUserProfile,
     editUserProfile,
     handleCustomSectionOperation,
     getUserSkills,
-    editUserSkills
+    editUserSkills,
+    changePassword,
+    getSavedJobs
 }

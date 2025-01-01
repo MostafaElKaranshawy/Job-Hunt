@@ -27,6 +27,8 @@ public class JobDto {
     private List<SectionDto> sections; // sections with fields
     private List<String> staticSections; // static sections
     private List<FieldDto> fields;     // standalone fields
+    private boolean saved;
+    private boolean applied;
 
     @Override
     public boolean equals(Object o) {
@@ -41,7 +43,6 @@ public class JobDto {
         return Objects.hash(id);
     }
 
-//     private String salary;
-//     private JobLevel level;
+
 
 }

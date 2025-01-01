@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import Header from '../../components/header/header';
 import ProfileSectionNavigator from "../../components/profileSections/profileSectionsNavigator/profileSectionsNavigator";
-import ConfirmationBox from "../../components/confirmationBox/confirmationBox.";
+import ConfirmationBox from "../../components/confirmationBox/confirmationBox";
 import "./profilePage.css";
 
 export default function ProfilePage() {
