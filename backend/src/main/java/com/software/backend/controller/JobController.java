@@ -4,6 +4,7 @@ import com.software.backend.dto.*;
 import com.software.backend.service.JobService;
 import com.software.backend.service.StaticSectionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +79,21 @@ public class JobController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/job/{userName}/{jobId}/report")
+    public ResponseEntity<String> reportJob(
+            @PathVariable int jobId,
+            @PathVariable String userName,
+            @RequestBody JobReportDTO jobReportDTO) {
+        try {
+            jobService.reportJob(jobId, userName, jobReportDTO);
+            return ResponseEntity.ok("Job report submitted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to submit job report: " + e.getMessage());
         }
     }
 

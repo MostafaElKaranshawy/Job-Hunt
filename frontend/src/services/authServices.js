@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:8080';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 const ERROR_MESSAGE = "Sign-up failed. Please try again.";
 const ERROR_MESSAGE_LOGIN = "Login failed. Please try again.";
 
