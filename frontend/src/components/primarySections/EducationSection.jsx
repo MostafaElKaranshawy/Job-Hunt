@@ -34,7 +34,9 @@ export default function EducationSection({ onChange }) {
     const [searchKey, setSearchKey] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [suggest, setSuggest] = useState(true);
+    const [startYear, setStartYear] = useState("");
     const [graduationYear, setGraduationYear] = useState("");
+    
     const threshold = 2;
 
     const handleSelect = (e) => {
@@ -82,9 +84,10 @@ export default function EducationSection({ onChange }) {
             highestDegree,
             fieldOfStudy,
             university: searchKey,
-            graduationYear
+            startYear,
+            graduationYear,
         });
-    }, [highestDegree, fieldOfStudy, searchKey, graduationYear]);
+    }, [highestDegree, fieldOfStudy, searchKey, startYear, graduationYear]);
 
     return (
         <div className="section-container">
@@ -108,7 +111,7 @@ export default function EducationSection({ onChange }) {
                 </div>}
                 <br /> <br />
                 
-                <DateInput name="Start Year" fullDate={false} value={graduationYear} onChange={setGraduationYear} />
+                <DateInput name="Start Year" fullDate={false} value={startYear} onChange={setStartYear} />
                 <br />
                 <DateInput name="End Year" fullDate={false} value={graduationYear} onChange={setGraduationYear} />
             </div>

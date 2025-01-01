@@ -124,7 +124,7 @@ const handleCloseModal = () => {
                   <p className="card-text"><b>Location:</b> {job.location}</p>
                   <p className="card-text"><b>posted at:</b> {formatter.format(new Date(job.postedAt))}</p>
                   <p className="card-text"><b>expires at:</b> {formatter.format(new Date(job.applicationDeadline))}</p>
-                  <Link to={`/jobs/${job.id}`} className="btn btn-primary card-body-btn">View Applications</Link>
+                  <Link to={`/jobs/${job.id}/applications`} className="btn btn-primary card-body-btn">View Applications</Link>
                   <i 
                     className="bi bi-three-dots-vertical card-body-icon"
                     onClick={() => toggleMenu(job.id)}

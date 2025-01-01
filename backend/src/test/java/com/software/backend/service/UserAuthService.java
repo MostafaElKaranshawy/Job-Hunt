@@ -3,6 +3,7 @@ package com.software.backend.service;
 import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.dto.LogInRequest;
 import com.software.backend.dto.SignUpRequest;
+import com.software.backend.entity.Admin;
 import com.software.backend.entity.Applicant;
 import com.software.backend.entity.Company;
 import com.software.backend.entity.User;
@@ -10,6 +11,7 @@ import com.software.backend.enums.UserType;
 import com.software.backend.exception.EmailAlreadyRegisteredException;
 import com.software.backend.exception.InvalidCredentialsException;
 import com.software.backend.exception.UserNotFoundException;
+import com.software.backend.repository.AdminRepository;
 import com.software.backend.repository.ApplicantRepository;
 import com.software.backend.repository.CompanyRepository;
 import com.software.backend.repository.UserRepository;
@@ -17,6 +19,8 @@ import com.software.backend.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -34,6 +38,8 @@ class UserAuthServiceTest {
     private CompanyRepository companyRepository;
 
     @Mock
+    private AdminRepository adminRepository;
+    @Mock
     private JwtUtil jwtUtil;
 
     @Mock
@@ -48,7 +54,7 @@ class UserAuthServiceTest {
     private SignUpRequest signUpRequest;
     private LogInRequest logInRequest;
     private User user;
-
+    private Admin admin;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -71,6 +77,12 @@ class UserAuthServiceTest {
         user.setEmail("testuser@example.com");
         user.setUsername("testuser");
         user.setPassword("hashedpassword123");
+
+        // Sample admin object
+        admin = new Admin();
+        admin.setUsername("admin");
+        admin.setPassword("hashedpassword123");
+
     }
 
     @Test
@@ -159,5 +171,49 @@ class UserAuthServiceTest {
         userAuthService.resetPassword("validToken", "newPassword1@");
 
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void testAdminLogin_invalidUsername_throwsInvalidCredentialsException() {
+        when(adminRepository.findByUsername(logInRequest.getUsername()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(InvalidCredentialsException.class, () -> userAuthService.adminLogin(logInRequest));
+    }
+
+    @Test
+    void testAdminLogin_invalidPassword_throwsInvalidCredentialsException() {
+        when(adminRepository.findByUsername(logInRequest.getUsername()))
+                .thenReturn(Optional.of(admin));
+        when(passwordService.verifyPassword(logInRequest.getPassword(), admin.getPassword()))
+                .thenReturn(false);
+
+        assertThrows(InvalidCredentialsException.class, () -> userAuthService.adminLogin(logInRequest));
+    }
+
+    @Test
+    void testAdminLogin_jwtGenerationFailure_throwsException() {
+        when(adminRepository.findByUsername(logInRequest.getUsername()))
+                .thenReturn(Optional.of(admin));
+        when(passwordService.verifyPassword(logInRequest.getPassword(), admin.getPassword()))
+                .thenReturn(true);
+        when(jwtUtil.generateAccessToken(any())).thenThrow(new RuntimeException("JWT error"));
+
+        Exception exception = assertThrows(RuntimeException.class, () -> userAuthService.adminLogin(logInRequest));
+        assertEquals("JWT error", exception.getMessage());
+    }
+
+    @Test
+    void testAdminLogin_nullUsername_throwsInvalidCredentialsException() {
+        logInRequest.setUsername(null);
+
+        assertThrows(InvalidCredentialsException.class, () -> userAuthService.adminLogin(logInRequest));
+    }
+
+    @Test
+    void testAdminLogin_nullPassword_throwsInvalidCredentialsException() {
+        logInRequest.setPassword(null);
+
+        assertThrows(InvalidCredentialsException.class, () -> userAuthService.adminLogin(logInRequest));
     }
 }

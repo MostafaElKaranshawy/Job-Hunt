@@ -1,46 +1,81 @@
-.job-list {
+.home .job-list {
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: 2rem;
 }
 
-.job-card {
+.home .job-card {
     background-color: white;
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.job-card-header {
+.home .job-card-header {
     display: flex;
     gap: 1rem;
-    /* margin-bottom: 1rem; */
 
 }
 
-.company-logo {
+.home .company-logo {
     width: 60px;
     height: 60px;
     background-color: #f0f0f0;
     border-radius: 4px;
 }
 
-.job-info h3 {
+.home .job-info {
+    flex: 1;
+}
+
+.home .job-info .name-and-save {
+    margin-top: -13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.home .job-info .name-and-save h3 {
     margin: 0;
     color: #333;
 }
 
-.job-title {
+.home .job-info .name-and-save .save-icon {
+    cursor: pointer;
+    font-size: 25px;
+    padding: 13px;
+    border-radius: 50%;
+    transition: background-color 0.25s;
+
+}
+
+
+
+.home .job-info .name-and-save .save-icon:hover {
+    background-color: #f0f0f0;
+}
+
+
+.home .job-info .name-and-save .saved {
+    color: #4caf50;
+}
+
+
+
+
+
+.home .job-title {
     font-size: 1.2rem;
     font-weight: 500;
-    margin: 0.5rem 0;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.new-badge {
+.home .new-badge {
     background-color: #e6f3f0;
     color: #557B70;
     padding: 0.2rem 0.5rem;
@@ -48,14 +83,14 @@
     font-size: 0.8rem;
 }
 
-.job-details {
+.home .job-details {
     display: flex;
     gap: 1rem;
     color: #666;
     font-size: 0.9rem;
 }
 
-.job-description {
+.home .job-description {
 
     color: #666;
     margin: 1rem 0;
@@ -63,7 +98,7 @@
     padding-top: 1rem;
 }
 
-.job-list .learn-more-button {
+.home .job-list .learn-more-button {
     background-color: white;
     color: #4caf50;
     border: 1px solid #bbbbbb;
@@ -73,6 +108,6 @@
     transition: background-color 0.25s;
 }
 
-.job-list .learn-more-button:hover {
+.home .job-list .learn-more-button:hover {
     background-color: #f9f9f9;
 }

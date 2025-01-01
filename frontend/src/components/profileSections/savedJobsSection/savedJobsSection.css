@@ -1,0 +1,13 @@
+.saved-jobs-section.home {
+    height: auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.saved-jobs-section .job-content {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 40px);
+    margin: 20px;
+    
+}

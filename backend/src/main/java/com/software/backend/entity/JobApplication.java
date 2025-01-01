@@ -18,11 +18,9 @@ public class JobApplication {
     @Column(name = "application_id")
     private Integer id;
 
-    @Column(
-        name = "application_status",
-        nullable = false
-    )
-    private ApplicationStatus applicationStatus;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus applicationStatus = ApplicationStatus.PENDING;
 
     @CreationTimestamp
     @Column(
