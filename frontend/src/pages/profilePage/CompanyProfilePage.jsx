@@ -89,41 +89,11 @@ function CompanyProfilePage() {
         }));
     }
 
-    const handlePhotoChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const path = URL.createObjectURL(file);
-            setCompanyInfo((prevInfo) => ({
-                ...prevInfo,
-                photo: path,
-            }));
-        }
-    };
-
     return (
         <div className="d-flex">
             <Sidebar />
             <div className='main'>
                 <div className="mb-3 profile-container">
-                    <div className="position-relative">
-                        <img
-                            src={companyInfo.photo}
-                            alt="Profile"
-                            className="profile-photo"
-                        />
-                        <i
-                            className="bi bi-camera-fill change-photo-icon"
-                            onClick={() => document.getElementById('file-input').click()}
-                            title="Change Profile Photo"
-                        ></i>
-                        <input
-                            id="file-input"
-                            type="file"
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            onChange={handlePhotoChange}
-                        />
-                    </div>
                     <div className="profile-name">
                         {isEditing.name ? (
                             <div className="d-flex align-items-center">
@@ -151,14 +121,14 @@ function CompanyProfilePage() {
                     </div>
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Email</label>
                     <div className="d-flex align-items-center">
                         <h3 className="me-2">{companyInfo.email}</h3>
                     </div>
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Website</label>
                     {isEditing.website ? (
                         <div className="d-flex">
@@ -188,7 +158,7 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Location</label>
                     {isEditing.location ? (
                         <div className="d-flex">
@@ -218,7 +188,7 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Overview</label>
                     {isEditing.overview ? (
                         <div className="d-flex">

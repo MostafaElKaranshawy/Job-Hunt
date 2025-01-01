@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Section from "../../section/section";
+
 import ProfileSection from "../../profileSection/profileSection";
 import CustomSection from "../../customSection/customSection";
 import Skills from "../../skills/skills";
 import "./profileInfoSection.css";
-import profileHolder from "../../../assets/profile.png";
+
 import { parseEducation,
     parseExperience,
     toCamelCase,
@@ -319,9 +319,6 @@ export default function ProfileInfoSection() {
     
     return (
         <div className="profile-info-section">
-            <div className="profile-picture">
-                <img src={profileHolder} />
-            </div>
             <div className="profile-data-sections">
                 {sections &&
                     sections.map((section, index) => {

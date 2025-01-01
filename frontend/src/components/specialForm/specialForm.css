@@ -1,14 +1,19 @@
+.modal-content {
+  max-width: 100vw;
+}
 .special-form {
   width: 100%;
-  max-width: 60em;
-  max-height: 40em;
-  margin: 0 auto;
   padding: 20px;
   background: linear-gradient(135deg, #70ca8e, #3b8d99);
   border-radius: 12px;
   overflow-y: scroll;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
 }
 
 .special-form::-webkit-scrollbar {
@@ -30,14 +35,14 @@
   background-color: transparent;
 }
 
-form {
+.special-form form {
   display: flex;
   flex-direction: column;
   gap: 20px;
   align-items: center;
 }
 
-.form-button {
+.special-form .form-button {
   font-size: 1.2em;
   width: 30%;
   padding: 10px 15px;
@@ -52,17 +57,17 @@ form {
   align-self: flex-start;
 }
 
-.form-button:hover {
+.special-form .form-button:hover {
   background-color: #af0000;
   transform: scale(1.05);
 }
 
-.form-button:active {
+.special-form .form-button:active {
   background-color: #8b0000;
   transform: scale(0.95);
 }
 
-.special-apply-user {
+.special-form .special-apply-user {
   /* Positioning */
   position: fixed;
   top: 50%;
@@ -173,3 +178,7 @@ form {
   font-size: 1.5rem;
 }
 
+.special-form .input {
+  width: 100%;
+  font-size: 15px;
+}

@@ -61,7 +61,7 @@ public class JwtUtil {
                 .claim("lastName", request.getLastName())
                 .claim("companyName", request.getCompanyName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000))// 5 m expiration
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("EMAIL_VERIFICATION_EXPIRATION"))))// 1 hour expiration
                 .signWith(secretKey)
                 .compact();
     }
@@ -70,7 +70,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 minutes
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("PASSWORD_RESET_EXPIRATION")))) // 5 minutes
                 .signWith(secretKey)
                 .compact();
     }

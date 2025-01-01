@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './JobCard.css';
 import { truncateDescription, calculateRelativeTime } from '../../utils/userHomeUtils';
 import { locationOptions, employmentTypes, jobLevels } from '../../constants/filterOptions';
-
+import profileHolder from "../../assets/profile.png";
 function JobCard({ job, handleExpandJob, handleToggleSave }) {
 
     const [saved, setSaved] = useState(job.saved);
@@ -26,7 +26,9 @@ function JobCard({ job, handleExpandJob, handleToggleSave }) {
     return (
         <div className="job-card">
             <div className="job-card-header">
-                <div className="company-logo"></div>
+                <div className="company-logo">
+                    <img src={profileHolder} />
+                </div>
                 <div className="job-info">
                     <div className="name-and-save">
                         <h3>{job.company.name}</h3>
