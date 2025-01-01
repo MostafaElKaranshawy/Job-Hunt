@@ -72,10 +72,13 @@ public class Job {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Section> sections;
 
-    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Field> fields;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobApplication> jobApplications;
 }
 

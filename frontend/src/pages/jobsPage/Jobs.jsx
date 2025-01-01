@@ -16,7 +16,7 @@ function Jobs() {
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [currentPageActive, setCurrentPageActive] = useState(1);
   const [currentPageExpired, setCurrentPageExpired] = useState(1);
-  const jobsPerPage = 5; // Number of jobs to display per page
+  const jobsPerPage = 4; // Number of jobs to display per page
 
   const fetchJobs = useCallback(async () => {
     try {

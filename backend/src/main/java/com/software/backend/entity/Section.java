@@ -21,7 +21,7 @@ public class Section {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Field> fields = new ArrayList<>();
 
     @ManyToOne
