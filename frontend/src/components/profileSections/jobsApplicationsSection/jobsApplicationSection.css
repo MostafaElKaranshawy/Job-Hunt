@@ -1,54 +1,138 @@
+/* Container styles */
 .job-applications-section {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-}
-
-.application-card {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-.responses-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.responses-table th, .responses-table td {
-    border: 1px solid #ffffff;
-    padding: 10px;
-    text-align: left;
-    border-radius: 50px;
-}
-
-.responses-table th {
-    background-color: #2f603cf0;
+    max-width: 70vw;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  
+  /* Pagination styles - moved to top */
+  .pagination.top-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .pagination button {
+    background-color: #2f603c;
     color: white;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
     border: none;
-}
-
-.pagination {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.pagination button {
-    padding: 10px;
-    margin: 0 10px;
-    background-color: #2f603cf0;
-    color: white;
-    border: none;
-    border-radius: 50px;
     cursor: pointer;
-}
-
-.pagination button:disabled {
-    background-color: #c0c0c0;
-}
-
-.pagination span {
-    font-size: 16px;
-    margin: 0 10px;
-}
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .pagination button:hover:not(:disabled) {
+    background-color: #234730;
+    transform: translateY(-1px);
+  }
+  
+  .pagination button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .pagination span {
+    color: #4b5563;
+    font-weight: 500;
+    min-width: 150px;
+    text-align: center;
+  }
+  
+  /* Header styles */
+  .job-applications-section h1 {
+    color: #1a2b3c;
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  
+  /* Info paragraph styles */
+  .job-applications-section p {
+    margin: 0.75rem 0;
+    color: #4b5563;
+    line-height: 1.6;
+  }
+  
+  .job-applications-section p strong {
+    color: #1f2937;
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+  
+  /* Table styles */
+  .responses-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-spacing: 0;
+    border-collapse: separate;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  }
+  
+  .responses-table th {
+    background-color: #2f603c;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.5rem;
+    text-align: left;
+  }
+  
+  .responses-table td {
+    padding: 1rem 1.5rem;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .responses-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .responses-table tr:hover td {
+    background-color: #f3f4f6;
+  }
+  
+  /* Loading and error states */
+  .job-applications-section > div:only-child {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .job-applications-section {
+      padding: 1rem;
+      margin: 1rem;
+    }
+  
+    .responses-table th,
+    .responses-table td {
+      padding: 0.75rem 1rem;
+    }
+  
+    .pagination.top-pagination {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
