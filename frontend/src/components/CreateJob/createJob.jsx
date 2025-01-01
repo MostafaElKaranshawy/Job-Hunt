@@ -28,22 +28,6 @@ export default function CreateJob({ detailsHistory, whenClose }) {
         setCountries(Countries.map((country)=>{return country.name}))
     },[Countries])
 
-    // useEffect(() => {
-    //     // Fetch country data from an API
-    //     const fetchCountries = async () => {
-    //         try {
-    //             const response = await fetch("https://restcountries.com/v3.1/all");
-    //             const data = await response.json();
-    //             const countryNames = data.map((country) => country.name.common);
-    //             setCountries(countryNames.sort());
-    //         } catch (error) {
-    //             console.error("Error fetching countries:", error);
-    //         }
-    //     };
-
-    //     fetchCountries();
-    // }, []);
-
     const handleLogData = () => {
         const tempDetails = {
             title: jobTitle,
