@@ -1,41 +1,44 @@
 package com.software.backend.service;
 
-import com.software.backend.service.PasswordService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
+class PasswordServiceTest {
 
-public class PasswordServiceTest {
+    private PasswordService passwordService;
 
-    private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-    private final PasswordService passwordService = new PasswordService();
+    @BeforeEach
+    void setUp() {
+        passwordService = new PasswordService();
+    }
 
-//    @Test
-//    public void testHashPassword() {
-//        String rawPassword = "mySecretPassword";
-//        String hashedPassword = "hashedPassword";
-//
-//        when(passwordEncoder.encode(rawPassword)).thenReturn(hashedPassword);
-//
-//        assertEquals(hashedPassword, passwordService.hashPassword(rawPassword));
-//        verify(passwordEncoder, times(1)).encode(rawPassword);
-//    }
+    @Test
+    void testHashPassword() {
+        String password = "myPassword";
+        String hashedPassword = passwordService.hashPassword(password);
 
-//    @Test
-//    public void testVerifyPassword() {
-//        String rawPassword = "mySecretPassword";
-//        String hashedPassword = "hashedPassword";
-//
-//        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
-//        when(passwordEncoder.matches("wrongPassword", hashedPassword)).thenReturn(false);
-//
-//        assertTrue(passwordService.verifyPassword(rawPassword, hashedPassword));
-//        assertFalse(passwordService.verifyPassword("wrongPassword", hashedPassword));
-//
-//        verify(passwordEncoder, times(2)).matches(anyString(), eq(hashedPassword));
-//    }
+        // Ensure the hashed password is not null and not equal to the raw password
+        assertNotNull(hashedPassword);
+        assertNotEquals(password, hashedPassword);
+    }
+
+    @Test
+    void testVerifyPassword_Success() {
+        String password = "myPassword";
+        String hashedPassword = passwordService.hashPassword(password);
+
+        // Verify that the password matches the hashed password
+        assertTrue(passwordService.verifyPassword(password, hashedPassword));
+    }
+
+    @Test
+    void testVerifyPassword_Failure() {
+        String password = "myPassword";
+        String wrongPassword = "wrongPassword";
+        String hashedPassword = passwordService.hashPassword(password);
+
+        // Verify that the password does not match the hashed password
+        assertFalse(passwordService.verifyPassword(wrongPassword, hashedPassword));
+    }
 }
