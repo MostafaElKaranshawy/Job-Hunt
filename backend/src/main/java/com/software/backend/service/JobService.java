@@ -51,6 +51,8 @@ public class JobService {
     private StaticSectionService staticSectionService;
     @Autowired
     private FieldMapper fieldMapper;
+    @Autowired
+    private EmailService emailService;
 
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
@@ -525,6 +527,9 @@ public class JobService {
 
         for (JobApplication jobApplication : jobApplications) {
             ApplicationResponseDTO dto = new ApplicationResponseDTO();
+            dto.setApplicationStatus(jobApplication.getApplicationStatus().ordinal());
+            System.out.println("application-id"+ jobApplication.getId());
+            System.out.println("Application Status: " + jobApplication.getApplicationStatus().ordinal());
             List<ApplicationResponse> responses = jobApplication.getApplicationResponsesList();
 
             ApplicationResponseDTO.PersonalDataDTO personalData = new ApplicationResponseDTO.PersonalDataDTO();
@@ -578,6 +583,9 @@ public class JobService {
             dto.setSpecialSectionsData(specialSections);
 
             responseDTOs.add(dto);
+        }
+        for (ApplicationResponseDTO dto : responseDTOs) {
+            System.out.println(dto);
         }
 
         return responseDTOs;
@@ -674,8 +682,24 @@ public class JobService {
         }
     }
 
+    public void acceptApplication(Integer applicationId) {
+        System.out.println("acceptApplication");
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId).orElse(null);
+        if (jobApplication == null) throw new IllegalArgumentException("Application not found for id: " + applicationId);
+        System.out.println("Application found");
+        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("ACCEPTED"));
+        jobApplicationRepository.save(jobApplication);
+        emailService.sendApplicationAcceptanceEmail(jobApplication.getApplicant().getUser().getEmail(), jobApplication.getJob().getTitle(), jobApplication.getJob().getCompany().getName());
+        System.out.println("Email sent");
+    }
 
-
-
+    public void rejectApplication(Integer applicationId) {
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId).orElse(null);
+        if (jobApplication == null) throw new IllegalArgumentException("Application not found for id: " + applicationId);
+        jobApplication.setApplicationStatus(ApplicationStatus.valueOf("Rejected"));
+        jobApplicationRepository.save(jobApplication);
+        emailService.sendApplicationRejectionEmail(jobApplication.getApplicant().getUser().getEmail(), jobApplication.getJob().getTitle(), jobApplication.getJob().getCompany().getName());
+        System.out.println("Email sent");
+    }
 }
 

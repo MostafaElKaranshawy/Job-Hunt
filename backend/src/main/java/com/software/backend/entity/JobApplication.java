@@ -20,6 +20,7 @@ public class JobApplication {
 
     @Column(
         name = "application_status",
+
         nullable = false
     )
     private ApplicationStatus applicationStatus;

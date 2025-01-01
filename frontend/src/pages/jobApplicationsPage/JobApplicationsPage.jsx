@@ -1,252 +1,205 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import './JobApplicationsPage.css';
-import { acceptApplication, rejectApplication } from '../../services/companyService';
+import { acceptApplication, rejectApplication, getApplications } from '../../services/companyService';
 
 function JobApplicationsPage() {
   const { jobId } = useParams(); 
   const [jobApplicationsData, setJobApplicationsData] = useState([]);
-  const [expandedIndex, setExpandedIndex] = useState(null); // To track expanded application
-
-  const getApplications = async () => {
-    try {
-      const companyUsername = 'company1'; // Replace with actual company username
-      const jobId = 2; // Replace with actual job ID
-  
-      const response = await fetch(
-        `http://localhost:8080/company/${companyUsername}/jobs/${jobId}`,
-        {
-          credentials: "include", // Include credentials for cookies/auth
-        }
-      );
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      console.log("Job applications data:", data);
-      setJobApplicationsData(data); // Assuming setJobApplicationsData is defined
-    } catch (error) {
-      console.error("Error fetching job applications:", error);
-    }
-  };
-
-  const handleAccept = async (index) => {
-    console.log(index);
-    const response = await acceptApplication( index );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageStart, setPageStart] = useState(1); // Start page range
+  const [pageEnd, setPageEnd] = useState(5); // End page range
+  const applicationsPerPage = 1; // Number of applications per page
+  const [successResponse, setSuccessResponse] = useState("");
+  const [failureResponse, setFailureResponse] = useState("");
+  const handleAccept = async () => {
+    console.log(currentPage);
+    const response = await acceptApplication(currentPage);
     if (response.success) {
       console.log(response.message);
-      // Handle success
+      setSuccessResponse(response.message);
+      jobApplicationsData[currentPage].applicationStatus = 1;
+      setFailureResponse("");
     } else {
+      setSuccessResponse("");
+      setFailureResponse(response.message);
       console.error(response.message);
-      // Handle error
     }
   };
 
-  const handleReject = async (index) => {
-    const response = await rejectApplication( index );
+  const handleReject = async () => {
+    console.log(currentPage);
+    const response = await rejectApplication(currentPage);
     if (response.success) {
+      setSuccessResponse(response.message);
+      jobApplicationsData[currentPage].applicationStatus = 2;
+      setFailureResponse("");
       console.log(response.message);
-      // Handle success
     } else {
+      setFailureResponse(response.message);
+      setSuccessResponse("");
       console.error(response.message);
-      // Handle error
     }
   };
-
-  
 
   useEffect(() => {
     const fetchJobApplications = async () => {
-        try {
-            // Using the provided response as mock data
-            const response = [
-                {
-                    educationData: {
-                        fieldOfStudy: "Computer Engineering",
-                        graduationYear: "2026",
-                        highestDegree: "Bachelor of Engineering (BE)",
-                        startYear: "2021",
-                        university: "Alexandria University"
-                    },
-                    experienceData: {
-                        companyName: "Cellula",
-                        currentRule: false,
-                        endDate: "2025-05-10",
-                        jobDescription: "jndfenew\nwefd;new;kd\ndjfj",
-                        jobLocation: "onsite",
-                        jobTitle: "ML ENG",
-                        startDate: "2024-12-01"
-                    },
-                    personalData: {
-                        address: "Alexandria, Sporting, Port said street",
-                        dateOfBirth: "2025-01-01",
-                        fullName: "Mustafa Kamel",
-                        linkedInURL: "https://linkedin.com/in/mostafa-nofal-923103197/",
-                        personalEmail: "mstfnfl@gmail.com",
-                        phoneNumber: "201099100787",
-                        portfolioURL: "https://linkedin.com/in/mostafa-nofal-923103197/"
-                    },
-                    skillData: ["Java", "Frontend Development/Scripting", "Javascript"],
-                    specialFieldsData: [
-                        { fieldName: "custom field 1", data: "2025-01-01" },
-                        { fieldName: "custom field 2", data: "x3" },
-                        { fieldName: "custom field 3", data: "lksfldkfdsselknfs" }
-                    ],
-                    specialSectionsData: [
-                        {
-                            sectionName: "Custom section 1",
-                            data: {
-                                "field 1": "kjrgfrkjf",
-                                "field 2": ",mrfrm,\nslfkner;k",
-                                "field 3": " option 2"
-                            }
-                        },
-                        {
-                            sectionName: "custom section 2",
-                            data: {
-                                "field 1 (checkbox)": ["y", "x", "z", "n"],
-                                "field 2": "fndlkdsfnlwkejf"
-                            }
-                        }
-                    ]
-                },
-				{
-					educationData: {
-						fieldOfStudy: "Computer Engineering",
-						graduationYear: "2026",
-						highestDegree: "Bachelor of Engineering (BE)",
-						startYear: "2021",
-						university: "Alexandria University"
-					},
-					experienceData: {
-						companyName: "Cellula",
-						currentRule: false,
-						endDate: "2025-05-10",
-						jobDescription: "jndfenew\nwefd;new;kd\ndjfj",
-						jobLocation: "onsite",
-						jobTitle: "ML ENG",
-						startDate: "2024-12-01"
-					},
-					personalData: {
-						address: "Alexandria, Sporting, Port said street",
-						dateOfBirth: "2025-01-01",
-						fullName: "Mustafa Kamel",
-						linkedInURL: "https://linkedin.com/in/mostafa-nofal-923103197/",
-						personalEmail: "yomna@mail.com",
-						phoneNumber: "201099100787",
-						portfolioURL: "https://linkedin.com/in/mostafa-nofal-923103197/"
-					},
-					skillData: ["Java", "Frontend Development/Scripting", "Javascript"],
-					specialFieldsData: [
-						{ fieldName: "custom field 1", data: "2025-01-01" },
-						{ fieldName: "custom field 2", data: "x3" },
-						{ fieldName: "custom field 3", data: "lksfldkfdsselknfs" }
-					],
-					specialSectionsData: [
-						{
-							sectionName: "Custom section 1",
-							data: {
-								"field 1": "kjrgfrkjf",
-								"field 2": ",mrfrm,\nslfkner;k",
-								"field 3": " option 2"
-							}
-						},
-						{
-							sectionName: "custom section 2",
-							data: {
-								"field 1 (checkbox)": ["y", "x", "z", "n"],
-								"field 2": "fndlkdsfnlwkejf"
-							}
-						}
-					]
-				},
-            ];
-            setJobApplicationsData(response);
-        } catch (error) {
-            console.error('Error fetching job applications:', error);
-        }
+      try {
+        const response = await getApplications(jobId);
+        setJobApplicationsData(response);
+      } catch (error) {
+        console.error('Error fetching job applications:', error);
+      }
     };
-
     fetchJobApplications(); 
-  }, []);
+  }, [jobId]);
 
-  // Toggle expanded application
-  const toggleExpand = (index) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
+  // Pagination logic
+  const indexOfLastApplication = currentPage * applicationsPerPage;
+  const indexOfFirstApplication = indexOfLastApplication - applicationsPerPage;
+  const currentApplications = jobApplicationsData.slice(indexOfFirstApplication, indexOfLastApplication);
+
+  const totalPages = Math.ceil(jobApplicationsData.length / applicationsPerPage);
+
+  // Update page range when the page changes
+  const handleNext = () => {
+    if (pageEnd < totalPages) {
+      setPageStart(pageStart + 5);
+      setPageEnd(pageEnd + 5);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (pageStart > 1) {
+      setPageStart(pageStart - 5);
+      setPageEnd(pageEnd - 5);
+    }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    if (pageNumber > pageEnd) {
+      setPageStart(pageEnd + 1);
+      setPageEnd(pageEnd + 5);
+    } else if (pageNumber < pageStart) {
+      setPageStart(pageStart - 5);
+      setPageEnd(pageStart - 1);
+    }
   };
 
   return (
     <div className="applications-container">
-      <ul>
-        {jobApplicationsData.map((application, index) => (
+      <ul className="applications-list" style={{ listStyleType: 'none' }}>
+        {currentApplications.map((application, index) => (
           <li key={index} className="application-card">
-            <h3>Personal Data</h3>
-            <p><strong>Name:</strong> {application.personalData.fullName}</p>
-            <p><strong>Email:</strong> {application.personalData.personalEmail}</p>
-            <p><strong>Phone:</strong> {application.personalData.phoneNumber}</p>
-            {expandedIndex === index && (
+            {application.personalData.fullName && (
               <>
+                <h3>Personal Information</h3>
+                <p><strong>Name:</strong> {application.personalData.fullName}</p>
+                <p><strong>Email:</strong> {application.personalData.personalEmail}</p>
+                <p><strong>Phone:</strong> {application.personalData.phoneNumber}</p>
                 <p><strong>Address:</strong> {application.personalData.address}</p>
                 <p><strong>LinkedIn:</strong> <a href={application.personalData.linkedInURL} target="_blank" rel="noopener noreferrer">View Profile</a></p>
-
+              </>
+            )}
+            {application.educationData.university && (
+              <>
                 <h3>Education</h3>
                 <p><strong>University:</strong> {application.educationData.university}</p>
                 <p><strong>Field of Study:</strong> {application.educationData.fieldOfStudy}</p>
                 <p><strong>Degree:</strong> {application.educationData.highestDegree}</p>
                 <p><strong>Graduation Year:</strong> {application.educationData.graduationYear}</p>
-
+              </>
+            )}
+            {application.experienceData.length > 0 && (
+              <>
                 <h3>Experience</h3>
-                <p><strong>Company:</strong> {application.experienceData.companyName}</p>
-                <p><strong>Title:</strong> {application.experienceData.jobTitle}</p>
-                <p><strong>Description:</strong> {application.experienceData.jobDescription}</p>
-
+                <ul>
+                  {application.experienceData.map((experience, i) => (
+                    <li key={i}>
+                      <p><strong>Company:</strong> {experience.company}</p>
+                      <p><strong>Position:</strong> {experience.position}</p>
+                      <p><strong>Start Date:</strong> {experience.startDate}</p>
+                      <p><strong>End Date:</strong> {experience.endDate}</p>
+                      <p><strong>Description:</strong> {experience.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {application.skillData.length > 0 && (
+              <>
                 <h3>Skills</h3>
                 <ul>
                   {application.skillData.map((skill, i) => (
                     <li key={i}>{skill}</li>
                   ))}
                 </ul>
-
+              </>
+            )}
+            {application.specialSectionsData.length > 0 && (
+              <>
+                {application.specialSectionsData.map((section, sectionIndex) => (
+                  <div key={sectionIndex}>
+                    <h3>{section.sectionName}</h3>
+                    <ul>
+                      {Object.entries(section.data).map(([field, value], fieldIndex) => (
+                        <li key={fieldIndex}>
+                          <strong>{field}:</strong> {Array.isArray(value) ? value.join(', ') : value}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </>
+            )}
+            {application.specialFieldsData.length > 0 && (
+              <>
                 <h3>Special Fields</h3>
-                <ul>
+                <ul >
                   {application.specialFieldsData.map((field, i) => (
                     <li key={i}><strong>{field.fieldName}:</strong> {field.data}</li>
                   ))}
                 </ul>
-
-                <h3>Special Sections</h3>
-                {application.specialSectionsData?.map((section, sectionIndex) => (
-                    <div key={sectionIndex}>
-                        <h4>{section.sectionName}</h4>
-                        <ul>
-                            {Object.entries(section.data).map(([field, value], fieldIndex) => (
-                                <li key={fieldIndex}>
-                                    <strong>{field}:</strong> {Array.isArray(value) ? value.join(', ') : value}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
               </>
             )}
-            <button className="read-more-btn" onClick={() => toggleExpand(index)}>
-              {expandedIndex === index ? "Show Less" : "Read More"}
-            </button>
-            {/* <select name="status" id="status">
-          <option value="pending">Under Review</option>
-          <option value="approved">Accepted</option>
-          <option value="rejected">Rejected</option>
-        </select> */}
-            <button className="accept-btn" onClick={()=>handleAccept(index)}>Accept</button>
-            <button className="reject-btn" onClick={()=>handleReject(index)}>Reject</button>
+            { application.applicationStatus === 0 &&
+            <div className="status-buttons">
+                <button className="accept-btn" onClick={handleAccept}>Accept</button>
+                <button className="reject-btn" onClick={handleReject}>Reject</button>
+                </div>
+         }
+         {
+            application.applicationStatus === 1 && <p className="accepted">Accepted</p>
+         }
+         {
+            application.applicationStatus === 2 && <p className="rejected">Rejected</p>
+         }
+                <div className="response-message">
+                   {successResponse && <p className="success-message">{successResponse}</p>}
+                   {failureResponse && <p className="failure-message">{failureResponse}</p>}
+                </div>
+
           </li>
         ))}
-
       </ul>
-      <button onClick={getApplications}>click</button>
+
+      <div className="pagination">
+        <button onClick={handlePrevious} disabled={pageStart === 1} className="prev-btn">Prev</button>
+        {Array.from({ length: Math.min(5, totalPages - pageStart + 1) }, (_, index) => (
+          <button 
+            key={pageStart + index}
+            onClick={() => handlePageChange(pageStart + index)}
+            className={`page-btn ${currentPage === pageStart + index ? 'active' : ''}`}
+          >
+            {pageStart + index}
+          </button>
+        ))}
+        {pageEnd < totalPages && <span className="dots">...</span>}
+        <button onClick={handleNext} disabled={pageEnd >= totalPages} className="next-btn">Next</button>
+      </div>
     </div>
   );
 }
+
 export default JobApplicationsPage;

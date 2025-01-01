@@ -16,6 +16,7 @@ public class ApplicationResponseDTO {
     private List<String> skillData;
     private List<SpecialFieldDTO> specialFieldsData;
     private List<SpecialSectionDTO> specialSectionsData;
+    private int applicationStatus;
 
     @Data
     public static class PersonalDataDTO {

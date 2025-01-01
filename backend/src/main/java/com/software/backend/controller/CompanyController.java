@@ -47,4 +47,5 @@ public class CompanyController {
         return ResponseEntity.status(404).body("Job not found or delete failed");
     }
 
+
 }
