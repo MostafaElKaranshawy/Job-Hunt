@@ -100,7 +100,8 @@ public class AuthController {
     public ResponseEntity<?> signUpApplicant(@RequestBody SignUpRequest signUpRequest ) {
         System.out.println("welcome from applicant signup");
         applicantAuthService.signUp(signUpRequest);
-         ResponseMessage responseMessage = new ResponseMessage("Email confirmation sent. Please verify your email.");
+//        userAuthService.createNewUser(signUpRequest);
+        ResponseMessage responseMessage = new ResponseMessage("Email confirmation sent. Please verify your email.");
         return ResponseEntity.ok().body(responseMessage);
     }
 
