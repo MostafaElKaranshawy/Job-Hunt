@@ -52,7 +52,7 @@ public class JobService {
     private EmailService emailService;
   
     @Autowired
-    private SavedJobRepository savedJobRepository
+    private SavedJobRepository savedJobRepository;
 
     @Autowired
     private JobApplicationMapper JobApplicationMapper;
@@ -745,7 +745,6 @@ public class JobService {
     }
 
 
-}
 
     private List<Integer> getSavedJobs (int applicantId) {
         return savedJobRepository.getJobIdByApplicantId(applicantId).orElse(new ArrayList<>());
@@ -797,7 +796,7 @@ public class JobService {
             ApplicantApplicationsResponseDto response = JobApplicationMapper.toApplicantApplicationsResponseDto(application);
 
             response.setResponses(application.getApplicationResponsesList().stream()
-                    .map(JobApplicationMapper::toApplicationResponseDTO)
+                    .map(JobApplicationMapper::toBriefApplicationResponseDto)
                     .collect(Collectors.toList()));
 
             return response;

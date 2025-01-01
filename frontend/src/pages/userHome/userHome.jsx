@@ -326,10 +326,9 @@ function UserHome() {
 
                         {/* Apply button */}
                         <button
-                            className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`
+                            className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`}
                             onClick={handleApplyClick}
-                            disabled=expandedJob.applied
-                            }
+                            disabled={expandedJob.applied}
                         >
                             {expandedJob.applied ?
                                 "Already Applied" : "Apply Now"

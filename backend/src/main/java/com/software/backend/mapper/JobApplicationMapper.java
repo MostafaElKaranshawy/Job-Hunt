@@ -2,6 +2,7 @@ package com.software.backend.mapper;
 
 import com.software.backend.dto.ApplicantApplicationsResponseDto;
 import com.software.backend.dto.ApplicationResponseDTO;
+import com.software.backend.dto.BriefApplicationResponseDto;
 import com.software.backend.entity.ApplicationResponse;
 import com.software.backend.entity.JobApplication;
 import org.mapstruct.Mapper;
@@ -18,6 +19,8 @@ public interface JobApplicationMapper {
     ApplicantApplicationsResponseDto toApplicantApplicationsResponseDto(JobApplication application);
 
     @Mapping(source = "field.label", target = "fieldName")
-    ApplicationResponseDTO toApplicationResponseDTO(ApplicationResponse response);
+    BriefApplicationResponseDto toBriefApplicationResponseDto(ApplicationResponse response);
+
+
 }
 

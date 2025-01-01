@@ -11,7 +11,7 @@ public class ApplicantApplicationsResponseDto {
     private String jobTitle;
     private String applicationStatus;
     private LocalDateTime applicationDate;
-    private List<ApplicationResponseDTO> responses;
+    private List<BriefApplicationResponseDto> responses;
 
     private String companyName;
     private String companyAddress;

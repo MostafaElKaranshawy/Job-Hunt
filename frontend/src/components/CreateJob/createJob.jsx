@@ -5,7 +5,7 @@ import DateInput from "../InputTypes/DateInput";
 import DropDown from "../InputTypes/DropDown";
 import CreateForm from "../createForm/CreateForm.jsx";
 import "../specialForm/specialForm.css";
-
+import Countries from "../../json/countries.json";
 export default function CreateJob({ detailsHistory, whenClose }) {
     const [jobTitle, setJobTitle] = useState(detailsHistory.title);
     const [jobDesc, setJobDesc] = useState(detailsHistory.description);
@@ -24,21 +24,25 @@ export default function CreateJob({ detailsHistory, whenClose }) {
     const levels = ["JUNIOR_LEVEL", "MID_LEVEL", "SENIOR_LEVEL", "ENTRY_LEVEL", "EXECUTIVE"];
     const [jobDetails, setJobDetails] = useState();
 
-    useEffect(() => {
-        // Fetch country data from an API
-        const fetchCountries = async () => {
-            try {
-                const response = await fetch("https://restcountries.com/v3.1/all");
-                const data = await response.json();
-                const countryNames = data.map((country) => country.name.common);
-                setCountries(countryNames.sort());
-            } catch (error) {
-                console.error("Error fetching countries:", error);
-            }
-        };
+    useEffect(()=>{
+        setCountries(Countries.map((country)=>{return country.name}))
+    },[Countries])
 
-        fetchCountries();
-    }, []);
+    // useEffect(() => {
+    //     // Fetch country data from an API
+    //     const fetchCountries = async () => {
+    //         try {
+    //             const response = await fetch("https://restcountries.com/v3.1/all");
+    //             const data = await response.json();
+    //             const countryNames = data.map((country) => country.name.common);
+    //             setCountries(countryNames.sort());
+    //         } catch (error) {
+    //             console.error("Error fetching countries:", error);
+    //         }
+    //     };
+
+    //     fetchCountries();
+    // }, []);
 
     const handleLogData = () => {
         const tempDetails = {

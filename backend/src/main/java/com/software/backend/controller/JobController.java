@@ -110,7 +110,8 @@ public class JobController {
             return ResponseEntity.ok().body(responseMessage);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
-
+        }
+    }
     @PostMapping("/home/{username}/jobs/{jobId}/save")
     public ResponseEntity<?> saveJob(@PathVariable(name = "username") String username,
                                      @PathVariable(name = "jobId") Integer jobId) {

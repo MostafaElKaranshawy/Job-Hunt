@@ -1,9 +1,6 @@
 package com.software.backend.service;
 
-import com.software.backend.dto.ApplicantApplicationsResponseDto;
-import com.software.backend.dto.ApplicationResponseDTO;
-import com.software.backend.dto.HomeDto;
-import com.software.backend.dto.JobDto;
+import com.software.backend.dto.*;
 import com.software.backend.entity.*;
 import com.software.backend.enums.ApplicationStatus;
 import com.software.backend.filter.JobCriteriaRunner;
@@ -16,10 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -95,25 +89,25 @@ public class JobServiceTest {
     void testGetApplicationsByApplicantWithResponses() {
         String username = "testUserWithResponses";
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockUser));
-        when(jobApplicationRepository.findApplicationsByApplicantId(1)).thenReturn(Optional.of(Arrays.asList(mockJobApplication)));
+        when(jobApplicationRepository.findApplicationsByApplicantId(1)).thenReturn(Optional.of(Collections.singletonList(mockJobApplication)));
 
         ApplicationResponse mockApplicationResponse = new ApplicationResponse();
         mockApplicationResponse.setResponseData("I love software development");
         mockApplicationResponse.setField(new Field());
 
-        mockJobApplication.setApplicationResponsesList(Arrays.asList(mockApplicationResponse));
+        mockJobApplication.setApplicationResponsesList(List.of(mockApplicationResponse));
 
-        ApplicationResponseDTO mockResponseDTO = new ApplicationResponseDTO();
-        mockResponseDTO.setFieldName("Why do you want this job?");
-        mockResponseDTO.setResponseData("I love software development");
+        BriefApplicationResponseDto mockBriefApplicationResponseDto = new BriefApplicationResponseDto();
+        mockBriefApplicationResponseDto.setFieldName("Why do you want this job?");
+        mockBriefApplicationResponseDto.setResponseData("I love software development");
 
-        when(jobApplicationMapper.toApplicationResponseDTO(mockApplicationResponse))
-                .thenReturn(mockResponseDTO);
+        when(jobApplicationMapper.toBriefApplicationResponseDto(mockApplicationResponse))
+                .thenReturn(mockBriefApplicationResponseDto);
 
         ApplicantApplicationsResponseDto mockDto = new ApplicantApplicationsResponseDto();
         mockDto.setApplicationId(1);
         mockDto.setJobTitle("Software Engineer");
-        mockDto.setResponses(Arrays.asList(mockResponseDTO));
+        mockDto.setResponses(List.of(mockBriefApplicationResponseDto));
 
         when(jobApplicationMapper.toApplicantApplicationsResponseDto(mockJobApplication)).thenReturn(mockDto);
 

@@ -18,8 +18,7 @@ public class ApplicationResponseDTO {
     private List<SpecialSectionDTO> specialSectionsData;
     private int applicationStatus;
     private int applicationId;
-    private String fieldName;
-    private String responseData;
+
 
     @Data
     public static class PersonalDataDTO {
