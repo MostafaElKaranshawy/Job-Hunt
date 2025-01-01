@@ -36,6 +36,8 @@ public class User implements UserDetails {
 
 
 
+
+
     @Column(
         unique = true,
         nullable = false
@@ -97,6 +99,10 @@ public class User implements UserDetails {
 
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean isBanned() {
+        return isBanned;
     }
 }
 

@@ -33,9 +33,12 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private PasswordService passwordService;
+
     @PostMapping("/hash-password")
     public ResponseEntity<?> hashPassword(@RequestBody String password) {
-        String hashedPassword = PasswordService.hashPassword(password);
+        String hashedPassword = passwordService.hashPassword(password);
         System.out.println("Hashed password: " + hashedPassword);
         return ResponseEntity.ok().body(hashedPassword);
     }

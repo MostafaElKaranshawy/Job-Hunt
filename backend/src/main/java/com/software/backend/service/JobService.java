@@ -227,7 +227,7 @@ public class JobService {
         return result;
     }
 
-    private static void addFields(List<Field> fields, List<FieldDto> fieldsDTO) {
+     static void addFields(List<Field> fields, List<FieldDto> fieldsDTO) {
         for (Field field : fields) {
             try {
                 int i = field.getSection().getId();
@@ -243,7 +243,7 @@ public class JobService {
         }
     }
 
-    private void addSections(List<Section> sections, List<String> staticSections, List<SectionDto> sectionsDTO) {
+     void addSections(List<Section> sections, List<String> staticSections, List<SectionDto> sectionsDTO) {
         for (Section section : sections) {
             String name = section.getName();
             if (name.equalsIgnoreCase("Personal Information")
@@ -473,11 +473,32 @@ public class JobService {
     }
 
     public void reportJob(int jobId, String userName, JobReportDTO jobReportDTO) {
+        Job job = jobRepository.findById(jobId).orElse(null);
+        if (job == null) {
+            throw new IllegalArgumentException("Job not found for id: " + jobId);
+        }
+
+        User user = userRepository.findByUsername(userName).orElse(null);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found for username: " + userName);
+        }
+
+        Applicant applicant = applicantRepository.findById(user.getId()).orElse(null);
+        if (applicant == null) {
+            throw new IllegalArgumentException("Applicant not found for user: " + userName);
+        }
+
+        JobReportReason reason;
+        try {
+            reason = JobReportReason.valueOf(jobReportDTO.getReason());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid job report reason: " + jobReportDTO.getReason());
+        }
+
         ReportedJob reportedJob = new ReportedJob();
-        reportedJob.setJob(jobRepository.findById(jobId).orElse(null));
-        reportedJob.setApplicant(applicantRepository.findById(
-                userRepository.findByUsername(userName).orElse(null).getId()).orElse(null));
-        reportedJob.setJobReportReason(JobReportReason.valueOf(jobReportDTO.getReason()));
+        reportedJob.setJob(job);
+        reportedJob.setApplicant(applicant);
+        reportedJob.setJobReportReason(reason);
         reportedJob.setReportDescription(jobReportDTO.getDescription());
 
         reportedJobRepository.save(reportedJob);
@@ -624,7 +645,7 @@ public class JobService {
         }
     }
 
-    private void mapToSpecialSection(List<ApplicationResponseDTO.SpecialSectionDTO> specialSections, String sectionName, String fieldName, String responseData) {
+    public  void mapToSpecialSection(List<ApplicationResponseDTO.SpecialSectionDTO> specialSections, String sectionName, String fieldName, String responseData) {
         boolean sectionExists = false;
         for (ApplicationResponseDTO.SpecialSectionDTO sectionDTO : specialSections) {
             if (sectionDTO.getSectionName().equals(sectionName)) {
