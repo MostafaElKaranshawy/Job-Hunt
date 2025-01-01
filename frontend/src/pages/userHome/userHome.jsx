@@ -177,12 +177,6 @@ function UserHome() {
                             <p className="loading-text">Loading jobs...</p> :
                             jobs.length === 0 ?
                                 <p className="no-jobs-message">No matching jobs found</p> :
-                                // <JobList 
-                                //     jobs={jobs} 
-                                //     handleExpandJob={handleExpandJob} 
-                                //     handleToggleSave={handleToggleSave}
-                                //     loading={loading}
-                                // />
 
                                 (
                                     <div className="job-list">
@@ -197,9 +191,6 @@ function UserHome() {
                                     </div>
                                 )
                         }
-
-                        {/* // Pagination */}
-
                         {
                             totalJobsCount > 0 &&
                             <div className="pagination">
@@ -259,19 +250,20 @@ function UserHome() {
                             </div>
 
                         </div>
-                        <button
-                            className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`}
-                            onClick={handleApplyClick}
-                            disabled={expandedJob.applied}
-                        >
-                            {expandedJob.applied ?
-                                "Already Applied" : "Apply Now"
-                            }
+                        <div className="buttons-container">
+                            <button
+                                className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`}
+                                onClick={handleApplyClick}
+                                disabled={expandedJob.applied}
+                            >
+                                {expandedJob.applied ?
+                                    "Already Applied" : "Apply Now"
+                                }
 
-                            {/* add the apply and don't apply when already applied */}
-                        </button>
-                        <br/>
-                        <button className="apply-button" onClick={handleReportClick}>Report</button>
+                            </button>
+                            <br/>
+                            <button className="apply-button" onClick={handleReportClick}>Report</button>
+                        </div>
 
                         <p className="job-description">{expandedJob.description}</p>
 

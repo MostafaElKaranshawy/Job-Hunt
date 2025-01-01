@@ -12,7 +12,7 @@ export default function DropDown({name, options, isMust, value, onChange}) {
         <div className="dropdown-input">
             <label className="input-label"> {name} </label>
             <br />
-            <select value={value} onChange={handleSelect} required = {isMust}>
+            <select value={value} onChange={handleSelect} required = {isMust} className="input-value input">
                 <option value="">Select a value</option>
                 {options.map((option, index) => (
                     <option key={index} value={option}>

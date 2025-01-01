@@ -233,9 +233,6 @@ const handleCloseModal = () => {
         <div className="modal show d-block" tabIndex="-1">
             <div className="modal-dialog custom-modal-size"> {/* Custom class */}
                 <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Create Job</h5>
-                    </div>
                     <div className="modal-body">
                         <CreateJob whenClose={handleCloseModal}/>
                     </div>

@@ -12,7 +12,7 @@ export default function SimpleText({ name, isMust, value, onChange }) {
         <div className="simple-text-input">
             <label className="input-label">{name}</label>
             <br />
-            <input type="text" value={value} onChange={handleTextChange}
+            <input type="text" value={value} onChange={handleTextChange} className="input-value input"
                 placeholder="Enter your text" maxLength={30} required={isMust} />
         </div>
     );
