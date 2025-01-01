@@ -7,8 +7,10 @@ import SignUpPage from './pages/signupPage/SignUpPage'
 import LogInPage from './pages/logInPage/LogInPage'
 import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPasswordRequestPage'
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage'
+import JobApplications from './pages/jobApplicationsPage/JobApplicationsPage'
 import AdminDashboard from './pages/adminProfile/adminDashboard'
 import AdminLogin from './pages/adminLoginPage/AdminLoginPage'
+
 function App() {
     return (
         <div className='app'>
@@ -23,6 +25,7 @@ function App() {
                     <Route path="/home" element={<UserHome/>}></Route>
                     <Route path="/reset-password" element={< ResetPasswordPage/>} />
                     <Route path="/reset-password-request" element={< ResetPasswordRequestPage/>} />
+                    <Route path="/jobs/:jobId/applications" element={<JobApplications/>}/>
                     <Route path="/admin/login" element={<AdminLogin/>}/>
                     <Route path="/admin/dashboard" element={<AdminDashboard/>} />
                 </Routes>

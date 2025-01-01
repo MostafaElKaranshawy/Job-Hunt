@@ -10,12 +10,54 @@ import { fetchJobs, toggleSaveJob } from "../../services/homeService";
 import Sorting from "../../components/sorting/Sorting.jsx";
 import { calculateRelativeTime } from "../../utils/userHomeUtils";
 import { locationOptions, employmentTypes, jobLevels, minimumSalary } from '../../constants/filterOptions';
+import SpecialForm from "../../components/specialForm/SpecialForm.jsx";
 
 
 function UserHome() {
 
+    const SectionData = {
+        staticSections: [
+            "Personal Information","Education","skills",
+        ],
+        sections: [
+          {
+            isRequired: [false, true],
+            label: ["f1", "f2"],
+            name: "sec1",
+            options: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
+            type: ["text", "dropdown"]
+          },
+          {
+            isRequired: [false, true],
+            label: ["f1", "f2"],
+            name: "sec1",
+            options: [[], ["Option 1", "Option 2", "Option 3", "Option 4"]],
+            type: ["text", "radio"]
+          },
+          
+        ],
+        fields: [
+            {
+                isRequired: true,
+                label: "ff1",
+                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+                type: "dropdown"
+            },
+            {
+                isRequired: false,
+                label: "ff2",
+                options: [],
+                type: "text"
+            },
+        ]
+      }
+    const [isOpen, setIsOpen] = useState(false);
+    const [formData, setFormData] = useState({});
+
     const [jobs, setJobs] = useState([]);
     const [expandedJob, setExpandedJob] = useState(null);
+
+    const [currentJob, setCurrentJob] = useState({});
     const [expandedJobState, setExpandedJobState] = useState(null); // Store both saved state and setSaved function
 
 
@@ -127,7 +169,41 @@ function UserHome() {
     const startIndex = page * offset + 1;
     const endIndex = Math.min((page + 1) * offset, totalJobsCount);
 
-
+    async function handleApplyClick (){
+        setIsOpen(true); 
+        setCurrentJob(structuredClone(expandedJob));
+        setExpandedJob(null);
+        try {
+            const form = await getJobForm(expandedJob.id);
+            // console.log(form);
+            setFormData(form);
+        } catch (error) {
+            console.error(error.message);
+        }
+        
+    };
+    async function getJobForm(id) {
+        try{
+            const url = `http://localhost:8080/job/${id}/form`;
+            const response = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+    
+            const form = await response.json();
+            return form;
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+      
     return (
         <div className="home">
             <Header />
@@ -250,7 +326,10 @@ function UserHome() {
 
                         {/* Apply button */}
                         <button
-                            className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`}
+                            className={`apply-button  ${expandedJob.applied ? 'applied' : ''}`
+                            onClick={handleApplyClick}
+                            disabled=expandedJob.applied
+                            }
                         >
                             {expandedJob.applied ?
                                 "Already Applied" : "Apply Now"
@@ -264,6 +343,12 @@ function UserHome() {
                     </div>
                 </div>
             )}
+        <SpecialForm 
+            open={isOpen} 
+            onClose={() => setIsOpen(false)} 
+            sectionData={formData}
+            job={currentJob}
+        />
         </div>
     )
 }

@@ -1,7 +1,6 @@
 package com.software.backend.controller;
 
-import com.software.backend.dto.HomeDto;
-import com.software.backend.dto.JobDto;
+import com.software.backend.dto.*;
 import com.software.backend.service.JobService;
 import com.software.backend.service.StaticSectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +57,59 @@ public class JobController {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/job/{jobId}/form")
+    public ResponseEntity<?> getJobForm(@PathVariable int jobId){
+        try {
+            FormDTO jobForm = jobService.getJobForm(jobId);
+            return ResponseEntity.ok(jobForm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/job/{userName}/{jobId}/form/response")
+    public ResponseEntity<?> submitJobForm(@PathVariable String userName, @PathVariable int jobId, @RequestBody ApplicationResponseDTO dto){
+
+        try {
+            jobService.submitJobForm(userName, jobId, dto);
+            return ResponseEntity.ok("Form submitted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/company/jobs/{jobId}")
+    public ResponseEntity<?> getJobApplications( @PathVariable Integer jobId) {
+        try {
+            return ResponseEntity.ok(jobService.getJobApplications(jobId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/job/acceptApplication/{applicationId}")
+    public ResponseEntity<?> acceptApplication(@PathVariable Integer applicationId) {
+        try {
+            jobService.acceptApplication(applicationId);
+            ResponseMessage responseMessage = new ResponseMessage("Application accepted successfully and acceptance email sent to the applicant");
+            return ResponseEntity.ok().body(responseMessage);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/job/rejectApplication/{applicationId}")
+    public ResponseEntity<?> rejectApplication(@PathVariable Integer applicationId) {
+        try {
+            jobService.rejectApplication(applicationId);
+            ResponseMessage responseMessage = new ResponseMessage("Application rejected successfully and rejection email sent to the applicant");
+            return ResponseEntity.ok().body(responseMessage);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
 
     @PostMapping("/home/{username}/jobs/{jobId}/save")
     public ResponseEntity<?> saveJob(@PathVariable(name = "username") String username,

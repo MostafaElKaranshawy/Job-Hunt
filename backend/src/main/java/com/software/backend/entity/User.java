@@ -1,5 +1,7 @@
 package com.software.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.software.backend.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +31,7 @@ public class User implements UserDetails {
     private Applicant applicant;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Company company;
 
 
