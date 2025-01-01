@@ -1,14 +1,12 @@
 package com.software.backend.service;
 
-import com.software.backend.dto.HomeDto;
+import com.software.backend.dto.*;
+import com.software.backend.mapper.JobApplicationMapper;
 import com.software.backend.repository.*;
 import com.software.backend.sorting.SortingContext;
-import com.software.backend.dto.JobDto;
 import com.software.backend.entity.Job;
 import com.software.backend.enums.JobStatus;
 import com.software.backend.filter.JobCriteriaRunner;
-import com.software.backend.dto.FieldDto;
-import com.software.backend.dto.SectionDto;
 import com.software.backend.entity.*;
 import com.software.backend.mapper.FieldMapper;
 import com.software.backend.mapper.JobMapper;
@@ -47,6 +45,9 @@ public class JobService {
     private ApplicantRepository applicantRepository;
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
+
+    @Autowired
+    private JobApplicationMapper JobApplicationMapper;
 
     public List<JobDto> getHomeActiveJobs(int page, int offset){
 
@@ -232,4 +233,23 @@ public class JobService {
         }
 
     }
+
+    public List<ApplicantApplicationsResponseDto> getApplicationsByApplicant(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Applicant not found with username: " + username));
+        int applicantId = user.getId();
+        List<JobApplication> applications = jobApplicationRepository.findApplicationsByApplicantId(applicantId).orElse(new ArrayList<>());
+
+        return applications.stream().map(application -> {
+            ApplicantApplicationsResponseDto response = JobApplicationMapper.toApplicantApplicationsResponseDto(application);
+
+            response.setResponses(application.getApplicationResponsesList().stream()
+                    .map(JobApplicationMapper::toApplicationResponseDTO)
+                    .collect(Collectors.toList()));
+
+            return response;
+        }).collect(Collectors.toList());
+    }
+
+
 }
