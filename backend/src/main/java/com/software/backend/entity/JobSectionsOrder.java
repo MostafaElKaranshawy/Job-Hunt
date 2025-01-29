@@ -3,6 +3,8 @@ package com.software.backend.entity;
 import com.software.backend.entity.compositeKeys.JobSectionsOrderId;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Data
@@ -18,6 +20,7 @@ public class JobSectionsOrder {
     @ManyToOne
     @MapsId("jobId")
     @JoinColumn(name = "job_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
 
     @ManyToOne

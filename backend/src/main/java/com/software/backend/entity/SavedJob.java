@@ -2,6 +2,8 @@ package com.software.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +22,7 @@ public class SavedJob {
         referencedColumnName = "job_id",
         nullable = false
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
 
     @ManyToOne

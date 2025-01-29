@@ -4,6 +4,8 @@ import com.software.backend.enums.JobReportReason;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +33,7 @@ public class ReportedJob {
 
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
 
     @ManyToOne

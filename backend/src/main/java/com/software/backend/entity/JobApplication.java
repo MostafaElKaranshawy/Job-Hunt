@@ -4,6 +4,8 @@ import com.software.backend.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,5 +41,6 @@ public class JobApplication {
 
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
 }
