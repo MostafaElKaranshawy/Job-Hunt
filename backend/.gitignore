@@ -34,3 +34,4 @@ build/
 
 ### User Configurations ###
 .env
+gmail.crt
