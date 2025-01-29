@@ -3,11 +3,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './CompanyProfilePage.css';
 import Sidebar from '../../components/sideBar/Sidebar';
-import CreateJob from '../../components/CreateJob/createJob';
+import ProfileSetting from '../../components/profileSections/profileSettings/profileSettings';
+const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
 function CompanyProfilePage() {
-    const { companyUsername } = useParams();
-    // const history = useHistory();
+    const { userName } = useParams();
 
     const [companyInfo, setCompanyInfo] = useState({
         name: "company name",
@@ -24,11 +25,10 @@ function CompanyProfilePage() {
         overview: false,
         photo: false,
     });
-    const [showCreateJob, setShowCreateJob] = useState(false); // New state variable
 
     const fetchCompanyInfo = useCallback(async () => {
         try {
-            const response = await fetch(`http://localhost:8080/company/${companyUsername}`, {
+            const response = await fetch(`${backendURL}/company/${userName}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -45,7 +45,7 @@ function CompanyProfilePage() {
         } catch (error) {
             console.error("Error fetching company info", error);
         }
-    }, [companyUsername]);
+    }, [userName]);
 
     useEffect(() => {
         fetchCompanyInfo();
@@ -60,11 +60,12 @@ function CompanyProfilePage() {
 
     const handleSaveClick = async (field) => {
         try {
-            const response = await fetch(`http://localhost:8080/company/${companyUsername}`, {
+            const response = await fetch(`${backendURL}/company/${userName}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({ [field]: companyInfo[field] }),
             });
             if (response.ok) {
@@ -88,55 +89,11 @@ function CompanyProfilePage() {
         }));
     }
 
-    const handlePhotoChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const path = URL.createObjectURL(file);
-            setCompanyInfo((prevInfo) => ({
-                ...prevInfo,
-                photo: path,
-            }));
-        }
-    };
-
-    const handleCreateJob = () => {
-        setShowCreateJob(true); // Show the CreateJob component
-    }
-
-    const handleCloseModal = () => {
-        setShowCreateJob(false); // Hide the CreateJob component
-    }
-
-    // const logout = () => {
-    //     localStorage.removeItem('auth_token');
-    //     // redirect to the login page
-    //     history.push('/login');
-    // };
-
     return (
         <div className="d-flex">
             <Sidebar />
             <div className='main'>
                 <div className="mb-3 profile-container">
-                    <div className="position-relative">
-                        <img
-                            src={companyInfo.photo}
-                            alt="Profile"
-                            className="profile-photo"
-                        />
-                        <i
-                            className="bi bi-camera-fill change-photo-icon"
-                            onClick={() => document.getElementById('file-input').click()}
-                            title="Change Profile Photo"
-                        ></i>
-                        <input
-                            id="file-input"
-                            type="file"
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            onChange={handlePhotoChange}
-                        />
-                    </div>
                     <div className="profile-name">
                         {isEditing.name ? (
                             <div className="d-flex align-items-center">
@@ -164,14 +121,14 @@ function CompanyProfilePage() {
                     </div>
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Email</label>
                     <div className="d-flex align-items-center">
                         <h3 className="me-2">{companyInfo.email}</h3>
                     </div>
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Website</label>
                     {isEditing.website ? (
                         <div className="d-flex">
@@ -192,7 +149,7 @@ function CompanyProfilePage() {
                         <div className="d-flex align-items-center">
                             <h3 className="me-2">{companyInfo.website}</h3>
                             <button
-                                className="btn btn-primary"
+                                className="btn edit-btn-primary"
                                 onClick={() => handleEditClick('website')}
                             >
                                 Edit
@@ -201,7 +158,7 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Location</label>
                     {isEditing.location ? (
                         <div className="d-flex">
@@ -222,7 +179,7 @@ function CompanyProfilePage() {
                         <div className="d-flex align-items-center">
                             <h3 className="me-2">{companyInfo.location}</h3>
                             <button
-                                className="btn btn-primary"
+                                className="btn edit-btn-primary"
                                 onClick={() => handleEditClick('location')}
                             >
                                 Edit
@@ -231,7 +188,7 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                <div className="mb-3 box">
+                <div className="mb-3 box company-profile-input">
                     <label className="form-label">Overview</label>
                     {isEditing.overview ? (
                         <div className="d-flex">
@@ -251,7 +208,7 @@ function CompanyProfilePage() {
                         <div className="d-flex align-items-center">
                             <h3 className="me-2">{companyInfo.overview}</h3>
                             <button
-                                className="btn btn-primary"
+                                className="btn edit-btn-primary"
                                 onClick={() => handleEditClick('overview')}
                             >
                                 Edit
@@ -260,27 +217,10 @@ function CompanyProfilePage() {
                     )}
                 </div>
 
-                <button className="btn btn-primary custom-btn" onClick={handleCreateJob}>Create New Job</button>
-
-                {/* Modal */}
-                {showCreateJob && (
-                <div className="modal show d-block" tabIndex="-1">
-                    <div className="modal-dialog custom-modal-size"> {/* Custom class */}
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Create Job</h5>
-                                {/* <button type="button" className="btn-close" onClick={handleCloseModal}></button> */}
-                            </div>
-                            <div className="modal-body">
-                                <CreateJob whenClose={handleCloseModal}/>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Close</button>
-                            </div>
-                        </div>
-                    </div>
+                {/* Change Password Section */}
+                <div className="mb-3 box">
+                    <ProfileSetting />
                 </div>
-            )}
             </div>
         </div>
     );

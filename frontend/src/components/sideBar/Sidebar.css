@@ -1,13 +1,22 @@
 .sidebar{
     min-height: 100vh;
-    width: 350px;
+    width: 290px;
     background-color: #2f603cf0;
 }
 
-/* .link{
+.company-link{
     color: white;
 }
 
-.link:hover{
+.company-link:hover{
     color: rgb(0, 0, 0);
-} */
+}
+
+.company-link-2{
+    color: white;
+    cursor: pointer;
+}
+
+.company-link-2:hover{
+    color: rgb(255, 0, 0);
+}

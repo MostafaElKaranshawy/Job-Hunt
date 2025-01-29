@@ -4,6 +4,8 @@ import com.software.backend.enums.FieldType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +47,6 @@ public class Field {
 
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
 }

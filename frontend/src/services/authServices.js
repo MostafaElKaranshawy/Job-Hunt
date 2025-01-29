@@ -1,5 +1,6 @@
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
 const ERROR_MESSAGE = "Sign-up failed. Please try again.";
+const ERROR_MESSAGE_LOGIN = "Login failed. Please try again.";
 
 export const employerSignUp = async (formData) => {
     try {
@@ -23,7 +24,6 @@ export const employerSignUp = async (formData) => {
         return { success: false, message: ERROR_MESSAGE };
     }
 };
-
 export const employeeSignUp = async (formData) => {
     try {
         const response = await fetch(`${apiUrl}/auth/signup/applicant`, {
@@ -100,7 +100,7 @@ export const googleLogIn = async (credentialResponse) => {
 };
 
 export const logIn = async (formData) => {
-  
+
     console.log(formData);
     try {
         const response = await fetch(`${apiUrl}/auth/login`, {
@@ -125,6 +125,33 @@ export const logIn = async (formData) => {
     } catch (error) {
         console.error(error.message);
         return { success: false, message: data.message };
+    }
+};
+
+export const adminLogin = async (formData) => {
+    console.log(formData);
+    try {
+        const response = await fetch(`${apiUrl}/auth/admin/login`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        if (response.ok) {
+            document.cookie = `username=${data.username};`;
+            //and i return the userType also if you need it
+            console.log(data.message);
+            return { success: true, message: data.message };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: ERROR_MESSAGE_LOGIN };
     }
 };
 
@@ -163,3 +190,27 @@ export const resetPassword = async (resetToken, newPassword) => {
         return { success: false, message: data.message };
     }
 };
+
+export const logout = async ()=>{
+    try{
+        const response = await fetch(`${apiUrl}/auth/logout`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data.message);
+            return { success: true, message: data.message };
+        } else {
+            console.error(data.message);
+            return { success: false, message: data.message };
+        }
+    }catch(error){
+        console.error(error);
+        return { success: false, message: ERROR_MESSAGE };
+    }
+
+}

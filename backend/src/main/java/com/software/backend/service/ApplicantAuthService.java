@@ -37,6 +37,7 @@ public class ApplicantAuthService {
 
     private final PasswordService passwordService;
 
+
     public void signUp(SignUpRequest signUpRequest) {
         System.out.println("Applicant Sign-Up from service");
         Validator validator = ValidationFactory.createValidator(ValidationType.APPLICANT_SIGNUP);
@@ -72,7 +73,11 @@ public class ApplicantAuthService {
         Applicant applicant = new Applicant();
         applicant.setUser(user);
         applicant.setFirstName(name.split(" ")[0]);
-        applicant.setLastName(name.split(" ")[1]);
+
+        if(name.split(" ").length > 1)
+            applicant.setLastName(name.split(" ")[1]);
+        else
+            applicant.setLastName("");
 
         // Save both User and Applicant entities
         userRepository.save(user);

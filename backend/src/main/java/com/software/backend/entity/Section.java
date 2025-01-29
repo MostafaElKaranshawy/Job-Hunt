@@ -3,6 +3,8 @@ package com.software.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +23,12 @@ public class Section {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Field> fields = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
 
 }

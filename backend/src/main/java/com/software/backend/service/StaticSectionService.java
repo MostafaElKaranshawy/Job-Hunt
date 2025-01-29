@@ -62,7 +62,9 @@ public class StaticSectionService {
                 new FieldDto("Company Name", "text", true, new ArrayList<>()),
                 new FieldDto("Start Date", "date", true, new ArrayList<>()),
                 new FieldDto("End Date", "date", true, new ArrayList<>()),
-                new FieldDto("Job Description", "textarea", false, new ArrayList<>())
+                new FieldDto("Job Description", "textarea", false, new ArrayList<>()),
+                new FieldDto(("Current Role"), "checkbox", false, new ArrayList<>()),
+                new FieldDto("Location", "dropdown", true, new ArrayList<>())
         ));
         return sectionMapper.sectionDtoToSection(experience);
     }

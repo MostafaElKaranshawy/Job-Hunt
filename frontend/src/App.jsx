@@ -7,6 +7,11 @@ import SignUpPage from './pages/signupPage/SignUpPage'
 import LogInPage from './pages/logInPage/LogInPage'
 import ResetPasswordRequestPage from './pages/resetPasswordRequestPage/ResetPasswordRequestPage'
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage'
+import SpecialForm from './components/specialForm/SpecialForm'
+import ReportForm from './components/reportForm/ReportForm'
+import JobApplications from './pages/jobApplicationsPage/JobApplicationsPage'
+import AdminDashboard from './pages/adminProfile/adminDashboard'
+import AdminLogin from './pages/adminLoginPage/AdminLoginPage'
 function App() {
     return (
         <div className='app'>
@@ -14,13 +19,18 @@ function App() {
                 <Routes>
                     <Route path="/" element={<SignUpPage/>}/>
                     <Route path="/login" element={<LogInPage/>}/>
-                    <Route path="/company/:companyUsername" element={<CompanyProfilePage/>} />
-                    <Route path="/company/:companyUsername/jobs" element={<Jobs/>} />
+                    <Route path="/company/:userName" element={<CompanyProfilePage/>} />
+                    <Route path="/company/:userName/jobs" element={<Jobs/>} />
                     <Route path="user/:userName/profile/" element={<Profile/>} />
                     <Route path="user/:userName/profile/:profileSection" element={<Profile/>} />
                     <Route path="/home" element={<UserHome/>}></Route>
                     <Route path="/reset-password" element={< ResetPasswordPage/>} />
                     <Route path="/reset-password-request" element={< ResetPasswordRequestPage/>} />
+                    <Route path="/user/apply/job/:jobId/form" element={<SpecialForm/>} />
+                    <Route path="/user/job/:jobId/report" element={<ReportForm/>} />
+                    <Route path="/jobs/:jobId/applications" element={<JobApplications/>}/>
+                    <Route path="/admin/login" element={<AdminLogin/>}/>
+                    <Route path="/admin/dashboard" element={<AdminDashboard/>} />
                 </Routes>
             </Router>
         </div>

@@ -5,8 +5,8 @@ import DateInput from "../InputTypes/DateInput";
 import DropDown from "../InputTypes/DropDown";
 import CreateForm from "../createForm/CreateForm.jsx";
 import "../specialForm/specialForm.css";
-
-export default function CreateJob({detailsHistory, whenClose}) {
+import Countries from "../../json/countries.json";
+export default function CreateJob({ detailsHistory, whenClose }) {
     const [jobTitle, setJobTitle] = useState(detailsHistory.title);
     const [jobDesc, setJobDesc] = useState(detailsHistory.description);
     const [jobCategory, setJobCategory] = useState(detailsHistory.category);
@@ -17,16 +17,18 @@ export default function CreateJob({detailsHistory, whenClose}) {
     const [jobDeadline, setJobDeadline] = useState(detailsHistory.deadline);
     const [jobSalary, setJobSalary] = useState(detailsHistory.salary);
     const [showCreateForm, setShowCreateForm] = useState(false);
+    const [countries, setCountries] = useState([]);
 
-    const locations = ["ONSITE","REMOTE","HYBRID"];
-    const types = ["FULL_TIME","PART_TIME","INTERNSHIP","TEMPORARY"];
-    const levels = ["JUNIOR_LEVEL","MID_LEVEL","SENIOR_LEVEL","ENTRY_LEVEL","EXECUTIVE"];
+    const locations = ["ONSITE", "REMOTE", "HYBRID"];
+    const types = ["FULL_TIME", "PART_TIME", "INTERNSHIP", "TEMPORARY"];
+    const levels = ["JUNIOR_LEVEL", "MID_LEVEL", "SENIOR_LEVEL", "ENTRY_LEVEL", "EXECUTIVE"];
     const [jobDetails, setJobDetails] = useState();
 
-
+    useEffect(()=>{
+        setCountries(Countries.map((country)=>{return country.name}))
+    },[Countries])
 
     const handleLogData = () => {
-
         const tempDetails = {
             title: jobTitle,
             description: jobDesc,
@@ -37,7 +39,6 @@ export default function CreateJob({detailsHistory, whenClose}) {
             employmentType: jobType,
             deadline: `${jobDeadline}T00:00:00`,
             salary: jobSalary,
-           
         };
 
         if (!tempDetails.title.trim()) {
@@ -60,7 +61,6 @@ export default function CreateJob({detailsHistory, whenClose}) {
             alert("Work Location cannot be empty.");
             return;
         }
-        
         if (!tempDetails.level.trim()) {
             alert("Level cannot be empty.");
             return;
@@ -85,18 +85,15 @@ export default function CreateJob({detailsHistory, whenClose}) {
         setShowCreateForm(true);
     };
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
 
     const handleDateChange = (date) => {
         if (date >= today) {
-            // const date1 = date.target.value;
-            // const dateTime = `${date1}T00:00:00`;
             setJobDeadline(date);
         } else {
             alert("Please select a date from today onwards.");
         }
     };
-
 
     return (
         <>
@@ -112,25 +109,29 @@ export default function CreateJob({detailsHistory, whenClose}) {
                                 <br />
                                 <SimpleText name="Category" value={jobCategory} onChange={setJobCategory} />
                                 <br />
-                                <SimpleText name="Country Location" value={countryLocation} onChange={setCountryLocation} />
+                                <DropDown
+                                    name="Country Location"
+                                    options={countries}
+                                    value={countryLocation}
+                                    onChange={setCountryLocation}
+                                />
                                 <br />
-                                <DropDown name="workLocation" options={locations} value={jobLocation} onChange={setJobLocation} />
+                                <DropDown name="Work Location" options={locations} value={jobLocation} onChange={setJobLocation} />
                                 <br />
                                 <DropDown name="Level" options={levels} value={jobLevel} onChange={setJobLevel} />
                                 <br />
-                                <DropDown name="employmentType" options={types} value={jobType} onChange={setJobType} />
+                                <DropDown name="Employment Type" options={types} value={jobType} onChange={setJobType} />
                                 <br />
                                 <DateInput name="Deadline" value={jobDeadline} onChange={handleDateChange} />
                                 <br />
-                                <label className="input-label">Yearly salary in $</label>
+                                <label className="input-label">Yearly Salary in $</label>
                                 <br />
                                 <input
-                                type="number"
-                                value={jobSalary}
-                                onChange={(e) => setJobSalary(e.target.value)}
-                                required
+                                    type="number"
+                                    value={jobSalary}
+                                    onChange={(e) => setJobSalary(e.target.value)}
+                                    required
                                 />
-                                
                             </div>
                         </div>
                         <button type="button" className="form-button" onClick={handleLogData}>
@@ -144,15 +145,17 @@ export default function CreateJob({detailsHistory, whenClose}) {
         </>
     );
 }
+
 CreateJob.defaultProps = {
     detailsHistory: {
         title: "",
         description: "",
         category: "",
+        location: "",
         workLocation: "",
         level: "",
         employmentType: "",
         deadline: "",
-        salaryRange: [0,0],
-    }
-}
+        salaryRange: [0, 0],
+    },
+};

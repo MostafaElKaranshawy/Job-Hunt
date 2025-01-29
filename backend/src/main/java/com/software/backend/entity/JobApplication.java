@@ -4,6 +4,8 @@ import com.software.backend.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,12 +20,9 @@ public class JobApplication {
     @Column(name = "application_id")
     private Integer id;
 
-    @Column(
-        name = "application_status",
-        nullable = false
-    )
-    private ApplicationStatus applicationStatus;
-
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus applicationStatus = ApplicationStatus.PENDING;
 
     @CreationTimestamp
     @Column(
@@ -42,5 +41,6 @@ public class JobApplication {
 
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
 }

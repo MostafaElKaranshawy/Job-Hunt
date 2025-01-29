@@ -1,0 +1,230 @@
+.applications-container {
+  padding: 20px;
+  /* max-width: 900px; */
+  margin: 0 auto;
+  background-color: #f8f9fa; /* Light background for better contrast */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center ;
+  height: 900px;
+  width: 700px;
+  flex-direction: column;
+}
+
+.applications-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /* overflow-y: auto; */
+  width: 100%;
+  /* max-height: 80vh; */
+}
+
+.application-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 100%;
+}
+
+.application-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.application-card h3 {
+  margin-top: 15px;
+  color: #4EA685;
+  border-bottom: 2px solid #4EA685;
+  padding-bottom: 5px;
+}
+
+.application-card p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.application-card ul {
+  padding-left: 20px;
+}
+
+.application-card ul li {
+  margin: 10px;
+  font-size: 18px;
+}
+
+.application-card ul li:hover {
+  background-color: #e9f7ef; /* Soft green on hover */
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.read-more-btn {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #4EA685;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.read-more-btn:hover {
+  background-color: #3b8566;
+  transform: scale(1.05);
+}
+
+.special-section {
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px dashed #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.special-section:hover {
+  background-color: #eef4fb; /* Light blue */
+  border: 1px dashed #4ea685;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-btn,
+.prev-btn,
+.next-btn {
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.page-btn.active {
+  background-color: #4ea685;
+  color: white;
+}
+
+.page-btn:hover,
+.prev-btn:hover,
+.next-btn:hover {
+  background-color: #4ea685;
+  color: white;
+  transform: scale(1.1);
+}
+
+.dots {
+  font-size: 18px;
+  padding: 0 10px;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.accept-btn,
+.reject-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-right: 10px;
+}
+
+.accept-btn {
+  background-color: #28a745; /* Green */
+  color: white;
+}
+
+.accept-btn:hover {
+  background-color: #218838; /* Darker Green */
+  transform: scale(1.05);
+}
+
+.accept-btn:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.6);
+}
+
+.reject-btn {
+  background-color: #dc3545; /* Red */
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #c82333; /* Darker Red */
+  transform: scale(1.05);
+}
+
+.reject-btn:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(220, 53, 69, 0.6);
+}
+
+.status-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.accepted {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.rejected {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.no-applications-message {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 20px;
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .applications-container {
+    padding: 10px;
+  }
+
+  .application-card {
+    padding: 10px;
+  }
+
+  .status-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .accept-btn,
+  .reject-btn {
+    width: 100%;
+  }
+}

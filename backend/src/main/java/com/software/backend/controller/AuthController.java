@@ -4,15 +4,12 @@ import com.software.backend.dto.AuthenticationResponse;
 import com.software.backend.dto.ResetPasswordRequest;
 import com.software.backend.dto.LogInRequest;
 import com.software.backend.dto.ResponseMessage;
-import com.software.backend.service.TokenService;
-import com.software.backend.service.UserAuthService;
+import com.software.backend.service.*;
 import com.software.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.software.backend.dto.SignUpRequest;
-import com.software.backend.service.ApplicantAuthService;
-import com.software.backend.service.CompanyAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +33,15 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private PasswordService passwordService;
+
+    @PostMapping("/hash-password")
+    public ResponseEntity<?> hashPassword(@RequestBody String password) {
+        String hashedPassword = passwordService.hashPassword(password);
+        System.out.println("Hashed password: " + hashedPassword);
+        return ResponseEntity.ok().body(hashedPassword);
+    }
 
     // Google Sign-Up Endpoint
     @PostMapping("/signup/applicant/google")
@@ -76,13 +82,29 @@ public class AuthController {
             return ResponseEntity.ok().body(usernameObject);
     }
 
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> adminLogin(
+            @RequestBody LogInRequest request,
+            HttpServletResponse response
+    ) {
+            System.out.println("Admin Login Endpoint ");
+            AuthenticationResponse authenticationResponse = userAuthService.adminLogin(request);
+            tokenService.storeTokens(authenticationResponse, response);
+            AuthenticationResponse usernameObject = new AuthenticationResponse();
+            usernameObject.setUsername(authenticationResponse.getUsername());
+            usernameObject.setUserType(authenticationResponse.getUserType());
+            System.out.println("Username: " + usernameObject.getUsername());
+            return ResponseEntity.ok().body(usernameObject);
+    }
+
     // normal sign up
     @CrossOrigin(origins = "*")
     @PostMapping("/signup/applicant")
     public ResponseEntity<?> signUpApplicant(@RequestBody SignUpRequest signUpRequest ) {
         System.out.println("welcome from applicant signup");
         applicantAuthService.signUp(signUpRequest);
-         ResponseMessage responseMessage = new ResponseMessage("Email confirmation sent. Please verify your email.");
+//        userAuthService.createNewUser(signUpRequest);
+        ResponseMessage responseMessage = new ResponseMessage("Email confirmation sent. Please verify your email.");
         return ResponseEntity.ok().body(responseMessage);
     }
 
@@ -118,5 +140,11 @@ public class AuthController {
         return  ResponseEntity.ok().body(responseMessage);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        tokenService.deleteCookies(response);
+        ResponseMessage responseMessage = new ResponseMessage("Logged out successfully.");
+        return ResponseEntity.ok().body(responseMessage);
+    }
 }
 

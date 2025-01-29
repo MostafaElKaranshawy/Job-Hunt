@@ -1,7 +1,7 @@
 .special-form input[type="text"], input[type="url"], input[type="email"], input[type="tel"] {
   font-weight: 500;
   width: 100%;
-  max-width: 400px;
+  /* max-width: 400px; */
   color: #333;
   display: inline-block;
   border: 1px solid #ccc;
@@ -17,7 +17,6 @@
 }
 
 .special-form input[type="radio"], input[type="checkbox"], input[type="date"] {
-  font-size: 1.5em;
   display: inline-block;
   margin-right: 10px;
 }
@@ -56,10 +55,9 @@
 }
 
 .special-form select {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: 500;
   color: #333;
-  max-width: fit-content;
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 8px;
